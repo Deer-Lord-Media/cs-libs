@@ -1,6 +1,6 @@
 namespace Buffs;
 
-struct Tracker<T>  where T : Data
+struct Tracker<T> where T : Data
 {
     public Tracker(T data, int stacks = 1)
     {
@@ -17,7 +17,7 @@ struct Tracker<T>  where T : Data
     {
         get
         {
-            return this.TimeLeft <= Tracker<T>.zeroTimeSpan;
+            return this.TimeLeft <= new TimeSpan(0, 0, 0, 0, 0, 0);
         }
     }
 
@@ -30,6 +30,4 @@ struct Tracker<T>  where T : Data
             return timeLeft;
         }
     }
-
-    static TimeSpan zeroTimeSpan = new TimeSpan(0, 0, 0, 0, 0, 0);
 }
