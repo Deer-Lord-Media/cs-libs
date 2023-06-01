@@ -50,7 +50,7 @@ public class Container<T> where T : Data
         return retval;
     }
 
-    public bool? Remove(Data data)
+    public bool? Remove(T data)
     {
         bool? retval = null;
         if(this.Has(data))
@@ -66,7 +66,7 @@ public class Container<T> where T : Data
         this.Members.RemoveWhere(m => m.Expired);
     }
 
-    public bool Has(Data data)
+    public bool Has(T data)
     {
         Tracker<T>? tracker = this.Members.Where(m => m.Data.Equals(data)).FirstOrDefault();
         return (tracker != null);
