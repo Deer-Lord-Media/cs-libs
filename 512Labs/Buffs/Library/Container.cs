@@ -1,9 +1,10 @@
+using System;
 namespace Buffs;
 
 /*
-class YourData : Buffs.Data
+class YourDatazs : Buffs.Data
 {
-
+    // you can extend this class to have additional attributes and methods
 }
 
 class Character

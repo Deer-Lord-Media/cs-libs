@@ -1,3 +1,7 @@
+#/bin/bash
+
+NAME=""
+
 cd 512Labs
 mkdir -p $NAME
 cd $NAME
