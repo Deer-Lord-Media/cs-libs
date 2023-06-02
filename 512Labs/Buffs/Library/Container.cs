@@ -1,5 +1,20 @@
 namespace Buffs;
 
+/*
+class YourData : Buffs.Data
+{
+
+}
+
+class Character
+{
+    public Buffs.Container<YourData> Buffs;
+}
+
+var character = new Character();
+var buff = new YourData();
+character.Buffs.Add(buff);
+*/
 public class Container<T> where T : Data
 {
     private HashSet<Tracker<T>> Members;
@@ -16,7 +31,7 @@ public class Container<T> where T : Data
         get
         {
             HashSet<Buff<T>> buffs = new HashSet<Buff<T>>();
-            foreach (Tracker<T> member in this.Members.Where(m => m.Expired))
+            foreach (Tracker<T> member in this.Members.Where(m => !m.Expired))
             {
                 Buff<T> buff = new Buff<T>(member.Data, member.TimeLeft, member.Stacks);
                 buffs.Add(buff);
@@ -28,16 +43,17 @@ public class Container<T> where T : Data
     public bool Add(T data)
     {
         bool retval = false;
-        if (this.MaxBuffs != null || this.MaxBuffs < this.Members.Count())
+        if (this.MaxBuffs == null || this.MaxBuffs > this.Members.Count())
         {
             Tracker<T> member;
-            Tracker<T>? current = this.Members.Where(m => m.Data.Equals(data)).FirstOrDefault();
-            if (current == null)
+            var found = this.Members.Where(m => m.Data.Equals(data));
+            if (found.Count() == 0)
             {
                 member = new Tracker<T>(data);
             } else
             {
-                member = (Tracker<T>)current;
+                member = found.First();
+                var s = member.Stacks;
                 if (member.Stacks < member.Data.MaxStacks)
                 {
                     this.Members.Remove(member);
@@ -61,14 +77,14 @@ public class Container<T> where T : Data
         return retval;
     }
 
-    public void Expire()
+    public int Expire()
     {
-        this.Members.RemoveWhere(m => m.Expired);
+        return this.Members.RemoveWhere(m => m.Expired);
     }
 
     public bool Has(T data)
     {
-        Tracker<T>? tracker = this.Members.Where(m => m.Data.Equals(data)).FirstOrDefault();
-        return (tracker != null);
+        var trackers = this.Members.Where(m => m.Data.Equals(data));
+        return (trackers.Count() != 0);
     }
 }

@@ -4,7 +4,7 @@ namespace Buffs;
 // this (probably) represents (part of) the data from your database
 public abstract class Data : IEquatable<Data>
 {
-    // internal ID. you set this
+    // internal ID. you set this.
     public int Id;
     // how long this buff lasts
     public TimeSpan Duration;
@@ -14,6 +14,6 @@ public abstract class Data : IEquatable<Data>
 
     public bool Equals(Data? obj)
     {
-        return (obj != null) && this.Id == obj.Id;
+        return (obj != null) && this.Id.Equals(obj.Id);
     }
 }
