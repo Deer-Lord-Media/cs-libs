@@ -17,14 +17,23 @@ character.Buffs.Add(buff);
 */
 public class Container<T> where T : Data
 {
-        public Container(int? maxbuffs = null)
+        public Container(int maximum)
     {
-        this.MaxBuffs = maxbuffs;
+        this.maximum = maximum;
         this.members = new HashSet<Buff<T>>();
     }
 
     private HashSet<Buff<T>> members;
-    private int? MaxBuffs;
+    private int maximum;
+    public int Maximum { get { return this.maximum; } }
+
+    public bool Full
+    {
+        get
+        {
+            return this.members.Count() == this.Maximum;
+        }
+    }
 
     public HashSet<Buff<T>> Active
     {
@@ -38,7 +47,7 @@ public class Container<T> where T : Data
     public bool Add(T data)
     {
         bool added = false;
-        if (this.MaxBuffs == null || this.members.Count() < this.MaxBuffs)
+        if (!this.Full)
         {
             Buff<T> member;
             var found = this.members.Where(m => m.Data.Equals(data));

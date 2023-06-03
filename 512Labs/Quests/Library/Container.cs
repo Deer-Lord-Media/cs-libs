@@ -4,7 +4,7 @@ public class Container<T> where T : Data
 {
     public Container(int maxquests, HashSet<Quest<T>>? members = null)
     {
-        this.Maximum = maxquests;
+        this.maximum = maxquests;
         if (members == null)
         {
             this.members = new HashSet<Quest<T>>();
@@ -14,8 +14,17 @@ public class Container<T> where T : Data
         }
     }
 
-    public int Maximum { get; }
+    private int maximum;
+    public int Maximum { get { return this.maximum; } }
     private HashSet<Quest<T>> members { get; }
+
+    public bool Full
+    {
+        get
+        {
+            return this.members.Count() == this.Maximum;
+        }
+    }
 
     public HashSet<Quest<T>> All
     {

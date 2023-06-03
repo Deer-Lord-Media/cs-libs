@@ -22,7 +22,7 @@ public class TestContainer
     [Fact]
     public void EmptyContainer()
     {
-        Buffs.Container<VanillaData> buffs = new Buffs.Container<VanillaData>();
+        Buffs.Container<VanillaData> buffs = new Buffs.Container<VanillaData>(16);
         Assert.Empty(buffs.Active);
     }
 

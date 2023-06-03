@@ -2,80 +2,71 @@
 
 public class Container<T> where T : Data, new()
 {
-    public Container(int maxSlots, List<Slot<T>?>? slots = null)
+    public Container(int maximum, HashSet<Slot<T>>? slots = null)
     {
-        this.maxSlots = maxSlots;
-        this.members = new List<Slot<T>?>();
-        int usedSlots = 0;
+        this.maximum = maximum;
+        this.members = new HashSet<Slot<T>>();
+        int filledSlots = 0;
         if (slots != null)
         {
             foreach (Slot<T>? slot in slots)
             {
                 this.members.Add(slot);
-                usedSlots++;
+                filledSlots++;
             }
-        }
-
-        for (int i = 0; i < (maxSlots - usedSlots); i++)
-        {
-            this.members.Add(null);
         }
     }
 
-    private int maxSlots;
-    public int MaxSlots { get { return this.maxSlots; } }
-    private List<Slot<T>?> members;
+    private int maximum;
+    public int Maximum { get { return this.maximum; } }
+    private HashSet<Slot<T>> members;
     public bool Full
     {
         get
         {
-            return this.members.Where(m => m == null).Count() == 0;
+            return this.members.Count() == this.Maximum;
         }
     }
 
-    public List<Slot<T>?> Slots { get { return new List<Slot<T>?>(this.members); } }
-
-    public bool Add(T data)
+    public List<Slot<T>> Slots
     {
-        bool added = false;
-        var slots = this.members.Where(m => m != null && m.Data.Equals(data));
-        if (slots.Count() != 0)
+        get
         {
-            foreach (Slot<T> slot in slots)
-            {
-                if (slot.Stacks < slot.Data.MaxStacks)
-                {
-                    // TODO: find more protected way to handle this
-                    slot.Stacks++;
-                    added = true;
-                    break;
-                }
-            }
+            return new List<Slot<T>>(this.members.OrderBy(m => m.Number));
         }
-        if (!added && !this.Full)
-        {
-            int index = this.members.FindIndex(m => m == null);
-            this.members[index] = new Slot<T>(data, 1);
-            added = true;
-        }
-        return added;
     }
 
-    public bool Remove(T data)
+    public Slot<T>? Slot(int slotNumber)
     {
-        bool removed = false;
-        var slots = this.members.Where(m => m != null && m.Data.Equals(data));
-        if (slots.Count() != 0)
+        Slot<T>? retval;
+        var slots = this.Slots.Where(m => m.Number == slotNumber);
+        retval = (slots.Count() > 0) ? slots.First() : null;
+        return retval;
+    }
+
+    public bool SwapSlots(int slotNumberA, int slotNumberB)
+    {
+        bool retval = false;
+        bool numberAinRange = (slotNumberA <= this.Maximum && 0 < slotNumberA);
+        bool numberBinRange = (slotNumberB <= this.Maximum && 0 < slotNumberB);
+        if (numberAinRange && numberBinRange)
         {
-            var slot = slots.Last();
-            slot.Stacks--;
-            if (slot.Stacks == 0)
+            Slot<T>? slotA = this.Slot(slotNumberA);
+            Slot<T>? slotB = this.Slot(slotNumberB);
+            if (slotA != null)
             {
-                int index = this.members.FindIndex(m => m == slot);
-                this.members[index] = null;
+                Slot<T> slotC = new Slot<T>(slotA.Data, slotNumberB, slotA.Stacks);
+                this.members.Add(slotC);
+                this.members.Remove(slotA);
             }
-            removed = true;
+            if (slotB != null)
+            {
+                Slot<T> slotD = new Slot<T>(slotB.Data, slotNumberA, slotB.Stacks);
+                this.members.Add(slotD);
+                this.members.Remove(slotB);
+            }
+            retval = true;
         }
-        return removed;
+        return retval;
     }
 }
