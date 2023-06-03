@@ -1,4 +1,6 @@
 
+build:
+	dotnet build
 
-test:
+test: build
 	dotnet test

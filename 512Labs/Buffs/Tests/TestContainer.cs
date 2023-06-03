@@ -56,7 +56,7 @@ public class TestContainer
             var removed = buffs.Remove(data);
             Assert.True(removed);
         }
-        Assert.Equal(0, buffs.Active.Count());
+        Assert.Empty(buffs.Active);
     }
 
     [Fact]
@@ -65,12 +65,12 @@ public class TestContainer
         int maxBuffs = 16;
         TimeSpan duration = new TimeSpan(0, 0, 0, 0, 0, -1);
         Buffs.Container<VanillaData> buffs = new Buffs.Container<VanillaData>(maxBuffs);
-        Assert.Equal(0, buffs.Active.Count());
+        Assert.Empty(buffs.Active);
         var data1 = new VanillaData(1, new TimeSpan(0, 0, 0, -1, 0, 0));
         var data2 = new VanillaData(2, new TimeSpan(0, 0, 0, 1, 0, 0));
         buffs.Add(data1);
         buffs.Add(data2);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public class TestContainer
         int maxBuffs = 16;
         TimeSpan duration = new TimeSpan(0, 0, 0, 0, 0, -1);
         Buffs.Container<VanillaData> buffs = new Buffs.Container<VanillaData>(maxBuffs);
-        Assert.Equal(0, buffs.Active.Count());
+        Assert.Empty(buffs.Active);
         var data1 = new VanillaData(1, new TimeSpan(0, 0, 0, 1, 0, 0));
         var data2 = new VanillaData(2, new TimeSpan(0, 0, 0, 1, 0, 0));
         buffs.Add(data1);
