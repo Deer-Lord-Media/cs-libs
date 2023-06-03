@@ -1,14 +1,33 @@
 namespace Buffs;
 
-public readonly struct Buff<T>
+public struct Buff<T> where T : Data
 {
-    public Buff(T data, TimeSpan timeLeft, int stacks)
+    public Buff(T data, int stacks = 1)
     {
         this.Data = data;
-        this.TimeLeft = timeLeft;
         this.Stacks = stacks;
+        this.At = DateTime.Now;
     }
-    public readonly T Data { get; }
-    public readonly TimeSpan TimeLeft { get; }
-    public readonly int Stacks { get; }
+
+    public T Data { get; }
+    public DateTime At { get; }
+    public int Stacks { get; }
+
+    public bool Expired
+    {
+        get
+        {
+            return this.TimeLeft <= new TimeSpan(0, 0, 0, 0, 0, 0);
+        }
+    }
+
+    public TimeSpan TimeLeft
+    {
+        get
+        {
+            TimeSpan timeLeft = this.Data.Duration - (DateTime.Now - this.At);
+            timeLeft = new TimeSpan(0, 0, 0, 0, 0, Math.Max(0, timeLeft.Microseconds));
+            return timeLeft;
+        }
+    }
 }

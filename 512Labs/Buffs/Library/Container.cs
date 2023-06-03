@@ -18,25 +18,20 @@ character.Buffs.Add(buff);
 */
 public class Container<T> where T : Data
 {
-    private HashSet<Tracker<T>> Members;
-    private int? MaxBuffs;
-
-    public Container(int? maxbuffs = null)
+        public Container(int? maxbuffs = null)
     {
         this.MaxBuffs = maxbuffs;
-        this.Members = new HashSet<Tracker<T>>();
+        this.members = new HashSet<Buff<T>>();
     }
+
+    private HashSet<Buff<T>> members;
+    private int? MaxBuffs;
 
     public HashSet<Buff<T>> Active
     {
         get
         {
-            HashSet<Buff<T>> buffs = new HashSet<Buff<T>>();
-            foreach (Tracker<T> member in this.Members.Where(m => !m.Expired))
-            {
-                Buff<T> buff = new Buff<T>(member.Data, member.TimeLeft, member.Stacks);
-                buffs.Add(buff);
-            }
+            HashSet<Buff<T>> buffs = new HashSet<Buff<T>>(this.members.Where(m => !m.Expired));
             return buffs;
         }
     }
@@ -44,24 +39,24 @@ public class Container<T> where T : Data
     public bool Add(T data)
     {
         bool retval = false;
-        if (this.MaxBuffs == null || this.MaxBuffs > this.Members.Count())
+        if (this.MaxBuffs == null || this.members.Count() < this.MaxBuffs)
         {
-            Tracker<T> member;
-            var found = this.Members.Where(m => m.Data.Equals(data));
+            Buff<T> member;
+            var found = this.members.Where(m => m.Data.Equals(data));
             if (found.Count() == 0)
             {
-                member = new Tracker<T>(data);
+                member = new Buff<T>(data);
             } else
             {
                 member = found.First();
                 var s = member.Stacks;
                 if (member.Stacks < member.Data.MaxStacks)
                 {
-                    this.Members.Remove(member);
-                    member = new Tracker<T>(data);
+                    this.members.Remove(member);
+                    member = new Buff<T>(data);
                 }
             }
-            this.Members.Add(member);
+            this.members.Add(member);
             retval = true;
         }
         return retval;
@@ -72,7 +67,7 @@ public class Container<T> where T : Data
         bool? retval = null;
         if(this.Has(data))
         {
-            int count = this.Members.RemoveWhere(m => m.Data.Equals(data));
+            int count = this.members.RemoveWhere(m => m.Data.Equals(data));
             retval = count != 0;
         }
         return retval;
@@ -80,12 +75,12 @@ public class Container<T> where T : Data
 
     public int Expire()
     {
-        return this.Members.RemoveWhere(m => m.Expired);
+        return this.members.RemoveWhere(m => m.Expired);
     }
 
     public bool Has(T data)
     {
-        var trackers = this.Members.Where(m => m.Data.Equals(data));
-        return (trackers.Count() != 0);
+        var members = this.members.Where(m => m.Data.Equals(data));
+        return (members.Count() != 0);
     }
 }
