@@ -2,9 +2,9 @@
 
 public class Container<T> where T : Data
 {
-    public Container(int maxquests, HashSet<Quest<T>>? members = null)
+    public Container(int maximum, HashSet<Quest<T>>? members = null)
     {
-        this.maximum = maxquests;
+        this.Maximum = maximum;
         if (members == null)
         {
             this.members = new HashSet<Quest<T>>();
@@ -14,8 +14,7 @@ public class Container<T> where T : Data
         }
     }
 
-    private int maximum;
-    public int Maximum { get { return this.maximum; } }
+    public int Maximum { get; }
     private HashSet<Quest<T>> members { get; }
 
     public bool Full
@@ -36,29 +35,22 @@ public class Container<T> where T : Data
 
     public bool Add(T data)
     {
-        bool retval = false;
-        if (this.members.Count() < this.Maximum)
+        if (!this.Contains(data) && !this.Full)
         {
-            var found = this.members.Where(m => m.Equals(data));
-            if (found.Count() == 0)
-            {
-                Quest<T> quest = new Quest<T>(data);
-                this.members.Add(quest);
-                retval = true;
-            }
+           this.members.Add(new Quest<T>(data));
         }
-        return retval;
+        return this.Contains(data);
     }
 
-   public bool? Remove(T data)
+   public bool Remove(T data)
     {
-        bool? retval = null;
+        bool removed = false;
         if(this.Contains(data))
         {
-            int count = this.members.RemoveWhere(m => m.Data.Equals(data));
-            retval = count != 0;
+            int count = this.members.RemoveWhere(m => m.Data == data);
+            removed = count > 0;
         }
-        return retval;
+        return removed;
     }
 
     public bool Contains(T data)

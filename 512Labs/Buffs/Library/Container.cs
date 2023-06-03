@@ -19,13 +19,12 @@ public class Container<T> where T : Data
 {
         public Container(int maximum)
     {
-        this.maximum = maximum;
+        this.Maximum = maximum;
         this.members = new HashSet<Buff<T>>();
     }
 
     private HashSet<Buff<T>> members;
-    private int maximum;
-    public int Maximum { get { return this.maximum; } }
+    public int Maximum { get; }
 
     public bool Full
     {
@@ -47,24 +46,21 @@ public class Container<T> where T : Data
     public bool Add(T data)
     {
         bool added = false;
-        if (!this.Full)
+        IEnumerable<Buff<T>> members = this.members.Where(m => m.Data == data);
+        if (members.Count() > 0)
         {
-            Buff<T> member;
-            var found = this.members.Where(m => m.Data.Equals(data));
-            if (found.Count() == 0)
+            Buff<T> member = members.First();
+            if (member.Stacks < member.Data.MaxStacks)
             {
-                member = new Buff<T>(data);
-            } else
-            {
-                member = found.First();
-                var s = member.Stacks;
-                if (member.Stacks < member.Data.MaxStacks)
-                {
-                    this.members.Remove(member);
-                    member = new Buff<T>(data);
-                }
+                Buff<T> buff = new Buff<T>(data, member.Stacks + 1);
+                this.members.Remove(member);
+                this.members.Add(buff);
+                added = true;
             }
-            this.members.Add(member);
+        } else if (!this.Full)
+        {
+            Buff<T> buff = new Buff<T>(data);
+            this.members.Add(buff);
             added = true;
         }
         return added;
@@ -73,12 +69,25 @@ public class Container<T> where T : Data
     public bool Remove(T data)
     {
         bool removed = false;
-        if(this.Contains(data))
+        IEnumerable<Buff<T>> members = this.members.Where(m => m.Data == data);
+        if (members.Count() > 0)
         {
-            int count = this.members.RemoveWhere(m => m.Data.Equals(data));
-            removed = count != 0;
+            var member = members.First();
+            this.members.Remove(member);
+            if (member.Stacks > 0)
+            {
+                Buff<T> buff = new Buff<T>(member.Data, member.Stacks - 1);
+                this.members.Add(buff);
+            }
+            removed = true;
         }
         return removed;
+    }
+
+    public bool Contains(T data)
+    {
+        var members = this.members.Where(m => m.Data == data);
+        return (members.Count() != 0);
     }
 
     public int Expire()
@@ -86,9 +95,5 @@ public class Container<T> where T : Data
         return this.members.RemoveWhere(m => m.Expired);
     }
 
-    public bool Contains(T data)
-    {
-        var members = this.members.Where(m => m.Data.Equals(data));
-        return (members.Count() != 0);
-    }
+
 }
