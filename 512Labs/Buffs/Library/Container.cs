@@ -37,7 +37,7 @@ public class Container<T> where T : Data
 
     public bool Add(T data)
     {
-        bool retval = false;
+        bool added = false;
         if (this.MaxBuffs == null || this.members.Count() < this.MaxBuffs)
         {
             Buff<T> member;
@@ -56,20 +56,20 @@ public class Container<T> where T : Data
                 }
             }
             this.members.Add(member);
-            retval = true;
+            added = true;
         }
-        return retval;
+        return added;
     }
 
-    public bool? Remove(T data)
+    public bool Remove(T data)
     {
-        bool? retval = null;
+        bool removed = false;
         if(this.Contains(data))
         {
             int count = this.members.RemoveWhere(m => m.Data.Equals(data));
-            retval = count != 0;
+            removed = count != 0;
         }
-        return retval;
+        return removed;
     }
 
     public int Expire()
