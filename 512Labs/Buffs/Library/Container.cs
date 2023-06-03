@@ -38,8 +38,7 @@ public class Container<T> where T : Data
     {
         get
         {
-            HashSet<Buff<T>> buffs = new HashSet<Buff<T>>(this.members.Where(m => !m.Expired));
-            return buffs;
+            return new HashSet<Buff<T>>(this.members.Where(m => !m.IsExpired && m.Stacks > 0));
         }
     }
 
@@ -76,8 +75,8 @@ public class Container<T> where T : Data
             this.members.Remove(member);
             if (member.Stacks > 0)
             {
-                Buff<T> buff = new Buff<T>(member.Data, member.Stacks - 1);
-                this.members.Add(buff);
+                member = new Buff<T>(member.Data, member.Stacks - 1);
+                this.members.Add(member);
             }
             removed = true;
         }
@@ -87,13 +86,11 @@ public class Container<T> where T : Data
     public bool Contains(T data)
     {
         var members = this.members.Where(m => m.Data == data);
-        return (members.Count() != 0);
+        return (members.Count() > 0);
     }
 
     public int Expire()
     {
-        return this.members.RemoveWhere(m => m.Expired);
+        return this.members.RemoveWhere(m => m.IsExpired);
     }
-
-
 }

@@ -37,8 +37,8 @@ public class Container<T> where T : Data, new()
         if (members.Count() > 0)
         {
             var member = members.First();
-            Slot<T> slot = new Slot<T>(member.Data, member.Number, member.Stacks + 1);
             this.members.Remove(member);
+            Slot<T> slot = new Slot<T>(member.Data, member.Number, member.Stacks + 1);
             this.members.Add(slot);
             added = true;
         } else if (!this.Full)
@@ -48,7 +48,8 @@ public class Container<T> where T : Data, new()
             foreach (Slot<T> member in this.members) usedSlotNumbers.Add(member.Number);
             availableSlotNumbers.ExceptWith(usedSlotNumbers);
             int number = availableSlotNumbers.First();
-            this.members.Add(new Slot<T>(data, number));
+            Slot<T> slot = new Slot<T>(data, number);
+            this.members.Add(slot);
             added = true;
         }
         return added;
@@ -58,15 +59,16 @@ public class Container<T> where T : Data, new()
     {
         bool removed = false;
         IEnumerable<Slot<T>> members = this.members.Where(m => m.Data == data).OrderBy(m => m.Stacks);
-        foreach (Slot<T> member in members)
+        if (members.Count() > 0)
         {
+            Slot<T> member = members.First();
             this.members.Remove(member);
             if (member.Stacks > 1)
             {
-                this.members.Add(new Slot<T>(member.Data, member.Number, member.Stacks - 1));
+                Slot<T> slot = new Slot<T>(member.Data, member.Number, member.Stacks - 1);
+                this.members.Add(slot);
             }
             removed = true;
-            break;
         }
         return removed;
     }
@@ -79,10 +81,8 @@ public class Container<T> where T : Data, new()
 
     public Slot<T>? Slot(int slotNumber)
     {
-        Slot<T>? slot;
         IEnumerable<Slot<T>> members = this.members.Where(m => m.Number == slotNumber);
-        slot = (members.Count() > 0) ? members.First() : null;
-        return slot;
+        return (members.Count() > 0) ? members.First() : null;
     }
 
     public bool SwapSlots(int slotNumberA, int slotNumberB)
@@ -96,17 +96,18 @@ public class Container<T> where T : Data, new()
             Slot<T>? slotB = this.Slot(slotNumberB);
             if (slotA != null)
             {
-                this.members.Remove(slotA);
                 Slot<T> slotC = new Slot<T>(slotA.Data, slotNumberB, slotA.Stacks);
+                this.members.Remove(slotA);
                 this.members.Add(slotC);
+                retval = true;
             }
             if (slotB != null)
             {
-                this.members.Remove(slotB);
                 Slot<T> slotD = new Slot<T>(slotB.Data, slotNumberA, slotB.Stacks);
+                this.members.Remove(slotB);
                 this.members.Add(slotD);
+                retval = true;
             }
-            retval = true;
         }
         return retval;
     }

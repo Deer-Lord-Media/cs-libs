@@ -17,7 +17,7 @@ public class Quest<T> where T : Data
     public bool Advance()
     {
         bool retval = false;
-        if (this.currentStage < this.Data.TotalStages)
+        if (this.currentStage <= this.Data.TotalStages)
         {
             this.currentStage++;
             retval = true;

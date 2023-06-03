@@ -13,11 +13,11 @@ public struct Buff<T> where T : Data
     public DateTime At { get; }
     public int Stacks { get; }
 
-    public bool Expired
+    public bool IsExpired
     {
         get
         {
-            return this.TimeLeft <= new TimeSpan(0, 0, 0, 0, 0, 0);
+            return this.TimeLeft <= this.cachedZeroTimeSpan;
         }
     }
 
@@ -30,4 +30,6 @@ public struct Buff<T> where T : Data
             return timeLeft;
         }
     }
+
+    private TimeSpan cachedZeroTimeSpan = new TimeSpan(0, 0, 0, 0, 0, 0);
 }
