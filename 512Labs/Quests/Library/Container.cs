@@ -36,21 +36,6 @@ public class Container<T> where T : Data
         return retval;
     }
 
-    public bool Progress(T data)
-    {
-        bool retval = false;
-        if (this.Has(data))
-        {
-            var found = this.members.Where(m => m.Equals(data));
-            var member = found.First();
-            Quest<T> quest = member.Progress();
-            this.members.RemoveWhere(m => m.Equals(data));
-            this.members.Add(quest);
-            retval = true;
-        }
-        return retval;
-    }
-
    public bool? Remove(T data)
     {
         bool? retval = null;
@@ -66,5 +51,20 @@ public class Container<T> where T : Data
     {
         var memberszzss = this.members.Where(m => m.Data.Equals(data));
         return (members.Count() != 0);
+    }
+
+    public bool Progress(T data)
+    {
+        bool retval = false;
+        if (this.Has(data))
+        {
+            var found = this.members.Where(m => m.Equals(data));
+            var member = found.First();
+            Quest<T> quest = member.Progress();
+            this.members.RemoveWhere(m => m.Equals(data));
+            this.members.Add(quest);
+            retval = true;
+        }
+        return retval;
     }
 }
