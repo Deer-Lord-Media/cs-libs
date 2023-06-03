@@ -1,26 +1,26 @@
 namespace Quests;
 
-public struct Quest<T>
+public class Quest<T> where T : Data
 {
     public Quest(T data, int currentstage)
     {
         this.Data = data;
-        this.CurrentStage = currentstage;
+        this.currentStage = currentstage;
     }
     public Data Data { get; }
-    public int CurrentStage { get; }
+    private int currentStage;
+    public int CurrentStage { get { return this.currentStage; } }
 
-    public bool Complete
+    public bool IsComplete { get { return this.CurrentStage > this.Data.TotalStages; } }
+
+    public bool Advance()
     {
-        get
+        bool retval = false;
+        if (this.currentStage < this.Data.TotalStages)
         {
-            return this.CurrentStage > this.Data.TotalStages;
+            this.currentStage++;
+            retval = true;
         }
-    }
-
-    public Quest<T>? Progress()
-    {
-        Quest<T>? quest = (this.Complete) ? null : new Quest<T>(this.Data, this.CurrentStage + 1);
-        return quest;
+        return retval;
     }
 }
