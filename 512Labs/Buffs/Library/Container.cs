@@ -65,7 +65,7 @@ public class Container<T> where T : Data
     public bool? Remove(T data)
     {
         bool? retval = null;
-        if(this.Has(data))
+        if(this.Contains(data))
         {
             int count = this.members.RemoveWhere(m => m.Data.Equals(data));
             retval = count != 0;
@@ -78,7 +78,7 @@ public class Container<T> where T : Data
         return this.members.RemoveWhere(m => m.Expired);
     }
 
-    public bool Has(T data)
+    public bool Contains(T data)
     {
         var members = this.members.Where(m => m.Data.Equals(data));
         return (members.Count() != 0);

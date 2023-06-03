@@ -83,7 +83,7 @@ public class TestContainer
         var data1 = new VanillaData(1, new TimeSpan(0, 0, 0, 1, 0, 0));
         var data2 = new VanillaData(2, new TimeSpan(0, 0, 0, 1, 0, 0));
         buffs.Add(data1);
-        Assert.True(buffs.Has(data1));
-        Assert.False(buffs.Has(data2));
+        Assert.True(buffs.Contains(data1));
+        Assert.False(buffs.Contains(data2));
     }
 }
