@@ -33,7 +33,7 @@ public class Container<T> where T : Data, new()
         }
     }
 
-    public List<Slot<T>?> All { get { return new List<Slot<T>?>(this.members); } }
+    public List<Slot<T>?> Slots { get { return new List<Slot<T>?>(this.members); } }
 
     public bool Add(T data)
     {
@@ -45,7 +45,7 @@ public class Container<T> where T : Data, new()
             {
                 if (slot.Stacks < slot.Data.MaxStacks)
                 {
-                    // TODO: look at a better interface to add this
+                    // TODO: find more protected way to handle this
                     slot.Stacks++;
                     added = true;
                     break;
@@ -67,8 +67,8 @@ public class Container<T> where T : Data, new()
         var slots = this.members.Where(m => m != null && m.Data.Equals(data));
         if (slots.Count() != 0)
         {
-            Slot<T> slot = slots.Last();
-            slot.Stacks -= 1;
+            var slot = slots.Last();
+            slot.Stacks--;
             if (slot.Stacks == 0)
             {
                 int index = this.members.FindIndex(m => m == slot);
