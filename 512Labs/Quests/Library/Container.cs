@@ -64,7 +64,7 @@ public class Container<T> where T : Data
 
     public bool Has(T data)
     {
-        var trackers = this.members.Where(m => m.Data.Equals(data));
-        return (trackers.Count() != 0);
+        var memberszzss = this.members.Where(m => m.Data.Equals(data));
+        return (members.Count() != 0);
     }
 }
