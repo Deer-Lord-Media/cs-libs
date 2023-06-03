@@ -2,14 +2,10 @@
 
 public class Container<T> where T : Data, new()
 {
-    public Container(int maximum, HashSet<Slot<T>>? slots = null)
+    public Container(int maximum, IEnumerable<Slot<T>>? members = null)
     {
         this.Maximum = maximum;
-        this.members = new HashSet<Slot<T>>();
-        if (slots != null)
-        {
-            foreach (Slot<T>? slot in slots) this.members.Add(slot);
-        }
+        this.members = (members == null) ? new HashSet<Slot<T>>() : new HashSet<Slot<T>>(members);
     }
 
     public int Maximum { get; }

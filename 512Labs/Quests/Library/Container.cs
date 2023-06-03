@@ -2,16 +2,10 @@
 
 public class Container<T> where T : Data
 {
-    public Container(int maximum, HashSet<Quest<T>>? members = null)
+    public Container(int maximum, IEnumerable<Quest<T>>? members = null)
     {
         this.Maximum = maximum;
-        if (members == null)
-        {
-            this.members = new HashSet<Quest<T>>();
-        } else
-        {
-            this.members = new HashSet<Quest<T>>(members);
-        }
+        this.members = (members == null) ? new HashSet<Quest<T>>() : new HashSet<Quest<T>>(members);
     }
 
     public int Maximum { get; }
@@ -61,7 +55,7 @@ public class Container<T> where T : Data
     private Quest<T>? get(T data)
     {
         Quest<T>? quest;
-        var members = this.members.Where(m => m.Data.Equals(data));
+        var members = this.members.Where(m => m.Data == data);
         quest = (members.Count() > 0) ? members.First() : null;
         return quest;
     }

@@ -17,10 +17,10 @@ character.Buffs.Add(buff);
 */
 public class Container<T> where T : Data
 {
-        public Container(int maximum)
+        public Container(int maximum, IEnumerable<Buff<T>>? members = null)
     {
         this.Maximum = maximum;
-        this.members = new HashSet<Buff<T>>();
+        this.members = (members == null) ? new HashSet<Buff<T>>() : new HashSet<Buff<T>>(members);
     }
 
     private HashSet<Buff<T>> members;
