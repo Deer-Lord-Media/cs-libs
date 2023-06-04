@@ -18,7 +18,7 @@ public struct Buff<T> where T : Data
         get
         {
             return this.TimeLeft.Microseconds <= 0;
-        }
+        } 
     }
 
     public TimeSpan TimeLeft

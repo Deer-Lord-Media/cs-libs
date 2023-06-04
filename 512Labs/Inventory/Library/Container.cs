@@ -10,21 +10,9 @@ public class Container<T> where T : Data, new()
 
     public int Maximum { get; }
     private HashSet<Slot<T>> members;
-    public bool Full
-    {
-        get
-        {
-            return this.members.Count() == this.Maximum;
-        }
-    }
+    public bool Full { get { return this.members.Count() == this.Maximum; } }
 
-    public List<Slot<T>> Slots
-    {
-        get
-        {
-            return new List<Slot<T>>(this.members.OrderBy(m => m.Number));
-        }
-    }
+    public List<Slot<T>> Slots { get { return new List<Slot<T>>(this.members.OrderBy(m => m.Number)); } }
 
     public bool Add(T data)
     {
