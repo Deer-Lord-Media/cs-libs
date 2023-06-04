@@ -33,7 +33,7 @@ public class Collection<T> where T : Data
     private HashSet<Buff<T>> members;
     public int Maximum { get; init; }
 
-    public bool Full { get { return this.members.Count() == this.Maximum; } }
+    public bool IsFull { get { return this.members.Count() == this.Maximum; } }
 
     public HashSet<Buff<T>> Active
     {
@@ -58,61 +58,53 @@ public class Collection<T> where T : Data
         return (count > 0);
     }
 
-    // apply a debuff `data` that removes buffs contained in `data.PrecedenceOver`
+    // apply a debuff `data` that removes buffs contained in `data.Overrides`
     public bool Debuff(T data)
     {
-        int count = this.members.RemoveWhere(m => data.Overrides.Contains(m.Data.Id));
+        int count = this.members.RemoveWhere(m => data.HasPrecedenceOver.Contains(m.Data.Id));
         return (count > 0);
     }
 
-    public BuffStatus Apply(T data)
+    public Status Apply(T data)
     {
-        BuffStatus retval = BuffStatus.NotApplied;
+        Status retval = Status.NotApplied;
         IEnumerable<Buff<T>> members = this.members.Where(m => m.Data == data);
         if (members.Count() > 0)
         // check for this buff
         {
             Buff<T> member = members.First();
             // increment stacks if possible
-            int stacks = (member.Stacks < member.Data.MaxStacks) ? 1 : 0;
+            int stacks = (member.Stacks < data.MaxStacks) ? 1 : 0;
             Buff<T> buff = new Buff<T>(data, member.Stacks + stacks);
             this.members.Remove(member);
             this.members.Add(buff);
-            retval = (stacks == 1) ? BuffStatus.StacksIncreased : BuffStatus.Refreshed;
+            retval = (stacks == 1) ? Status.StacksIncreased : Status.Refreshed;
         } else
         {
             bool similar = this.similar(data);
             bool blocked = this.blocked(data);
             if (blocked)
             {
-                retval = BuffStatus.Blocked;
+                retval = Status.Blocked;
             } else if (similar)
             {
-                retval = BuffStatus.Similar;
+                retval = Status.Similar;
             } else
             {
-                bool canAdd = false;
-                // remove buffs that we override
-                this.members.RemoveWhere(m => data.Overrides.Contains(m.Data.Id));
-                if (this.Full)
+                // remove buffs that we override; mandatory
+                this.members.RemoveWhere(m => data.HasPrecedenceOver.Contains(m.Data.Id));
+                if (this.IsFull)
+                // check for any buffs we can override and push the first one off
                 {
-                    // push off first buff that is lower
-                    members = this.members.Where(m => m.Data.PrecedenceLevel < data.PrecedenceLevel);
-                    if (members.Count() > 0)
-                    {
-                        Buff<T> member = members.First();
-                        this.members.Remove(member);
-                        canAdd = true;
-                    }
-                } else
-                {
-                    canAdd = true;
+                    members = this.members.Where(m => m.Data.PriorityLevel < data.PriorityLevel);
+                    if (members.Count() > 0) this.members.Remove(members.First());
                 }
-                if (canAdd)
+                if (!this.IsFull)
+                // if we have room now, add it
                 {
                     Buff<T> buff = new Buff<T>(data);
                     this.members.Add(buff);
-                    retval = BuffStatus.NewApplication;
+                    retval = Status.NewApplication;
                 }
             }
         }
@@ -146,10 +138,10 @@ public class Collection<T> where T : Data
     private bool similar(T data)
     {
         bool retval = false;
-        if (data.SimilarTo.Count() > 0)
+        if (data.IsSimilarTo.Count() > 0)
         {
             IEnumerable<Buff<T>> members = this.members
-                .Where(m => data.SimilarTo.Contains(m.Data.Id) || m.Data.SimilarTo.Contains(data.Id));
+                .Where(m => data.IsSimilarTo.Contains(m.Data.Id) || m.Data.IsSimilarTo.Contains(data.Id));
             retval = (members.Count() > 0);
         }
         return retval;
@@ -157,7 +149,7 @@ public class Collection<T> where T : Data
 
     private bool blocked(T data)
     {
-        IEnumerable<Buff<T>> members = this.members.Where(m => m.Data.Overrides.Contains(data.Id));
+        IEnumerable<Buff<T>> members = this.members.Where(m => m.Data.HasPrecedenceOver.Contains(data.Id));
         return (members.Count() > 0);
     }
 }

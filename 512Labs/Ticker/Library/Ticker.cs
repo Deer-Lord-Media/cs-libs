@@ -7,11 +7,11 @@ record Ticker(List<Action> preTicks, List<Action> postTicks)
 
     public void PreTick()
     {
-        foreach (Action preTick in this.PreTicks) preTick();
+        foreach (Action preTick in this.preTicks) preTick();
     }
 
     public void PostTick()
     {
-        foreach (Action postTick in this.PreTicks) postTick();
+        foreach (Action postTick in this.postTicks) postTick();
     }
 }
