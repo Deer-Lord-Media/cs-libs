@@ -17,7 +17,7 @@ public struct Buff<T> where T : Data
     {
         get
         {
-            return this.TimeLeft.Microseconds <= 0;
+            return this.TimeLeft.Milliseconds <= 0;
         } 
     }
 
@@ -26,7 +26,7 @@ public struct Buff<T> where T : Data
         get
         {
             TimeSpan timeLeft = this.Data.Duration - (DateTime.Now - this.At);
-            timeLeft = new TimeSpan(0, 0, 0, 0, 0, Math.Max(0, timeLeft.Microseconds));
+            timeLeft = new TimeSpan(0, 0, 0, 0, Math.Max(0, timeLeft.Milliseconds));
             return timeLeft;
         }
     }

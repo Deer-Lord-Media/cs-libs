@@ -12,6 +12,7 @@ public abstract record Data(
 {
     internal HashSet<int> SimilarTo { get; init; } = (SimilarTo == null) ? new HashSet<int>() : SimilarTo;
     internal HashSet<int> PrecedenceOver { get; init; } = (PrecedenceOver == null) ? new HashSet<int>() : PrecedenceOver;
+
     public override int GetHashCode()
     {
         return this.Id;
