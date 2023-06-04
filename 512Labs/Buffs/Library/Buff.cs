@@ -9,9 +9,9 @@ public struct Buff<T> where T : Data
         this.At = DateTime.Now;
     }
 
-    public T Data { get; }
-    public DateTime At { get; }
-    public int Stacks { get; }
+    public T Data { get; init; }
+    public DateTime At { get; init; }
+    public int Stacks { get; init; }
 
     public bool IsExpired
     {

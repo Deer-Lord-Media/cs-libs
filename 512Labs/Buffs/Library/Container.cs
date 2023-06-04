@@ -1,30 +1,36 @@
 namespace Buffs;
 
 /*
-class YourDatazs : Buffs.Data
+record YourData(int Id, TimeSpan Duration, int Other) : Buffs.Data(Id, Duration)
 {
-    // you can extend this class to have additional attributes and methods
+
 }
 
 class Character
 {
-    public Buffs.Container<YourData> Buffs;
+    private Buffs.Container<YourData> buffs;
+    public HashSet<Buff<YourData>> Buffs { get { this.buffs.Active; } }
+    public void ApplyBuff(YourData data)
+    {
+        this.buffs.Add(data);
+    }
 }
 
 var character = new Character();
-var buff = new YourData();
-character.Buffs.Add(buff);
+var data = new YourData(1, new TimeSpan(0, 0, 0, 1));
+character.ApplyBuff(data);
 */
+
 public class Container<T> where T : Data
 {
-        public Container(int maximum, IEnumerable<Buff<T>>? members = null)
+    public Container(int maximum, IEnumerable<Buff<T>>? members = null)
     {
         this.Maximum = maximum;
         this.members = (members == null) ? new HashSet<Buff<T>>() : new HashSet<Buff<T>>(members);
     }
 
     private HashSet<Buff<T>> members;
-    public int Maximum { get; }
+    public int Maximum { get; init; }
 
     public bool Full
     {
@@ -34,11 +40,14 @@ public class Container<T> where T : Data
         }
     }
 
-    public HashSet<Buff<T>> Active
+    public List<Buff<T>> Active
     {
         get
         {
-            return new HashSet<Buff<T>>(this.members.Where(m => !m.IsExpired && m.Stacks > 0));
+            IEnumerable<Buff<T>> members = this.members
+                .Where(m => !m.IsExpired && m.Stacks > 0)
+                .OrderBy(m => m.TimeLeft);
+            return new List<Buff<T>>(members);
         }
     }
 
