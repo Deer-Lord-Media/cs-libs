@@ -1,10 +1,7 @@
 namespace Inventory;
 
-public abstract record Data : IEquatable<Data>
+public abstract record Data(int Id, int MaxStacks = 1) : IEquatable<Data>
 {
-    public int Id { get; init; }
-    public int MaxStacks { get; init; }
-
     public override int GetHashCode()
     {
         return this.Id;

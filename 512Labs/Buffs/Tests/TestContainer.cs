@@ -1,13 +1,9 @@
 using Buffs;
 namespace Tests;
 
-record VanillaData : Buffs.Data
+record VanillaData(int Id, TimeSpan Duration) : Buffs.Data(Id, Duration)
 {
-    public VanillaData(int id, TimeSpan duration)
-    {
-        this.Id = id;
-        this.Duration = duration;
-    }
+
 }
 
 public class TestContainer

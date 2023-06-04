@@ -1,11 +1,7 @@
 namespace Quests;
 
-public abstract record Data : IEquatable<Data>
+public abstract record Data(int Id, int TotalStages = 1) : IEquatable<Data>
 {
-
-    public int Id { get; init; }
-    public int TotalStages { get; init; }
-
     public override int GetHashCode()
     {
         return this.Id;
