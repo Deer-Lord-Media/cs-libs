@@ -5,7 +5,7 @@ public struct Buff<T> where T : Data
     public Buff(T data, int stacks = 1)
     {
         this.Data = data;
-        this.Stacks = stacks;
+        this.Stacks = Math.Max(0, Math.Min(data.MaxStacks, stacks));
         this.At = DateTime.Now;
     }
 
@@ -17,7 +17,7 @@ public struct Buff<T> where T : Data
     {
         get
         {
-            return this.TimeLeft <= this.cachedZeroTimeSpan;
+            return this.TimeLeft.Microseconds <= 0;
         }
     }
 
@@ -30,6 +30,4 @@ public struct Buff<T> where T : Data
             return timeLeft;
         }
     }
-
-    private TimeSpan cachedZeroTimeSpan = new TimeSpan(0, 0, 0, 0, 0, 0);
 }

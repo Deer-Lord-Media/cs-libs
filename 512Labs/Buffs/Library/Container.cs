@@ -71,7 +71,7 @@ public class Container<T> where T : Data
         IEnumerable<Buff<T>> members = this.members.Where(m => m.Data == data);
         if (members.Count() > 0)
         {
-            var member = members.First();
+            Buff<T> member = members.First();
             this.members.Remove(member);
             if (member.Stacks > 0)
             {
@@ -85,7 +85,7 @@ public class Container<T> where T : Data
 
     public bool Contains(T data)
     {
-        var members = this.members.Where(m => m.Data == data);
+        IEnumerable<Buff<T>> members = this.members.Where(m => m.Data == data);
         return (members.Count() > 0);
     }
 

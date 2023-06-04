@@ -1,13 +1,13 @@
 namespace Quests;
 
-public abstract class Data : IEquatable<Data>
+public abstract record Data : IEquatable<Data>
 {
 
-    public int Id;
-    public int TotalStages { get; }
+    public int Id { get; init; }
+    public int TotalStages { get; init; }
 
-    public bool Equals(Data? obj)
+    public override int GetHashCode()
     {
-        return (obj != null) && this.Id.Equals(obj.Id);
+        return this.Id;
     }
 }

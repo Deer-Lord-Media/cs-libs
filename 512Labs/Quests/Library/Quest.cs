@@ -6,10 +6,8 @@ public class Quest<T> where T : Data
     {
         this.Data = data;
         this.currentStage = currentstage;
-        this.Tracked = false;
     }
     public Data Data { get; }
-    public bool Tracked;
     private int currentStage;
     public int CurrentStage { get { return this.currentStage; } }
     public bool IsComplete { get { return this.CurrentStage > this.Data.TotalStages; } }

@@ -29,7 +29,7 @@ public class Container<T> where T : Data, new()
     public bool Add(T data)
     {
         bool added = false;
-        IEnumerable<Slot<T>> members = this.members.Where(m => m.Data == data && m.Stacks < m.Data.MaxStacks);
+        IEnumerable<Slot<T>> members = this.members.Where(m => m.Data == data && !m.Full);
         if (members.Count() > 0)
         {
             var member = members.First();

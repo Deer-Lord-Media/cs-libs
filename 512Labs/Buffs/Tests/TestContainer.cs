@@ -1,7 +1,7 @@
 using Buffs;
 namespace Tests;
 
-class VanillaData : Buffs.Data
+record VanillaData : Buffs.Data
 {
     public VanillaData(int id, TimeSpan duration)
     {
