@@ -39,71 +39,81 @@ public class Collection<T> where T : Data
     {
         get
         {
-            IEnumerable<Buff<T>> members = this.members
-                .Where(m => !m.IsExpired && m.Stacks > 0);
+            IEnumerable<Buff<T>> members = this.members.Where(m => !m.IsExpired && m.Stacks > 0);
             return new HashSet<Buff<T>>(members);
         }
     }
 
     // remove any expired buffs
-    public void Expire()
+    public bool Expire()
     {
-        this.members.RemoveWhere(m => m.IsExpired);
+        int count = this.members.RemoveWhere(m => m.IsExpired);
+        return (count > 0);
     }
 
-    // cancel your own buff
-    public void Cancel(T data)
+    // cancel an existing buff
+    public bool Cancel(T data)
     {
-        this.members.RemoveWhere(m => m.Data == data);
+        int count = this.members.RemoveWhere(m => m.Data == data);
+        return (count > 0);
     }
 
     // apply a debuff `data` that removes buffs contained in `data.PrecedenceOver`
-    public void Debuff(T data)
+    public bool Debuff(T data)
     {
-        this.members.RemoveWhere(m => data.PrecedenceOver.Contains(m.Data.Id));
+        int count = this.members.RemoveWhere(m => data.Overrides.Contains(m.Data.Id));
+        return (count > 0);
     }
 
-    public ApplyStatus Apply(T data)
+    public BuffStatus Apply(T data)
     {
-        ApplyStatus retval = ApplyStatus.NotApplied;
+        BuffStatus retval = BuffStatus.NotApplied;
         IEnumerable<Buff<T>> members = this.members.Where(m => m.Data == data);
         if (members.Count() > 0)
         // check for this buff
         {
             Buff<T> member = members.First();
             // increment stacks if possible
-            if (member.Stacks < member.Data.MaxStacks)
-            {
-                Buff<T> buff = new Buff<T>(data, member.Stacks + 1);
-                this.members.Remove(member);
-                this.members.Add(buff);
-                retval = ApplyStatus.StacksIncreased;
-            } else 
-            {
-                retval = ApplyStatus.StacksMaxed;
-            }
+            int stacks = (member.Stacks < member.Data.MaxStacks) ? 1 : 0;
+            Buff<T> buff = new Buff<T>(data, member.Stacks + stacks);
+            this.members.Remove(member);
+            this.members.Add(buff);
+            retval = (stacks == 1) ? BuffStatus.StacksIncreased : BuffStatus.Refreshed;
         } else
         {
             bool similar = this.similar(data);
             bool blocked = this.blocked(data);
-            if (!similar && !blocked)
-            // check for buffs that are similar, which we can't override
-            // check for buffs that take precedence over us, we can't apply
+            if (blocked)
             {
-                // check for buffs we can override, remove them
-                this.members.RemoveWhere(m => data.PrecedenceOver.Contains(m.Data.Id));
-                if (!this.Full)
+                retval = BuffStatus.Blocked;
+            } else if (similar)
+            {
+                retval = BuffStatus.Similar;
+            } else
+            {
+                bool canAdd = false;
+                // remove buffs that we override
+                this.members.RemoveWhere(m => data.Overrides.Contains(m.Data.Id));
+                if (this.Full)
+                {
+                    // push off buffs that are lower
+                    members = this.members.Where(m => m.Data.PrecedenceLevel < data.PrecedenceLevel);
+                    if (members.Count() > 0)
+                    {
+                        Buff<T> member = members.First();
+                        this.members.Remove(member);
+                        canAdd = true;
+                    }
+                } else
+                {
+                    canAdd = true;
+                }
+                if (canAdd)
                 {
                     Buff<T> buff = new Buff<T>(data);
                     this.members.Add(buff);
-                    retval = ApplyStatus.NewApplication;
+                    retval = BuffStatus.NewApplication;
                 }
-            } else if (blocked)
-            {
-                retval = ApplyStatus.Blocked;
-            } else
-            {
-                retval = ApplyStatus.Similar;
             }
         }
         return retval;
@@ -147,18 +157,7 @@ public class Collection<T> where T : Data
 
     private bool blocked(T data)
     {
-        IEnumerable<Buff<T>> members = this.members.Where(m => m.Data.PrecedenceOver.Contains(data.Id));
+        IEnumerable<Buff<T>> members = this.members.Where(m => m.Data.Overrides.Contains(data.Id));
         return (members.Count() > 0);
     }
-}
-
-
-public enum ApplyStatus
-{
-    NewApplication,
-    StacksIncreased,
-    Blocked,
-    Similar,
-    StacksMaxed,
-    NotApplied
 }
