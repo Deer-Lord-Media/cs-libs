@@ -96,7 +96,7 @@ public class Collection<T> where T : Data
                 this.members.RemoveWhere(m => data.Overrides.Contains(m.Data.Id));
                 if (this.Full)
                 {
-                    // push off buffs that are lower
+                    // push off first buff that is lower
                     members = this.members.Where(m => m.Data.PrecedenceLevel < data.PrecedenceLevel);
                     if (members.Count() > 0)
                     {
