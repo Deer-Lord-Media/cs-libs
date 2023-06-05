@@ -65,9 +65,9 @@ public class Collection<T> where T : Data
         return (count > 0);
     }
 
-    public Status Apply(T data)
+    public bool Apply(T data)
     {
-        Status retval = Status.NotApplied;
+        bool retval = false;
         IEnumerable<Buff<T>> members = this.members.Where(m => m.Data == data);
         if (members.Count() > 0)
         // check for this buff
@@ -81,37 +81,26 @@ public class Collection<T> where T : Data
                 ? 1
                 : Math.Min(data.MaxStacks, member.Stacks + 1);
             // create new buff; refresh timer with appropriate stack count
-            Buff<T> buff = new Buff<T>(data, stacks);
             this.members.Remove(member);
-            this.members.Add(buff);
-            retval = Status.Refreshed;
-        } else
+            member = new Buff<T>(data, stacks);
+            this.members.Add(member);
+            retval = true;
+        } else if (!this.blocked(data) && !this.similar(data))
         {
-            bool similar = this.similar(data);
-            bool blocked = this.blocked(data);
-            if (blocked)
+            // remove buffs that we override; mandatory
+            this.members.RemoveWhere(m => data.HasPrecedenceOver.Contains(m.Data.Id));
+            if (this.IsFull)
+            // check for any buffs we can override and push the first one off
             {
-                retval = Status.Blocked;
-            } else if (similar)
+                members = this.members.Where(m => m.Data.PriorityLevel < data.PriorityLevel);
+                if (members.Count() > 0) this.members.Remove(members.First());
+            }
+            if (!this.IsFull)
+            // if we have room now, add it
             {
-                retval = Status.Similar;
-            } else
-            {
-                // remove buffs that we override; mandatory
-                this.members.RemoveWhere(m => data.HasPrecedenceOver.Contains(m.Data.Id));
-                if (this.IsFull)
-                // check for any buffs we can override and push the first one off
-                {
-                    members = this.members.Where(m => m.Data.PriorityLevel < data.PriorityLevel);
-                    if (members.Count() > 0) this.members.Remove(members.First());
-                }
-                if (!this.IsFull)
-                // if we have room now, add it
-                {
-                    Buff<T> buff = new Buff<T>(data);
-                    this.members.Add(buff);
-                    retval = Status.NewApplication;
-                }
+                Buff<T> buff = new Buff<T>(data);
+                this.members.Add(buff);
+                retval = true;
             }
         }
         return retval;
