@@ -79,7 +79,7 @@ public class Collection<T> where T : Data
             // else just refresh with maxStacks
             int stacks = (member.IsExpired)
                 ? 1
-                : Math.Min(member.Data.MaxStacks, member.Stacks + 1);
+                : Math.Min(data.MaxStacks, member.Stacks + 1);
             // create new buff; refresh timer with appropriate stack count
             Buff<T> buff = new Buff<T>(data, stacks);
             this.members.Remove(member);
