@@ -20,7 +20,7 @@
     defines which Buffs this debuff cancels
 
 ## Notes
-The specifics of how buff/debuffs work together is up to your code; this library simply provides the tracker and basic data mechanisms. This example provides one collection to track both buffs and debuffs.
+The specifics of how buff/debuffs work together and are handled is up to your code; this library simply provides the tracker and basic data mechanisms. This example provides one collection to track both buffs and debuffs.
 
 ```csharp
 enum BuffType
@@ -37,7 +37,7 @@ record YourBuff : Buffs.Data
 
 var buffs = Buffs.Collection<YourBuff>();
 
-void CalculateBuffedStats(Buffs.Collection<YourBuff> buffs)
+void HandleBuffS(Buffs.Collection<YourBuff> buffs)
 {
     int stats = 0;
     foreach (Buff<YourBuff> buff in buffs)
