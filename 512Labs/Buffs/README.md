@@ -1,19 +1,4 @@
 # USING THIS LIBRARY
-## Example Classes 
-
-```csharp
-// mandatory
-record YourBuff : Data
-{
-    // additional attributes and methods
-}
-
-// extra
-record YourDebuff : Data
-{
-    // additional attributes and methods
-}
-```
 
 ## Buffs
 - Behavior dictated via Buffs.Apply() method
@@ -34,9 +19,8 @@ record YourDebuff : Data
 - precedenceOver
     defines which Buffs this debuff cancels
 
-
 ## Notes
-The specifics of how buff/debuffs work together is up to your code; this library simply provides the tracker and data mechanisms. If you want to track and calculate both applied Buffs and Debuffs, you might consider the following
+The specifics of how buff/debuffs work together is up to your code; this library simply provides the tracker and basic data mechanisms. This example provides one collection to track both buffs and debuffs.
 
 ```csharp
 enum BuffType
@@ -44,7 +28,9 @@ enum BuffType
     Buff,
     Debuff
 }
-record YourBuff : Data
+
+// extend the Data class as necessary for your implementation
+record YourBuff : Buffs.Data
 {
     public BuffType type;  // 0 for buff, 1 for debuff
 }
