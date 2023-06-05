@@ -73,12 +73,18 @@ public class Collection<T> where T : Data
         // check for this buff
         {
             Buff<T> member = members.First();
-            // increment stacks if possible
-            int stacks = (member.Stacks < data.MaxStacks) ? 1 : 0;
-            Buff<T> buff = new Buff<T>(data, member.Stacks + stacks);
+            // complicated logic
+            // if buff is expired, new application; new buff with 1 stack
+            // else if not maxStacks, set stacks to +1
+            // else just refresh with maxStacks
+            int stacks = (member.IsExpired)
+                ? 1
+                : Math.Min(member.Data.MaxStacks, member.Stacks + 1);
+            // create new buff; refresh timer with appropriate stack count
+            Buff<T> buff = new Buff<T>(data, stacks);
             this.members.Remove(member);
             this.members.Add(buff);
-            retval = (stacks == 1) ? Status.StacksIncreased : Status.Refreshed;
+            retval = Status.Refreshed;
         } else
         {
             bool similar = this.similar(data);

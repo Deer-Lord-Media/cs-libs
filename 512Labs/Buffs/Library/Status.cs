@@ -6,7 +6,6 @@ public enum Status
     NotApplied,
     Blocked,
     Similar,
-    Refreshed,
-    StacksIncreased,
-    NewApplication
+    NewApplication,
+    Refreshed
 }
