@@ -24,82 +24,82 @@ character.ApplyBuff(data);
 
 public class Collection<T> where T : Data
 {
-    public Collection(int maximum, IEnumerable<Buff<T>>? members = null)
+    public Collection(int maximum, IEnumerable<Buff<T>>? buffs = null)
     {
         this.Maximum = maximum;
-        this.members = (members == null) ? new HashSet<Buff<T>>() : new HashSet<Buff<T>>(members);
+        this.buffs = (buffs == null) ? new HashSet<Buff<T>>() : new HashSet<Buff<T>>(buffs);
     }
 
-    private HashSet<Buff<T>> members;
+    private HashSet<Buff<T>> buffs;
     public int Maximum { get; init; }
 
-    public bool IsFull { get { return this.members.Count() == this.Maximum; } }
+    public bool IsFull { get { return this.buffs.Count() == this.Maximum; } }
 
     public HashSet<Buff<T>> Active
     {
         get
         {
-            IEnumerable<Buff<T>> members = this.members.Where(m => !m.IsExpired && m.Stacks > 0);
-            return new HashSet<Buff<T>>(members);
+            IEnumerable<Buff<T>> buffs = this.buffs.Where(m => !m.IsExpired && m.Stacks > 0);
+            return new HashSet<Buff<T>>(buffs);
         }
     }
 
     // remove any expired buffs
     public bool Expire()
     {
-        int count = this.members.RemoveWhere(m => m.IsExpired);
+        int count = this.buffs.RemoveWhere(m => m.IsExpired);
         return (count > 0);
     }
 
     // cancel an existing buff
     public bool Cancel(T data)
     {
-        int count = this.members.RemoveWhere(m => m.Data == data);
+        int count = this.buffs.RemoveWhere(m => m.Data == data);
         return (count > 0);
     }
 
     // apply a debuff `data` that removes buffs contained in `data.Overrides`
     public bool Debuff(T data)
     {
-        int count = this.members.RemoveWhere(m => data.HasPrecedenceOver.Contains(m.Data.Id));
+        int count = this.buffs.RemoveWhere(m => data.HasPrecedenceOver(m.Data));
         return (count > 0);
     }
 
     public bool Apply(T data)
     {
         bool retval = false;
-        IEnumerable<Buff<T>> members = this.members.Where(m => m.Data == data);
-        if (members.Count() > 0)
+        IEnumerable<Buff<T>> buffs = this.buffs.Where(m => m.Data == data);
+        if (buffs.Count() > 0)
         // check for this buff
         {
-            Buff<T> member = members.First();
+            Buff<T> buff = buffs.First();
             // complicated logic
             // if buff is expired, new application; new buff with 1 stack
             // else if not maxStacks, set stacks to +1
             // else just refresh with maxStacks
-            int stacks = (member.IsExpired)
+            int stacks = (buff.IsExpired)
                 ? 1
-                : Math.Min(data.MaxStacks, member.Stacks + 1);
+                : Math.Min(data.MaxStacks, buff.Stacks + 1);
             // create new buff; refresh timer with appropriate stack count
-            this.members.Remove(member);
-            member = new Buff<T>(data, stacks);
-            this.members.Add(member);
+            this.buffs.Remove(buff);
+            buff = new Buff<T>(data, stacks);
+            this.buffs.Add(buff);
             retval = true;
-        } else if (!this.blocked(data) && !this.similar(data))
+        } else if (!this.containsBlocker(data) && !this.containsSimilar(data))
         {
             // remove buffs that we override; mandatory
-            this.members.RemoveWhere(m => data.HasPrecedenceOver.Contains(m.Data.Id));
+            this.buffs.RemoveWhere(m => data.HasPrecedenceOver(m.Data));
             if (this.IsFull)
             // check for any buffs we can override and push the first one off
             {
-                members = this.members.Where(m => m.Data.PriorityLevel < data.PriorityLevel);
-                if (members.Count() > 0) this.members.Remove(members.First());
+                buffs = this.buffs.Where(m => m.Data.PriorityLevel < data.PriorityLevel);
+                if (buffs.Count() > 0) this.buffs.Remove(buffs.First());
             }
             if (!this.IsFull)
             // if we have room now, add it
             {
                 Buff<T> buff = new Buff<T>(data);
-                this.members.Add(buff);
+                this.buffs.Add(buff);
                 retval = true;
             }
         }
@@ -109,15 +109,15 @@ public class Collection<T> where T : Data
     public bool Remove(T data)
     {
         bool removed = false;
-        IEnumerable<Buff<T>> members = this.members.Where(m => m.Data == data);
-        if (members.Count() > 0)
+        IEnumerable<Buff<T>> buffs = this.buffs.Where(m => m.Data == data);
+        if (buffs.Count() > 0)
         {
-            Buff<T> member = members.First();
-            this.members.Remove(member);
-            if (member.Stacks > 1)
+            Buff<T> buff = buffs.First();
+            this.buffs.Remove(buff);
+            if (buff.Stacks > 1)
             {
-                member = new Buff<T>(member.Data, member.Stacks - 1);
-                this.members.Add(member);
+                buff = new Buff<T>(buff.Data, buff.Stacks - 1);
+                this.buffs.Add(buff);
             }
             removed = true;
         }
@@ -126,25 +126,22 @@ public class Collection<T> where T : Data
 
     public bool Contains(T data)
     {
-        IEnumerable<Buff<T>> members = this.members.Where(m => m.Data == data);
-        return (members.Count() > 0);
+        IEnumerable<Buff<T>> buffs = this.buffs.Where(m => m.Data == data);
+        return (buffs.Count() > 0);
     }
 
-    private bool similar(T data)
+    private bool containsSimilar(T data)
     {
         bool retval = false;
-        if (data.IsSimilarTo.Count() > 0)
-        {
-            IEnumerable<Buff<T>> members = this.members
-                .Where(m => data.IsSimilarTo.Contains(m.Data.Id) || m.Data.IsSimilarTo.Contains(data.Id));
-            retval = (members.Count() > 0);
-        }
+        IEnumerable<Buff<T>> buffs = this.buffs
+            .Where(m => data.IsSimilarTo(m.Data) || m.Data.IsSimilarTo(data));
+        retval = (buffs.Count() > 0);
         return retval;
     }
 
-    private bool blocked(T data)
+    private bool containsBlocker(T data)
     {
-        IEnumerable<Buff<T>> members = this.members.Where(m => m.Data.HasPrecedenceOver.Contains(data.Id));
-        return (members.Count() > 0);
+        IEnumerable<Buff<T>> buffs = this.buffs.Where(m => m.Data.HasPrecedenceOver(data));
+        return (buffs.Count() > 0);
     }
 }
