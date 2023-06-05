@@ -130,6 +130,11 @@ public class Collection<T> where T : Data
         return (buffs.Count() > 0);
     }
 
+    public void Clear()
+    {
+        this.buffs.Clear();
+    }
+
     private bool containsSimilar(T data)
     {
         bool retval = false;

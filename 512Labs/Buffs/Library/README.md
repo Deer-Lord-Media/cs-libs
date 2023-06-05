@@ -39,10 +39,16 @@ record YourDebuff : Data
 The specifics of how buff/debuffs work together is up to your code; this library simply provides the tracker and data mechanisms. If you want to track and calculate both applied Buffs and Debuffs, you might consider the following
 
 ```csharp
+enum BuffType
+{
+    Buff,
+    Debuff
+}
 record YourBuff : Data
 {
-    public int type;  // 0 for buff, 1 for debuff
+    public BuffType type;  // 0 for buff, 1 for debuff
 }
+
 var buffs = Buffs.Collection<YourBuff>();
 
 void CalculateBuffedStats(Buffs.Collection<YourBuff> buffs)
@@ -50,13 +56,19 @@ void CalculateBuffedStats(Buffs.Collection<YourBuff> buffs)
     int stats = 0;
     foreach (Buff<YourBuff> buff in buffs)
     {
-        if (buff.type == 0){
-            stat = stat + buff.YourStatData;
-        } else if (buff.type == 1)
+
+        switch (buff.type)
         {
-            stat = stat - buff.YourStatData;
+            case BuffType.Buff:
+                stat += buff.Data.YourStatData;
+                break;
+            case BuffType.Debuff:
+                stat -= buff.Data.YourStatData;
+                break;
+            default:
+                //
+                break;
         }
     }
 }
 ```
-
