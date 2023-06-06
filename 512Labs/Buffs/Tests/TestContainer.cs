@@ -1,24 +1,19 @@
 using Buffs;
 namespace Tests;
 
-record VanillaData(int Id, TimeSpan Duration, int MaxStacks = 1) : Buffs.Data(Id, Duration, MaxStacks: MaxStacks)
-{
-
-}
-
 public class TestContainer
 {
     [Fact]
     public void SubclassData()
     {
         TimeSpan duration = new TimeSpan(0, 0, 0, 0, 0, 0);
-        VanillaData data = new VanillaData(1, duration);
+        Data data = new Data(1, duration);
     }
 
     [Fact]
     public void NoBuffs()
     {
-        Buffs.Collection<VanillaData> buffs = new Buffs.Collection<VanillaData>(16);
+        Buffs.Tracker buffs = new Buffs.Tracker(16);
         Assert.Empty(buffs.Active);
     }
 
@@ -26,9 +21,9 @@ public class TestContainer
     [Fact]
     public void ApplyBuff()
     {
-        Buffs.Collection<VanillaData> buffs = new Buffs.Collection<VanillaData>(4);
+        Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
-        VanillaData buff = new VanillaData(1, duration);
+        Data buff = new Data(1, duration);
         buffs.Apply(buff);
         Assert.Equal(1, buffs.Active.Count());
         Assert.Equal(buff, buffs.Active.First().Data);
@@ -37,32 +32,75 @@ public class TestContainer
     [Fact]
     public void FullBuffs()
     {
-        Buffs.Collection<VanillaData> buffs = new Buffs.Collection<VanillaData>(4);
+        Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
         foreach (int index in Enumerable.Range(1, 7))
         {
-            VanillaData buff = new VanillaData(index, duration);
+            Data buff = new Data(index, duration);
             buffs.Apply(buff);
         }
         Assert.Equal(4, buffs.Active.Count());
     }
 
     [Fact]
-    public void StackBuff()
+    public void SingleStack()
     {
-        Buffs.Collection<VanillaData> buffs = new Buffs.Collection<VanillaData>(4);
+        Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
-        VanillaData buff = new VanillaData(1, duration, 2);
+        Data buff = new Data(1, duration);  
+        Assert.Equal(1, buff.MaxStacks);
         Assert.Equal(0, buffs.Active.Count());
         buffs.Apply(buff);
         Assert.Equal(1, buffs.Active.Count());
+        Assert.Equal(1, buffs.Active.First().Stacks);
+        buffs.Apply(buff);
+        Assert.Equal(1, buffs.Active.First().Stacks);
+    }
+
+    [Fact]
+    public void MultiStack()
+    {
+        Buff tracker;
+        Buffs.Tracker buffs = new Buffs.Tracker(4);
+        TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
+        Data buff = new Data(1, duration, MaxStacks: 2);  
+        Assert.Equal(2, buff.MaxStacks);
+        Assert.Equal(0, buffs.Active.Count());
         buffs.Apply(buff);
         Assert.Equal(1, buffs.Active.Count());
-        var tracker = buffs.Active.First();
+        tracker = buffs.Active.First();
+        Assert.Equal(1, tracker.Stacks);
+        buffs.Apply(buff);
+        Assert.Equal(1, buffs.Active.Count());
+        tracker = buffs.Active.First();
         Assert.Equal(2, tracker.Stacks);
         buffs.Apply(buff);
         Assert.Equal(1, buffs.Active.Count());
         tracker = buffs.Active.First();
         Assert.Equal(2, tracker.Stacks);
     }
+
+    [Fact]
+    public void BuffRefreshes()
+    {
+
+    }
+
+    [Fact]
+    public void BuffExpires()
+    {
+
+    }
+
+    [Fact]
+    public void BuffIsSimilar()
+    {
+
+    }
+
+    [Fact]
+    public void BuffIsBlocked()
+    {
+
+    } 
 }

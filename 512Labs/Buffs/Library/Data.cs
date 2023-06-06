@@ -1,6 +1,6 @@
 namespace Buffs;
 
-public abstract record Data(
+public record Data(
     int Id,
     // how long the buff lasts
     TimeSpan Duration,
