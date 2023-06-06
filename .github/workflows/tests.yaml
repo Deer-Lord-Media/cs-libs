@@ -1,0 +1,17 @@
+name: Test Libraries
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  Test-Libraries:  
+    runs-on: [self-hosted, linux]
+    strategy:
+      fail-fast: false
+
+    steps:
+      # Checkout
+      - name: Tests
+        run: make test
