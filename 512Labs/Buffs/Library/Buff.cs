@@ -25,9 +25,15 @@ public struct Buff
     {
         get
         {
-            TimeSpan timeLeft = this.Data.Duration - (DateTime.Now - this.At);
-            timeLeft = new TimeSpan(0, 0, 0, 0, Math.Max(0, timeLeft.Milliseconds));
-            return timeLeft;
+            return this.Data.Duration - this.TimePassed;
+        }
+    }
+
+    public TimeSpan TimePassed
+    {
+        get
+        {
+            return (DateTime.Now - this.At);
         }
     }
 }
