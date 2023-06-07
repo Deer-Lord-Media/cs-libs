@@ -21,24 +21,15 @@ public class Tracker
         }
     }
 
-    // remove any expired buffs
     public bool Expire()
     {
         int count = this.members.RemoveWhere(m => m.IsExpired);
         return (count > 0);
     }
 
-    // cancel an existing buff
     public bool Cancel(Data data)
     {
         int count = this.members.RemoveWhere(m => m.Data == data);
-        return (count > 0);
-    }
-
-    // apply a debuff `data` that removes buffs contained in `data.Overrides`
-    public bool Debuff(Data data)
-    {
-        int count = this.members.RemoveWhere(m => data.HasPrecedenceOver(m.Data));
         return (count > 0);
     }
 
@@ -59,8 +50,7 @@ public class Tracker
                 : Math.Min(data.MaxStacks, buff.Stacks + 1);
             // create new buff; refresh timer with appropriate stack count
             this.members.Remove(buff);
-            buff = new Buff(data, stacks);
-            this.members.Add(buff);
+            this.members.Add(new Buff(data, stacks));
             retval = true;
         } else if (!this.containsBlocker(data) && !this.containsSimilar(data))
         {
@@ -75,8 +65,7 @@ public class Tracker
             if (!this.IsFull)
             // if we have room, add it
             {
-                Buff buff = new Buff(data);
-                this.members.Add(buff);
+                this.members.Add(new Buff(data));
                 retval = true;
             }
         }
@@ -93,8 +82,7 @@ public class Tracker
             this.members.Remove(buff);
             if (buff.Stacks > 1)
             {
-                buff = new Buff(buff.Data, buff.Stacks - 1);
-                this.members.Add(buff);
+                this.members.Add(new Buff(buff.Data, buff.Stacks - 1));
             }
             removed = true;
         }

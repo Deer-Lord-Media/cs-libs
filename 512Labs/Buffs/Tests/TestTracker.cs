@@ -160,7 +160,7 @@ public class TestContainer
     }
 
     [Fact]
-    public void BuffTakesPriority()
+    public void BuffHasPrecedence()
     {
         // buff2 should push buff1 off
         Buffs.Tracker buffs = new Buffs.Tracker(1);
@@ -173,5 +173,20 @@ public class TestContainer
         Assert.Equal(1, buffs.Active.Count());
         var tracker = buffs.Active.First();
         Assert.Equal(2, tracker.Data.Id);
-    } 
+    }
+
+    [Fact]
+    public void BuffHasPriority()
+    {
+        Buffs.Tracker buffs = new Buffs.Tracker(1);
+        TimeSpan duration = new TimeSpan(0, 0, 100);
+        Data buff1 = new Data(1, duration);
+        Data buff2 = new Data(2, duration, PriorityLevel: 1);
+        buffs.Apply(buff1);
+        Assert.Equal(1, buffs.Active.Count());
+        buffs.Apply(buff2);
+        Assert.Equal(1, buffs.Active.Count());
+        var tracker = buffs.Active.First();
+        Assert.Equal(2, tracker.Data.Id);
+    }
 }
