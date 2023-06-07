@@ -13,5 +13,11 @@ jobs:
 
     steps:
       # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repo }}
+          ref: ${{ github.ref }}
+
       - name: Tests
         run: make test
