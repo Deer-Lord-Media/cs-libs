@@ -9,9 +9,9 @@ public class Bag
     }
 
     public int Maximum { get; init; }
-    private HashSet<Slot> members;
     public bool IsFull { get { return this.members.Count() >= this.Maximum; } }
     public List<Slot> Slots { get { return new List<Slot>(this.members.OrderBy(m => m.Number)); } }
+    private HashSet<Slot> members;
 
     public bool Store(Data data)
     {
@@ -31,9 +31,10 @@ public class Bag
             HashSet<int> availableSlotNumbers = new HashSet<int>(Enumerable.Range(1, this.Maximum));
             HashSet<int> usedSlotNumbers = new HashSet<int>(this.members.Select(m => m.Data.Id));
             availableSlotNumbers.ExceptWith(usedSlotNumbers);
-            int number = availableSlotNumbers.First();
-            this.members.Add(new Slot(data, number));
-            retval = true;
+            if (availableSlotNumbers.Count() > 0)
+            {
+                retval = this.members.Add(new Slot(data, availableSlotNumbers.First()));
+            }
         }
         return retval;
     }

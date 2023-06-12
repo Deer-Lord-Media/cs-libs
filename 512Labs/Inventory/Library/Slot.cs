@@ -1,16 +1,16 @@
 namespace Inventory;
 
-public class Slot : IEquatable<Slot>
+public class Slot
 {
-    public Slot(Data data, int slotNumber, int stacks = 1)
+    public Slot(Data data, int number, int stacks = 1)
     {
         this.Data = data;
-        this.Number = slotNumber;
+        this.Number = number;
         this.Stacks = Math.Max(0, Math.Min(data.MaxStacks, stacks));
     }
-    public int Number { get; }
-    public Data Data { get; }
-    public int Stacks { get; }
+    public int Number { get; init; }
+    public Data Data { get; init; }
+    public int Stacks { get; init; }
 
     public bool IsFull
     {
@@ -18,10 +18,5 @@ public class Slot : IEquatable<Slot>
         {
             return this.Stacks >= this.Data.MaxStacks;
         }
-    }
-
-    public bool Equals(Slot? obj)
-    {
-        return (obj != null) && obj.Equals(this);
     }
 }

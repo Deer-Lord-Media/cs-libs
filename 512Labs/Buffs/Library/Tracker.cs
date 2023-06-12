@@ -49,9 +49,7 @@ public class Tracker
                 ? 1
                 : Math.Min(data.MaxStacks, buff.Stacks + 1);
             // create new buff; refresh timer with appropriate stack count
-            this.members.Remove(buff);
-            this.members.Add(new Buff(data, stacks));
-            retval = true;
+            retval = this.members.Remove(buff) && this.members.Add(new Buff(data, stacks));
         } else if (!this.containsBlocker(data) && !this.containsSimilar(data))
         {
             // remove buffs that we override; mandatory
@@ -65,8 +63,7 @@ public class Tracker
             if (!this.IsFull)
             // if we have room, add it
             {
-                this.members.Add(new Buff(data));
-                retval = true;
+                retval = this.members.Add(new Buff(data));
             }
         }
         return retval;
