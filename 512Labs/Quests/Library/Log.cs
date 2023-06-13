@@ -15,11 +15,14 @@ public class Log
 
     public bool Add(Data data)
     {
+        bool retval = false;
+        var members = this.members.Where(m => m.Data == data);
         if (!this.IsFull && !this.Contains(data))
         {
            this.members.Add(new Quest(data));
+           retval = true;
         }
-        return this.Contains(data);
+        return retval;
     }
 
    public bool Remove(Data data)
@@ -59,14 +62,17 @@ public class Log
         return retval;
     }
 
-    public void Advance(Data data)
+    public bool Advance(Data data)
     {
-        Quest? quest = this.Get(data);
-        if (quest != null)
+        bool retval = false;
+        var members = this.members.Where(m => m.Data == data);
+        if (members.Count() > 0)
         {
+            var quest = members.First();
             this.members.Remove(quest);
-            this.members.Add(new Quest(data, quest.CurrentStage + 1));
+            retval = this.members.Add(new Quest(data, quest.CurrentStage + 1));
         }
+        return retval;
     }
 
     private Quest? Get(Data data)

@@ -17,7 +17,8 @@ public class TestContainer
         Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
         Data buff = new Data(1, duration);
-        buffs.Apply(buff);
+        var success = buffs.Apply(buff);
+        Assert.True(success);
         Assert.Equal(1, buffs.Active.Count());
         Assert.Equal(buff, buffs.Active.First().Data);
     }
@@ -31,7 +32,7 @@ public class TestContainer
         foreach (int index in Enumerable.Range(1, 7))
         {
             Data buff = new Data(index, duration);
-            buffs.Apply(buff);
+            var success = buffs.Apply(buff);
         }
         Assert.Equal(4, buffs.Active.Count());
     }
