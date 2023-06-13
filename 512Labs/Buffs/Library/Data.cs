@@ -1,6 +1,7 @@
 namespace Buffs;
 
 public record Data(
+    // internal Id
     int Id,
     // how long the buff lasts
     TimeSpan Duration,
@@ -10,6 +11,7 @@ public record Data(
     HashSet<int>? PrecedenceOver = null,
     // determines priority of buffs if collection is full
     int PriorityLevel = 0,
+    // maximum amount of times the buff can be applied
     int MaxStacks = 1
 ) : IEquatable<Data>
 {
