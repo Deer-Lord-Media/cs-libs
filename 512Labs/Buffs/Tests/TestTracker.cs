@@ -4,13 +4,6 @@ namespace Tests;
 public class TestContainer
 {
     [Fact]
-    public void SubclassData()
-    {
-        TimeSpan duration = new TimeSpan(0, 0, 0, 0, 0, 0);
-        Data data = new Data(1, duration);
-    }
-
-    [Fact]
     public void NoBuffs()
     {
         Buffs.Tracker buffs = new Buffs.Tracker(16);
@@ -32,6 +25,7 @@ public class TestContainer
     [Fact]
     public void FullBuffs()
     {
+        // ensure too many buffs can't be applied
         Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
         foreach (int index in Enumerable.Range(1, 7))
@@ -43,8 +37,9 @@ public class TestContainer
     }
 
     [Fact]
-    public void SingleStack()
+    public void SingleStackBuff()
     {
+        // ensure single stack buffs can't overstack
         Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
         Data buff = new Data(1, duration);  
@@ -58,8 +53,9 @@ public class TestContainer
     }
 
     [Fact]
-    public void MultiStack()
+    public void MultiStackBuff()
     {
+        // ensure multi stack buffs can't overstack
         Buff tracker;
         Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
@@ -83,6 +79,7 @@ public class TestContainer
     [Fact]
     public void BuffRefreshes()
     {
+        // ensure re-application of an unexpired buff refreshes the duration and keeps stacks maximized
         Buff tracker;
         Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(0, 0, 20);
@@ -101,6 +98,7 @@ public class TestContainer
     [Fact]
     public void BuffExpires()
     {
+        // ensure buffs can be expired and not included
         Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(0, 0, 2);
         Data buff = new Data(1, duration);
@@ -116,6 +114,7 @@ public class TestContainer
     [Fact]
     public void BuffIsSimilarOne()
     {
+        // ensure similar buffs can't be overridden
         Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(0, 0, 100);
         Data buff1 = new Data(1, duration, SimilarTo: new HashSet<int>{2,});
@@ -131,6 +130,7 @@ public class TestContainer
     [Fact]
     public void BuffIsSimilarTwo()
     {
+        // checks similar from other side
         Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(0, 0, 100);
         Data buff1 = new Data(1, duration);
@@ -178,6 +178,7 @@ public class TestContainer
     [Fact]
     public void BuffHasPriority()
     {
+        // remove lower priority buff; more general than similarTo or precedenceOver
         Buffs.Tracker buffs = new Buffs.Tracker(1);
         TimeSpan duration = new TimeSpan(0, 0, 100);
         Data buff1 = new Data(1, duration);
