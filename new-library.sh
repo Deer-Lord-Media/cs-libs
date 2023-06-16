@@ -2,7 +2,6 @@
 
 NAME=""
 
-cd 512Labs
 mkdir -p $NAME
 cd $NAME
 dotnet new classlib -o Library
