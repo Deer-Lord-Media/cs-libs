@@ -23,3 +23,6 @@ jobs:
         with:
           dotnet-version: '7.0.x'
       - run: dotnet test
+
+# publish to GH Packages
+# https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry#authenticating-in-a-github-actions-workflow
