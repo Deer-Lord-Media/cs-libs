@@ -21,8 +21,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          - packageName: Buffs
-            packageVersion: "1.0.0"  # get dynamically
+        - packageName: Buffs
+          packageVersion: "1.0.0"  # get dynamically
 
     steps:
       - name: Checkout Repository
