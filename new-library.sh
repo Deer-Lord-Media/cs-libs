@@ -1,5 +1,7 @@
 #/bin/bash
 
+set -euo pipefail
+
 NAME="${1}"
 DESC="${2}"
 
@@ -13,24 +15,21 @@ DESC="${2}"
 # dotnet add Tests/Tests.csproj reference Library/Library.csproj
 
 create-library() {
-  name="${1}"
-  dotnet new classlib -o "${name}"
+  dotnet new classlib -o "${NAME}"
 }
 
 insert-nuget-xml() {
-  name="${1}"
-  description="${2}"
-  csproj="${name}/${name}.csproj"
+  csproj="${NAME}/${NAME}.csproj"
 
   # clear end tags
   sed -e '/<\/PropertyGroup>/ d' -e '/<\/Project>/ d' -i "$csproj"
 
   cat >> "$csproj" <<EOF
-    <PackageId>${name}</PackageId>
+    <PackageId>${NAME}</PackageId>
     <Version>0.0.1</Version>
-    <Authors>William Da Friend</Authors>
+    <Authors>William DaFriend</Authors>
     <Company>Deer Lord Entertainment</Company>
-    <PackageDescription>${description}</PackageDescription>
+    <PackageDescription>${DESC}</PackageDescription>
     <RepositoryUrl>https://github.com/Deer-Lord-Entertainment/cs-libs</RepositoryUrl>
   </PropertyGroup>
 
@@ -39,12 +38,11 @@ EOF
 }
 
 main() {
-  if [ -e "${NAME}"]
+  if [ ! -e "${NAME}"]
   then
-    return 1
+    create-library
+    insert-nuget-xml
   fi
-  create-library "${NAME}" "${DESC}"
-  insert-nuget-xml "${NAME}" 
 }
 
 main
