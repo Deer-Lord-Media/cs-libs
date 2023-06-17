@@ -8,7 +8,7 @@ on:
       - closed
 env:
   PROJECT_NAME: Buffs
-  PROJECT_VERSION: 1.0.0
+  PROJECT_VERSION: "1.0.0"
 
 jobs:
   Package-Libraries:  
@@ -24,7 +24,7 @@ jobs:
           ref: ${{ github.ref }}
 
       - name: Package Library
-        run: dotnet pack ${{ PROJECT_NAME }} --configuration Release
+        run: dotnet pack $PROJECT_NAME --configuration Release
 
       - name: Publish Library
-        run: dotnet nuget push "${{ PROJECT_NAME }}/bin/Release/${{ PROJECT_NAME }}.${{ PROJECT_VERSION }}.nupkg" --source "github"
+        run: dotnet nuget push "$PROJECT_NAME/bin/Release/$PROJECT_NAME.$PROJECT_VERSION.nupkg" --source "github"
