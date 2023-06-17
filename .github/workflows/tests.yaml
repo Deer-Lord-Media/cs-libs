@@ -18,8 +18,8 @@ jobs:
           repository: ${{ github.repo }}
           ref: ${{ github.ref }}
 
-      - name: Run Tests
-      - uses: actions/setup-dotnet@v3
+      - name: Setup Dotnet
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
       - run: dotnet test
