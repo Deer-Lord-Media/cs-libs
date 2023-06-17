@@ -20,7 +20,7 @@ public class TestContainer
         Data buff = new Data(1, duration);
         var success = buffs.Apply(buff);
         Assert.True(success);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         Assert.Equal(buff, buffs.Active.First().Data);
     }
 
@@ -46,9 +46,9 @@ public class TestContainer
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
         Data buff = new Data(1, duration);  
         Assert.Equal(1, buff.MaxStacks);
-        Assert.Equal(0, buffs.Active.Count());
+        Assert.Empty(buffs.Active);
         buffs.Apply(buff);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         Assert.Equal(1, buffs.Active.First().Stacks);
         buffs.Apply(buff);
         Assert.Equal(1, buffs.Active.First().Stacks);
@@ -63,17 +63,17 @@ public class TestContainer
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
         Data buff = new Data(1, duration, MaxStacks: 2);  
         Assert.Equal(2, buff.MaxStacks);
-        Assert.Equal(0, buffs.Active.Count());
+        Assert.Empty(buffs.Active);
         buffs.Apply(buff);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         tracker = buffs.Active.First();
         Assert.Equal(1, tracker.Stacks);
         buffs.Apply(buff);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         tracker = buffs.Active.First();
         Assert.Equal(2, tracker.Stacks);
         buffs.Apply(buff);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         tracker = buffs.Active.First();
         Assert.Equal(2, tracker.Stacks);
     }
@@ -105,12 +105,12 @@ public class TestContainer
         TimeSpan duration = new TimeSpan(0, 0, 2);
         Data buff = new Data(1, duration);
         buffs.Apply(buff);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         buffs.Expire();
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         Thread.Sleep(duration);
         buffs.Expire();
-        Assert.Equal(0, buffs.Active.Count());
+        Assert.Empty(buffs.Active);
     }
 
     [Fact]
@@ -122,9 +122,9 @@ public class TestContainer
         Data buff1 = new Data(1, duration, SimilarTo: new HashSet<int>{2,});
         Data buff2 = new Data(2, duration);
         buffs.Apply(buff1);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         buffs.Apply(buff2);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         var tracker = buffs.Active.First();
         Assert.Equal(1, tracker.Data.Id);
     }
@@ -138,9 +138,9 @@ public class TestContainer
         Data buff1 = new Data(1, duration);
         Data buff2 = new Data(2, duration, SimilarTo: new HashSet<int>{1,});
         buffs.Apply(buff1);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         buffs.Apply(buff2);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         var tracker = buffs.Active.First();
         Assert.Equal(1, tracker.Data.Id);
     }
@@ -154,9 +154,9 @@ public class TestContainer
         Data buff1 = new Data(1, duration, PrecedenceOver: new HashSet<int>{2,});
         Data buff2 = new Data(2, duration);
         buffs.Apply(buff1);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         buffs.Apply(buff2);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         var tracker = buffs.Active.First();
         Assert.Equal(1, tracker.Data.Id);
     }
@@ -170,9 +170,9 @@ public class TestContainer
         Data buff1 = new Data(1, duration);
         Data buff2 = new Data(2, duration, PrecedenceOver: new HashSet<int>{1,});
         buffs.Apply(buff1);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         buffs.Apply(buff2);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         var tracker = buffs.Active.First();
         Assert.Equal(2, tracker.Data.Id);
     }
@@ -186,9 +186,9 @@ public class TestContainer
         Data buff1 = new Data(1, duration);
         Data buff2 = new Data(2, duration, PriorityLevel: 1);
         buffs.Apply(buff1);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         buffs.Apply(buff2);
-        Assert.Equal(1, buffs.Active.Count());
+        Assert.Single(buffs.Active);
         var tracker = buffs.Active.First();
         Assert.Equal(2, tracker.Data.Id);
     }
