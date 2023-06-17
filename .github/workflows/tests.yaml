@@ -22,5 +22,6 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
-          dotnet-quality: 'preview'
-      - run: dotnet build <my project>
+          cache: true
+      - run: dotnet test
+        working-directory: csharp
