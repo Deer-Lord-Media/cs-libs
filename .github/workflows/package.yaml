@@ -6,6 +6,9 @@ on:
       - main
     types:
       - closed
+env:
+  PROJECT_NAME: Buffs
+  PROJECT_VERSION: 1.0.0
 
 jobs:
   Package-Libraries:  
@@ -20,5 +23,8 @@ jobs:
           repository: ${{ github.repo }}
           ref: ${{ github.ref }}
 
-      - name: Publish Package
-        run: dotnet nuget add source --username ${{ secrets.NUGET_USERNAME }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ secrets.NUGET_NAMESPACE }}/index.json"
+      - name: Package Library
+        run: dotnet pack ${{ PROJECT_NAME }} --configuration Release
+
+      - name: Publish Library
+        run: dotnet nuget push "${{ PROJECT_NAME }}/bin/Release/${{ PROJECT_NAME }}.${{ PROJECT_VERSION }}.nupkg" --source "github"

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>Buffs</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>William Da Friend</Authors>
+    <Company>Deer Lord Entertainment</Company>
+    <PackageDescription>Buff Tracker</PackageDescription>
+    <RepositoryUrl>https://github.com/Deer-Lord-Entertainment/Buffs</RepositoryUrl>
+  </PropertyGroup>
+
+</Project>
