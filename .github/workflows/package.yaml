@@ -21,8 +21,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        - packageName: Buffs
-          packageVersion: "1.0.0"  # get dynamically
+        packageName:
+          - Buffs
 
     steps:
       - name: Checkout Repository
@@ -35,4 +35,4 @@ jobs:
         run: dotnet pack ${{ matrix.packageName }} --configuration Release
 
       - name: Publish Library
-        run: dotnet nuget push "${{ matrix.packageName }}/bin/Release/${{ matrix.packageName }}.${{ matrix.packageVersion }}.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+        run: dotnet nuget push "${{ matrix.packageName }}/bin/Release/${{ matrix.packageName }}.1.0.0.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
