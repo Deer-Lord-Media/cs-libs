@@ -17,12 +17,13 @@ jobs:
         with:
           repository: ${{ github.repo }}
           ref: ${{ github.ref }}
-
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
-      - run: dotnet test
-
-# publish to GH Packages
-# https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry#authenticating-in-a-github-actions-workflow
+      - name: Restore Dependencies
+        run: dotnet restore
+      - name: Build Libraries
+        run: dotnet build --no-restore
+      - name: Test Libraries
+        run: dotnet test --no-build --verbosity normal

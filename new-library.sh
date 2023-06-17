@@ -37,12 +37,40 @@ insert-nuget-xml() {
 EOF
 }
 
+create-tests() {
+  testfile="Tests/${NAME}.cs"
+  if [ -e "${testfile}" ]
+  then
+    return 1
+  fi
+  cat > "Tests/${NAME}.cs" <<EOF
+namespace Tests;
+
+public class ${NAME}Test
+{
+    [Fact]
+    public void Test1()
+    {
+
+    }
+}
+EOF
+}
+
+add-to-solution() {
+  libproj="${NAME}/${NAME}.csproj"
+  testproj="Tests/Tests.csproj"
+  dotnet sln add "${libproj}"
+  dotnet sln add "${testproj}"
+  dotnet add "${testproj}" reference "${libproj}"
+}
+
 main() {
   if [ ! -e "${NAME}"]
   then
     create-library
     insert-nuget-xml
+    create-tests
+    add-to-solution
   fi
 }
-
-main
