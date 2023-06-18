@@ -48,5 +48,22 @@ public class ResourceTest
         Assert.Equal(5, tracker.Amount);
     }
 
+    [Fact]
+    public void CheckEmpty()
+    {
+        var tracker = new Resource.Tracker("Health", 10);
+        Assert.True(tracker.IsEmpty);
+        Assert.False(tracker.IsFull);
+    }
+
+    [Fact]
+    public void CheckFull()
+    {
+        var tracker = new Resource.Tracker("Health", 10, 10);
+        Assert.True(tracker.IsFull);
+        Assert.False(tracker.IsEmpty);
+    }
+
+
 
 }
