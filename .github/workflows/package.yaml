@@ -31,9 +31,11 @@ jobs:
         with:
           repository: ${{ github.repo }}
           ref: ${{ github.ref }}
-
+      - name: Setup Dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x'
       - name: Package Library
         run: dotnet pack ${{ matrix.packageName }} --configuration Release
-
       - name: Publish Library
-        run: dotnet nuget push --skip-duplicate "${{ matrix.packageName }}/bin/Release/${{ matrix.packageName }}.${{ matrix.packageVersion }}.nupkg" --source "https://nuget.pkg.github.com/Deer-Lord-Media/index.json" --api-key ${{ secrets.NUGET_TOKEN }}
+        run: dotnet nuget push --skip-duplicate "${{ matrix.packageName }}/bin/Release/${{ matrix.packageName }}.${{ matrix.packageVersion }}.nupkg" --source "github" --api-key ${{ secrets.NUGET_TOKEN }}
