@@ -4,12 +4,13 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
     <PackageId>Buffs</PackageId>
     <Version>0.0.1</Version>
     <Authors>William Da Friend</Authors>
-    <Company>Deer Lord Entertainment</Company>
+    <Company>Deer Lord Media</Company>
     <PackageDescription>Buff Tracker</PackageDescription>
-    <RepositoryUrl>https://github.com/Deer-Lord-Entertainment/cs-libs</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Deer-Lord-Media/cs-libs</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
