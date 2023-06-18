@@ -37,7 +37,7 @@ public class Tracker
         if (remaining > 0)
         {
             toAdd = Math.Min(remaining, Math.Max(0, amount));
-            this.Amount =+ toAdd;
+            this.Amount = this.Amount + toAdd;
         }
         return toAdd;
     }
