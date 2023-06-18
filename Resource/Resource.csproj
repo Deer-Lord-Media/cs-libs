@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <PackageId>Resource</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>William DaFriend</Authors>
+    <Company>Deer Lord Media</Company>
+    <PackageDescription>Resource Tracker and Management</PackageDescription>
+    <RepositoryUrl>https://github.com/Deer-Lord-Media/cs-libs</RepositoryUrl>
+  </PropertyGroup>
+
+</Project>
