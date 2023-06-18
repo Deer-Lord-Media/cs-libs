@@ -21,10 +21,6 @@ jobs:
         include:
           - packageName: Buffs
             packageVersion: "0.0.1"
-          - packageName: Inventory
-            packageVersion: "0.0.1"
-          - packageName: Quests
-            packageVersion: "0.0.1"
 
     steps:
       - name: Checkout Repository
