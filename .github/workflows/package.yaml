@@ -8,8 +8,6 @@ on:
       - closed
     paths:
       - '*/*.csproj'
-env:
-  PROJECT_VERSION: "1.0.0"
 permissions:
   packages: write
   contents: read
