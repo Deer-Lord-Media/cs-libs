@@ -14,7 +14,7 @@ public class TestBag
         Assert.Empty(bag.Slots);
         var success = bag.Store(data);
         Assert.True(success);
-        Assert.Equal(1, bag.Slots.Count());
+        Assert.Single(bag.Slots);
         var slot = bag.Slots.First();
         Assert.Equal(data, slot.Data);
     }
