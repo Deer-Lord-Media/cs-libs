@@ -15,14 +15,8 @@ public class Tracker
     public string Name { get; init; }
     public int Amount
     {
-        get
-        {
-            return this.amount;
-        }
-        set
-        {
-            this.amount = Math.Min(this.Maximum, Math.Max(0, value));
-        }
+        get { return this.amount; }
+        set { this.amount = Math.Min(this.Maximum, Math.Max(0, value)); }
     }
 
     public bool Consume(int amount)
@@ -30,19 +24,21 @@ public class Tracker
         bool retval = false;
         if (amount < this.Amount)
         {
-            this.Amount = this.amount - amount;
+            this.Amount = this.Amount - amount;
             retval = true;
         }
         return retval;
     }
 
-    public int Replenish(int amount) // 200, 10
+    public int Replenish(int amount)
     {
-        // 100 - 200 = 0
-        // 100 - 10 = 90
+        int toAdd = 0;
         int remaining = Math.Max(this.Maximum - this.Amount, 0);
-        int toAdd = Math.Min(remaining, amount);
-        this.Amount =+ toAdd;
+        if (remaining > 0)
+        {
+            toAdd = Math.Min(remaining, Math.Max(0, amount));
+            this.Amount =+ toAdd;
+        }
         return toAdd;
     }
 
