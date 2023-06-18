@@ -33,4 +33,4 @@ jobs:
         run: dotnet pack ${{ matrix.packageName }} --configuration Release
 
       - name: Publish Library
-        run: dotnet nuget push --skip-duplicate "${{ matrix.packageName }}/bin/Release/${{ matrix.packageName }}.${{ matrix.packageVersion }}.nupkg" --source "github" --api-key ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet nuget push --skip-duplicate "${{ matrix.packageName }}/bin/Release/${{ matrix.packageName }}.${{ matrix.packageVersion }}.nupkg" --source "github" --api-key ${{ secrets.NUGET_TOKEN }}
