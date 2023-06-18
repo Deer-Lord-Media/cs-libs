@@ -21,7 +21,7 @@ public class TestLog
         Assert.True(success);
         success = log.Add(data2);
         Assert.False(success);
-        Assert.Equal(1, log.All.Count());
+        Assert.Single(log.All);
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class TestLog
         Assert.True(success);
         success = log.Add(data);
         Assert.False(success);
-        Assert.Equal(1, log.All.Count());
+        Assert.Single(log.All);
     }
 
     [Fact]
