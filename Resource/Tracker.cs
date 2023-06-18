@@ -5,7 +5,7 @@ public class Tracker
     public Tracker(string name, int maximum, int amount = 0)
     {
         this.Maximum = maximum;
-        this.amount = amount;
+        this.Amount = amount;
         this.Name = name;
     }
     private int amount;
