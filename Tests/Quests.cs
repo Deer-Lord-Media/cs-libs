@@ -1,3 +1,5 @@
+using Quests;
+
 namespace Tests;
 
 public class TestLog

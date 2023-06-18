@@ -1,3 +1,5 @@
+using Inventory;
+
 namespace Tests;
 
 public class TestBag
