@@ -14,9 +14,10 @@ public class ResourceTest
     [Fact]
     public void AddResource()
     {
-        var tracker = new Resource.Tracker("Health", 10);
-        tracker.Replenish(5);
-        Assert.Equal(5, tracker.Amount);
+        var tracker = new Resource.Tracker("Health", 10, 2);
+        int replenished = tracker.Replenish(5);
+        Assert.Equal(7, tracker.Amount);
+        Assert.Equal(5, replenished);
     }
 
     [Fact]
