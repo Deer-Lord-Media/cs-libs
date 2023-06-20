@@ -1,39 +1,42 @@
-namespace Buffs;
+using System;
 
-public struct Buff
+namespace Buffs
 {
-    public Buff(Data data, int stacks = 1)
+    public struct Buff
     {
-        this.Data = data;
-        this.Stacks = Math.Max(0, Math.Min(data.MaxStacks, stacks));
-        this.At = DateTime.Now;
-    }
-
-    public Data Data { get; init; }
-    public DateTime At { get; init; }
-    public int Stacks { get; init; }
-
-    public bool IsExpired
-    {
-        get
+        public Buff(Data data, int stacks = 1)
         {
-            return this.TimeLeft.Milliseconds <= 0;
-        } 
-    }
-
-    public TimeSpan TimeLeft
-    {
-        get
-        {
-            return this.Data.Duration - this.TimePassed;
+            this.Data = data;
+            this.Stacks = Math.Max(0, Math.Min(data.MaxStacks, stacks));
+            this.At = DateTime.Now;
         }
-    }
 
-    public TimeSpan TimePassed
-    {
-        get
+        public Data Data { get; }
+        public DateTime At { get; }
+        public int Stacks { get; }
+
+        public bool IsExpired
         {
-            return (DateTime.Now - this.At);
+            get
+            {
+                return this.TimeLeft <= new TimeSpan(0, 0, 0, 0, 0);
+            } 
+        }
+
+        public TimeSpan TimeLeft
+        {
+            get
+            {
+                return this.Data.Duration - this.TimePassed;
+            }
+        }
+
+        public TimeSpan TimePassed
+        {
+            get
+            {
+                return (DateTime.Now - this.At);
+            }
         }
     }
 }

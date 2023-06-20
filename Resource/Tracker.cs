@@ -1,58 +1,61 @@
-﻿namespace Resource;
+﻿using System;
 
-public class Tracker
+namespace Resource
 {
-    public Tracker(string name, int maximum, int amount = 0)
+    public class Tracker
     {
-        this.Maximum = maximum;
-        this.Amount = amount;
-        this.Name = name;
-    }
-    private int amount;
-    public string Name { get; init; }
-    public int Maximum { get; init; }
-    public int Amount
-    {
-        get { return this.amount; }
-        // must be between 0 and this.Maximum
-        set { this.amount = Math.Min(this.Maximum, Math.Max(0, value)); }
-    }
-
-    public int Remaining
-    {
-        get { return this.Maximum - this.Amount; }
-    }
-
-    public bool Consume(int amount)
-    {
-        bool retval = false;
-        if (amount < this.Amount)
+        public Tracker(string name, int maximum, int amount = 0)
         {
-            this.Amount = this.Amount - amount;
-            retval = true;
+            this.Maximum = maximum;
+            this.Amount = amount;
+            this.Name = name;
         }
-        return retval;
-    }
-
-    public int Replenish(int amount)
-    {
-        int toAdd = 0;
-        int remaining = this.Remaining;
-        if (remaining > 0)
+        private int amount;
+        public string Name { get; }
+        public int Maximum { get; }
+        public int Amount
         {
-            toAdd = Math.Min(remaining, Math.Max(0, amount));
-            this.Amount = this.Amount + toAdd;
+            get { return this.amount; }
+            // must be between 0 and this.Maximum
+            set { this.amount = Math.Min(this.Maximum, Math.Max(0, value)); }
         }
-        return toAdd;
-    }
 
-    public bool IsFull
-    {
-        get { return this.Maximum == this.Amount; }
-    }
+        public int Remaining
+        {
+            get { return this.Maximum - this.Amount; }
+        }
 
-    public bool IsEmpty
-    {
-        get { return this.Amount == 0; }
+        public bool Consume(int amount)
+        {
+            bool retval = false;
+            if (amount < this.Amount)
+            {
+                this.Amount = this.Amount - amount;
+                retval = true;
+            }
+            return retval;
+        }
+
+        public int Replenish(int amount)
+        {
+            int toAdd = 0;
+            int remaining = this.Remaining;
+            if (remaining > 0)
+            {
+                toAdd = Math.Min(remaining, Math.Max(0, amount));
+                this.Amount = this.Amount + toAdd;
+            }
+            return toAdd;
+        }
+
+        public bool IsFull
+        {
+            get { return this.Maximum == this.Amount; }
+        }
+
+        public bool IsEmpty
+        {
+            get { return this.Amount == 0; }
+        }
     }
 }

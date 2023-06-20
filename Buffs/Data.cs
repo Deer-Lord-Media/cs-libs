@@ -1,37 +1,57 @@
-namespace Buffs;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-public record Data(
-    // internal Id
-    int Id,
-    // how long the buff lasts
-    TimeSpan Duration,
-    // buffs that block application
-    HashSet<int>? SimilarTo = null,
-    // buffs to remove, if they are present
-    HashSet<int>? PrecedenceOver = null,
-    // determines priority of buffs if collection is full
-    int PriorityLevel = 0,
-    // maximum amount of times the buff can be applied
-    int MaxStacks = 1
-) : IEquatable<Data>
+namespace Buffs
 {
-    private HashSet<int> similarTo { get; init; } = (SimilarTo == null)
-        ? new HashSet<int>() : new HashSet<int>(SimilarTo);
-    private HashSet<int> precedenceOver { get; init; } = (PrecedenceOver == null)
-        ? new HashSet<int>() : new HashSet<int>(PrecedenceOver);
-
-    public bool IsSimilarTo(Data data)
+    public class Data : IEquatable<Data>
     {
-        return (this.similarTo.Count() > 0) ? this.similarTo.Contains(data.Id) : false;
-    }
+        public Data(
+            int id,
+            TimeSpan duration,
+            HashSet<int>? similarTo = null,
+            HashSet<int>? precedenceOver = null,
+            int priorityLevel = 0,
+            int maxStacks = 1
+        )
+        {
+            this.Id = id;
+            this.Duration = duration;
+            this.similarTo = (similarTo == null)
+                ? new HashSet<int>()
+                : new HashSet<int>(similarTo);
+            this.precedenceOver = (precedenceOver == null)
+                ? new HashSet<int>()
+                : new HashSet<int>(precedenceOver);
+            this.PriorityLevel = priorityLevel;
+            this.MaxStacks = maxStacks;
+        }
 
-    public bool HasPrecedenceOver(Data data)
-    {
-        return (this.precedenceOver.Count() > 0) ? this.precedenceOver.Contains(data.Id) : false;
-    }
+        public int Id { get; }
+        public int PriorityLevel { get; }
+        public int MaxStacks { get; }
+        public TimeSpan Duration { get; }
+        private HashSet<int> similarTo { get; }
+        private HashSet<int> precedenceOver { get; }
 
-    public override int GetHashCode()
-    {
-        return this.Id;
+        public bool IsSimilarTo(Data data)
+        {
+            return (this.similarTo.Count() > 0) ? this.similarTo.Contains(data.Id) : false;
+        }
+
+        public bool HasPrecedenceOver(Data data)
+        {
+            return (this.precedenceOver.Count() > 0) ? this.precedenceOver.Contains(data.Id) : false;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id;
+        }
+
+        public bool Equals(Data obj)
+        {
+            return this.Id == obj.Id;
+        }
     }
 }

@@ -1,15 +1,18 @@
-namespace Quests;
+using System;
 
-public class Quest
+namespace Quests
 {
-    public Quest(Data data, int currentStage = 0, bool tracked = false)
+    public class Quest
     {
-        this.Data = data;
-        this.CurrentStage = Math.Max(0, Math.Min(currentStage, data.TotalStages));
-        this.Tracked = tracked;
+        public Quest(Data data, int currentStage = 0, bool tracked = false)
+        {
+            this.Data = data;
+            this.CurrentStage = Math.Max(0, Math.Min(currentStage, data.TotalStages));
+            this.Tracked = tracked;
+        }
+        public Data Data { get; }
+        public int CurrentStage { get; }
+        public bool IsComplete { get { return this.CurrentStage >= this.Data.TotalStages; } }
+        public bool Tracked { get; }
     }
-    public Data Data { get; init; }
-    public int CurrentStage { get; init; }
-    public bool IsComplete { get { return this.CurrentStage >= this.Data.TotalStages; } }
-    public bool Tracked { get; init; }
 }

@@ -1,9 +1,31 @@
-namespace Quests;
+using System;
 
-public record Data(int Id, int TotalStages = 1) : IEquatable<Data>
+namespace Quests
 {
-    public override int GetHashCode()
+
+    public class Data : IEquatable<Data>
     {
-        return this.Id;
+        public Data(int id, string name, string description, int totalStages = 1)
+        {
+            this.Id = id;
+            this.Name = name;
+            this.Description = description;
+            this.TotalStages = totalStages;
+        }
+
+        public int Id { get; }
+        public string Name { get;} 
+        public string Description { get; }
+        public int TotalStages { get; }
+
+        public override int GetHashCode()
+        {
+            return this.Id;
+        }
+
+        public bool Equals(Data obj)
+        {
+            return this.Id == obj.Id;
+        }
     }
 }

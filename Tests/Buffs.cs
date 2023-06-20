@@ -44,7 +44,7 @@ public class TestContainer
         // ensure single stack buffs can't overstack
         Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
-        Data buff = new Data(1, duration);  
+        Data buff = new Data(1, duration);
         Assert.Equal(1, buff.MaxStacks);
         Assert.Empty(buffs.Active);
         buffs.Apply(buff);
@@ -61,7 +61,7 @@ public class TestContainer
         Buff tracker;
         Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
-        Data buff = new Data(1, duration, MaxStacks: 2);  
+        Data buff = new Data(1, duration, maxStacks: 2);  
         Assert.Equal(2, buff.MaxStacks);
         Assert.Empty(buffs.Active);
         buffs.Apply(buff);
@@ -119,7 +119,7 @@ public class TestContainer
         // ensure similar buffs can't be overridden
         Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(0, 0, 100);
-        Data buff1 = new Data(1, duration, SimilarTo: new HashSet<int>{2,});
+        Data buff1 = new Data(1, duration, similarTo: new HashSet<int>{2,});
         Data buff2 = new Data(2, duration);
         buffs.Apply(buff1);
         Assert.Single(buffs.Active);
@@ -136,7 +136,7 @@ public class TestContainer
         Buffs.Tracker buffs = new Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(0, 0, 100);
         Data buff1 = new Data(1, duration);
-        Data buff2 = new Data(2, duration, SimilarTo: new HashSet<int>{1,});
+        Data buff2 = new Data(2, duration, similarTo: new HashSet<int>{1,});
         buffs.Apply(buff1);
         Assert.Single(buffs.Active);
         buffs.Apply(buff2);
@@ -151,7 +151,7 @@ public class TestContainer
         // buff2 cannot be applied, buff1 blocks it
         Buffs.Tracker buffs = new Buffs.Tracker(1);
         TimeSpan duration = new TimeSpan(0, 0, 100);
-        Data buff1 = new Data(1, duration, PrecedenceOver: new HashSet<int>{2,});
+        Data buff1 = new Data(1, duration, precedenceOver: new HashSet<int>{2,});
         Data buff2 = new Data(2, duration);
         buffs.Apply(buff1);
         Assert.Single(buffs.Active);
@@ -168,7 +168,7 @@ public class TestContainer
         Buffs.Tracker buffs = new Buffs.Tracker(1);
         TimeSpan duration = new TimeSpan(0, 0, 100);
         Data buff1 = new Data(1, duration);
-        Data buff2 = new Data(2, duration, PrecedenceOver: new HashSet<int>{1,});
+        Data buff2 = new Data(2, duration, precedenceOver: new HashSet<int>{1,});
         buffs.Apply(buff1);
         Assert.Single(buffs.Active);
         buffs.Apply(buff2);
@@ -184,7 +184,7 @@ public class TestContainer
         Buffs.Tracker buffs = new Buffs.Tracker(1);
         TimeSpan duration = new TimeSpan(0, 0, 100);
         Data buff1 = new Data(1, duration);
-        Data buff2 = new Data(2, duration, PriorityLevel: 1);
+        Data buff2 = new Data(2, duration, priorityLevel: 1);
         buffs.Apply(buff1);
         Assert.Single(buffs.Active);
         buffs.Apply(buff2);

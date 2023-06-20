@@ -15,8 +15,8 @@ public class TestLog
     public void LogFullCantAccept()
     {
         var log = new Quests.Log(1);
-        var data1 = new Quests.Data(1);
-        var data2 = new Quests.Data(2);
+        var data1 = new Quests.Data(1, "NAME", "DESC");
+        var data2 = new Quests.Data(2, "NAME", "DESC");
         var success = log.Add(data1);
         Assert.True(success);
         success = log.Add(data2);
@@ -28,8 +28,8 @@ public class TestLog
     public void ConfirmContains()
     {
         var log = new Quests.Log(5);
-        var data1 = new Quests.Data(1);
-        var data2 = new Quests.Data(2);
+        var data1 = new Quests.Data(1, "NAME", "DESC");
+        var data2 = new Quests.Data(2, "NAME", "DESC");
         var success = log.Add(data1);
         Assert.True(success);
         var contains = log.Contains(data1);
@@ -42,7 +42,7 @@ public class TestLog
     public void NoDuplicates()
     {
         var log = new Quests.Log(5);
-        var data = new Quests.Data(1);
+        var data = new Quests.Data(1, "NAME", "DESC");
         var success = log.Add(data);
         Assert.True(success);
         success = log.Add(data);
@@ -54,7 +54,7 @@ public class TestLog
     public void AdvanceQuest()
     {
         var log = new Quests.Log(5);
-        var data = new Quests.Data(1, 2);
+        var data = new Quests.Data(1, "NAME", "DESC", 2);
         var success = log.Add(data);
         Assert.True(success);
         var quest = log.All.First();
@@ -66,7 +66,7 @@ public class TestLog
     public void TrackQuest()
     {
         var log = new Quests.Log(5);
-        var data = new Quests.Data(1, 2);
+        var data = new Quests.Data(1, "NAME", "DESC", 2);
         log.Add(data);
         var quest = log.All.First();
         Assert.False(quest.Tracked);

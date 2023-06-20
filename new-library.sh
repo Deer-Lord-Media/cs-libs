@@ -4,7 +4,7 @@ NAME="${1}"
 DESC="${2}"
 
 create-library() {
-  dotnet new classlib -o "${NAME}"
+  dotnet new classlib --framework "netstandard2.1" -o "${NAME}"
 }
 
 insert-nuget-xml() {
