@@ -1,4 +1,4 @@
-using Buffs;
+using CSLibs.Buffs;
 
 namespace Tests;
 
@@ -7,7 +7,7 @@ public class TestContainer
     [Fact]
     public void NoBuffs()
     {
-        Buffs.Tracker buffs = new Buffs.Tracker(16);
+        CSLibs.Buffs.Tracker buffs = new CSLibs.Buffs.Tracker(16);
         Assert.Empty(buffs.Active);
     }
 
@@ -15,7 +15,7 @@ public class TestContainer
     [Fact]
     public void ApplyBuff()
     {
-        Buffs.Tracker buffs = new Buffs.Tracker(4);
+        CSLibs.Buffs.Tracker buffs = new CSLibs.Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
         Data buff = new Data(1, duration);
         var success = buffs.Apply(buff);
@@ -28,7 +28,7 @@ public class TestContainer
     public void FullBuffs()
     {
         // ensure too many buffs can't be applied
-        Buffs.Tracker buffs = new Buffs.Tracker(4);
+        CSLibs.Buffs.Tracker buffs = new CSLibs.Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
         foreach (int index in Enumerable.Range(1, 7))
         {
@@ -42,7 +42,7 @@ public class TestContainer
     public void SingleStackBuff()
     {
         // ensure single stack buffs can't overstack
-        Buffs.Tracker buffs = new Buffs.Tracker(4);
+        CSLibs.Buffs.Tracker buffs = new CSLibs.Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
         Data buff = new Data(1, duration);
         Assert.Equal(1, buff.MaxStacks);
@@ -59,7 +59,7 @@ public class TestContainer
     {
         // ensure multi stack buffs can't overstack
         Buff tracker;
-        Buffs.Tracker buffs = new Buffs.Tracker(4);
+        CSLibs.Buffs.Tracker buffs = new CSLibs.Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(1, 0, 0, 0, 0, 0);
         Data buff = new Data(1, duration, maxStacks: 2);  
         Assert.Equal(2, buff.MaxStacks);
@@ -83,7 +83,7 @@ public class TestContainer
     {
         // ensure re-application of an unexpired buff refreshes the duration and keeps stacks maximized
         Buff tracker;
-        Buffs.Tracker buffs = new Buffs.Tracker(4);
+        CSLibs.Buffs.Tracker buffs = new CSLibs.Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(0, 0, 20);
         TimeSpan wait = new TimeSpan(0, 0, 2);
         Data buff = new Data(1, duration);
@@ -101,7 +101,7 @@ public class TestContainer
     public void BuffExpires()
     {
         // ensure buffs can be expired and not included
-        Buffs.Tracker buffs = new Buffs.Tracker(4);
+        CSLibs.Buffs.Tracker buffs = new CSLibs.Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(0, 0, 2);
         Data buff = new Data(1, duration);
         buffs.Apply(buff);
@@ -117,7 +117,7 @@ public class TestContainer
     public void BuffIsSimilarOne()
     {
         // ensure similar buffs can't be overridden
-        Buffs.Tracker buffs = new Buffs.Tracker(4);
+        CSLibs.Buffs.Tracker buffs = new CSLibs.Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(0, 0, 100);
         Data buff1 = new Data(1, duration, similarTo: new HashSet<int>{2,});
         Data buff2 = new Data(2, duration);
@@ -133,7 +133,7 @@ public class TestContainer
     public void BuffIsSimilarTwo()
     {
         // checks similar from other side
-        Buffs.Tracker buffs = new Buffs.Tracker(4);
+        CSLibs.Buffs.Tracker buffs = new CSLibs.Buffs.Tracker(4);
         TimeSpan duration = new TimeSpan(0, 0, 100);
         Data buff1 = new Data(1, duration);
         Data buff2 = new Data(2, duration, similarTo: new HashSet<int>{1,});
@@ -149,7 +149,7 @@ public class TestContainer
     public void BuffIsBlocked()
     {
         // buff2 cannot be applied, buff1 blocks it
-        Buffs.Tracker buffs = new Buffs.Tracker(1);
+        CSLibs.Buffs.Tracker buffs = new CSLibs.Buffs.Tracker(1);
         TimeSpan duration = new TimeSpan(0, 0, 100);
         Data buff1 = new Data(1, duration, precedenceOver: new HashSet<int>{2,});
         Data buff2 = new Data(2, duration);
@@ -165,7 +165,7 @@ public class TestContainer
     public void BuffHasPrecedence()
     {
         // buff2 should push buff1 off
-        Buffs.Tracker buffs = new Buffs.Tracker(1);
+        CSLibs.Buffs.Tracker buffs = new CSLibs.Buffs.Tracker(1);
         TimeSpan duration = new TimeSpan(0, 0, 100);
         Data buff1 = new Data(1, duration);
         Data buff2 = new Data(2, duration, precedenceOver: new HashSet<int>{1,});
@@ -181,7 +181,7 @@ public class TestContainer
     public void BuffHasPriority()
     {
         // remove lower priority buff; more general than similarTo or precedenceOver
-        Buffs.Tracker buffs = new Buffs.Tracker(1);
+        CSLibs.Buffs.Tracker buffs = new CSLibs.Buffs.Tracker(1);
         TimeSpan duration = new TimeSpan(0, 0, 100);
         Data buff1 = new Data(1, duration);
         Data buff2 = new Data(2, duration, priorityLevel: 1);

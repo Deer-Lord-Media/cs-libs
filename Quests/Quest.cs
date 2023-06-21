@@ -1,6 +1,6 @@
 using System;
 
-namespace Quests
+namespace CSLibs.Quests
 {
     public class Quest
     {

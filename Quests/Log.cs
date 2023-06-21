@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Quests
+namespace CSLibs.Quests
 {
     public class Log
     {

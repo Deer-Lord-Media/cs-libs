@@ -1,6 +1,6 @@
 using System;
 
-namespace Inventory
+namespace CSLibs.Inventory
 {
     public class Slot
     {

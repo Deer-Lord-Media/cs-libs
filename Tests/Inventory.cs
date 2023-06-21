@@ -1,4 +1,4 @@
-using Inventory;
+using CSLibs.Inventory;
 
 namespace Tests;
 
@@ -9,8 +9,8 @@ public class TestBag
     public void StoreItem()
     {
         // add an item
-        var data = new Inventory.Data(1);
-        var bag = new Inventory.Bag(20);
+        var data = new CSLibs.Inventory.Data(1);
+        var bag = new CSLibs.Inventory.Bag(20);
         Assert.Empty(bag.Slots);
         var success = bag.Store(data);
         Assert.True(success);
@@ -23,8 +23,8 @@ public class TestBag
     public void StackAndRemoveSingle()
     {
         // add 2 items with 2 max stacks, remove 
-        var data = new Inventory.Data(1, false, 2);
-        var bag = new Inventory.Bag(20);
+        var data = new CSLibs.Inventory.Data(1, false, 2);
+        var bag = new CSLibs.Inventory.Bag(20);
         Assert.Empty(bag.Slots);
         foreach (int i in Enumerable.Range(1, 4))
         {
@@ -46,8 +46,8 @@ public class TestBag
     [Fact]
     public void RemoveLastItem()
     {
-        var data = new Inventory.Data(1, false, 10);
-        var bag = new Inventory.Bag(20);
+        var data = new CSLibs.Inventory.Data(1, false, 10);
+        var bag = new CSLibs.Inventory.Bag(20);
         Assert.Empty(bag.Slots);
         var success = bag.Store(data);
         Assert.True(success);
@@ -61,19 +61,19 @@ public class TestBag
     [Fact]
     public void BagFull()
     {
-        var data = new Inventory.Data(1);
-        var bag = new Inventory.Bag(2);
+        var data = new CSLibs.Inventory.Data(1);
+        var bag = new CSLibs.Inventory.Bag(2);
         Assert.Empty(bag.Slots);
         var success = bag.Store(data);
         Assert.True(success);
         success = bag.Store(data);
         Assert.True(success);
         Assert.Equal(2, bag.Slots.Count());
-        var data2 = new Inventory.Data(2);
+        var data2 = new CSLibs.Inventory.Data(2);
         success = bag.Store(data2);
         Assert.False(success);
         Assert.Equal(2, bag.Slots.Count());
-        foreach (Inventory.Slot slot in bag.Slots)
+        foreach (CSLibs.Inventory.Slot slot in bag.Slots)
         {
             Assert.Equal(1, slot.Data.Id);
         }
@@ -82,9 +82,9 @@ public class TestBag
     [Fact]
     public void SwapSlotsTwoItems()
     {
-        var data1 = new Inventory.Data(1);
-        var data2 = new Inventory.Data(2);
-        var bag = new Inventory.Bag(2);
+        var data1 = new CSLibs.Inventory.Data(1);
+        var data2 = new CSLibs.Inventory.Data(2);
+        var bag = new CSLibs.Inventory.Bag(2);
         var success = bag.Store(data1);
         Assert.True(success);
         success = bag.Store(data2);
@@ -108,8 +108,8 @@ public class TestBag
     [Fact]
     public void SwapSlotsItemToEmpty()
     {
-        var data = new Inventory.Data(1);
-        var bag = new Inventory.Bag(2);
+        var data = new CSLibs.Inventory.Data(1);
+        var bag = new CSLibs.Inventory.Bag(2);
         var success = bag.Store(data);
         Assert.True(success);
         var slot = bag.Slots.First();

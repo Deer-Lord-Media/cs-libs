@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>Quests</PackageId>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <Authors>William DaFriend</Authors>
     <Company>Deer Lord Media</Company>
     <PackageDescription>Quest Tracker and Management</PackageDescription>

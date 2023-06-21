@@ -1,4 +1,4 @@
-using Resource;
+using CSLibs.Resource;
 
 namespace Tests;
 
@@ -7,14 +7,14 @@ public class ResourceTest
     [Fact]
     public void InitTracker()
     {
-        var tracker = new Resource.Tracker("Health", 10);
+        var tracker = new CSLibs.Resource.Tracker("Health", 10);
         Assert.Equal(0, tracker.Amount);
     }
 
     [Fact]
     public void AddResource()
     {
-        var tracker = new Resource.Tracker("Health", 10, 2);
+        var tracker = new CSLibs.Resource.Tracker("Health", 10, 2);
         int replenished = tracker.Replenish(5);
         Assert.Equal(7, tracker.Amount);
         Assert.Equal(5, replenished);
@@ -23,7 +23,7 @@ public class ResourceTest
     [Fact]
     public void LimitMaximum()
     {
-        var tracker = new Resource.Tracker("Health", 10);
+        var tracker = new CSLibs.Resource.Tracker("Health", 10);
         int added = tracker.Replenish(20);
         Assert.Equal(10, tracker.Amount);
         Assert.Equal(10, added);
@@ -32,7 +32,7 @@ public class ResourceTest
     [Fact]
     public void Consume()
     {
-        var tracker = new Resource.Tracker("Health", 10, 5);
+        var tracker = new CSLibs.Resource.Tracker("Health", 10, 5);
         Assert.Equal(5, tracker.Amount);
         bool consumed = tracker.Consume(3);
         Assert.True(consumed);
@@ -42,7 +42,7 @@ public class ResourceTest
     [Fact]
     public void UnableToConsume()
     {
-        var tracker = new Resource.Tracker("Health", 10, 5);
+        var tracker = new CSLibs.Resource.Tracker("Health", 10, 5);
         Assert.Equal(5, tracker.Amount);
         bool consumed = tracker.Consume(10);
         Assert.False(consumed);
@@ -52,7 +52,7 @@ public class ResourceTest
     [Fact]
     public void CheckEmpty()
     {
-        var tracker = new Resource.Tracker("Health", 10);
+        var tracker = new CSLibs.Resource.Tracker("Health", 10);
         Assert.True(tracker.IsEmpty);
         Assert.False(tracker.IsFull);
     }
@@ -60,7 +60,7 @@ public class ResourceTest
     [Fact]
     public void CheckFull()
     {
-        var tracker = new Resource.Tracker("Health", 10, 10);
+        var tracker = new CSLibs.Resource.Tracker("Health", 10, 10);
         Assert.True(tracker.IsFull);
         Assert.False(tracker.IsEmpty);
     }

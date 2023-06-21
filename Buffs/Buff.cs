@@ -1,6 +1,6 @@
 using System;
 
-namespace Buffs
+namespace CSLibs.Buffs
 {
     public struct Buff
     {

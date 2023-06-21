@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Buffs
+namespace CSLibs.Buffs
 {
     public class Data : IEquatable<Data>
     {

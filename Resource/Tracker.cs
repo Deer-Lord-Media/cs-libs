@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Resource
+namespace CSLibs.Resource
 {
     public class Tracker
     {
