@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>Buffs</PackageId>
-    <Version>0.0.3</Version>
+    <Version>0.0.4</Version>
     <Authors>William Da Friend</Authors>
     <Company>Deer Lord Media</Company>
     <PackageDescription>Buff Tracker</PackageDescription>

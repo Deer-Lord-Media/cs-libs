@@ -20,7 +20,7 @@ jobs:
       matrix:
         include:
           - packageName: Buffs
-            packageVersion: "0.0.3"
+            packageVersion: "0.0.4"
           - packageName: Inventory
             packageVersion: "0.0.3"
           - packageName: Quests

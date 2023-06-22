@@ -37,9 +37,10 @@ namespace CSLibs.Buffs
             return (count > 0);
         }
 
-        public bool Apply(Data data)
+        // TODO: change this to return the buff itself
+        public Buff? Apply(Data data)
         {
-            bool retval = false;
+            Buff? retval = null;
             IEnumerable<Buff> buffs = this.members.Where(m => m.Data == data);
             if (buffs.Count() > 0)
             // check for this buff
@@ -52,8 +53,13 @@ namespace CSLibs.Buffs
                 int stacks = (buff.IsExpired)
                     ? 1
                     : Math.Min(data.MaxStacks, buff.Stacks + 1);
-                // create new buff; refresh timer with appropriate stack count
-                retval = this.members.Remove(buff) && this.members.Add(new Buff(data, stacks));
+                bool removed = this.members.Remove(buff);
+                buff = new Buff(data, stacks);
+                bool added = this.members.Add(buff);
+                if (removed && added)
+                {
+                    retval = buff;
+                }
             } else if (!this.containsBlocker(data) && !this.containsSimilar(data))
             {
                 // remove buffs that we override; mandatory
@@ -67,7 +73,11 @@ namespace CSLibs.Buffs
                 if (!this.IsFull)
                 // if we have room, add it
                 {
-                    retval = this.members.Add(new Buff(data, 1));
+                    Buff buff = new Buff(data, 1);
+                    if (this.members.Add(buff))
+                    {
+                        retval = buff;
+                    }
                 }
             }
             return retval;

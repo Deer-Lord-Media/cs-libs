@@ -8,6 +8,7 @@ namespace CSLibs.Buffs
     {
         public Data(
             int id,
+            string name,
             TimeSpan duration,
             HashSet<int>? similarTo = null,
             HashSet<int>? precedenceOver = null,
@@ -16,6 +17,7 @@ namespace CSLibs.Buffs
         )
         {
             this.Id = id;
+            this.Name = name;
             this.Duration = duration;
             this.similarTo = (similarTo == null)
                 ? new HashSet<int>()
@@ -28,9 +30,10 @@ namespace CSLibs.Buffs
         }
 
         public int Id { get; }
+        public string Name { get; }
+        public TimeSpan Duration { get; }
         public int PriorityLevel { get; }
         public int MaxStacks { get; }
-        public TimeSpan Duration { get; }
         private HashSet<int> similarTo { get; }
         private HashSet<int> precedenceOver { get; }
 
@@ -49,9 +52,9 @@ namespace CSLibs.Buffs
             return this.Id;
         }
 
-        public bool Equals(Data obj)
+        public bool Equals(Data data)
         {
-            return this.Id == obj.Id;
+            return this.Id == data.Id;
         }
     }
 }
