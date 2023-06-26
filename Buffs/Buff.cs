@@ -4,11 +4,11 @@ namespace CSLibs.Buffs
 {
     public struct Buff
     {
-        public Buff(Data data, int stacks = 1)
+        public Buff(Data data, int stacks = 1, DateTime? at = null)
         {
             this.Data = data;
             this.Stacks = Math.Max(0, Math.Min(data.MaxStacks, stacks));
-            this.At = DateTime.Now;
+            this.At = (at != null) ? (DateTime)at : DateTime.Now;
         }
 
         public Data Data { get; }

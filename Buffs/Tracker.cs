@@ -10,42 +10,75 @@ namespace CSLibs.Buffs
         {
             this.Maximum = maximum;
             this.members = (buffs == null) ? new HashSet<Buff>() : new HashSet<Buff>(buffs);
+            this.lastCached = DateTime.Now;
+            this.lastUpdated = DateTime.Now;
         }
 
         public HashSet<Buff> members;
         public int Maximum { get; }
-
         public bool IsFull { get { return this.members.Count() >= this.Maximum; } }
 
-        public IEnumerable<Buff> Active
+        private DateTime lastUpdated;
+        private DateTime lastCached;
+        private List<Buff> cache = new List<Buff>();
+
+        public List<Buff> Active
         {
             get
             {
-                return this.members.Where(m => !m.IsExpired); // add stack check
+                if (this.lastUpdated >= this.lastCached)
+                {
+                    IEnumerable<Buff> members = this.members.Where(m => !m.IsExpired && m.Stacks > 0);
+                    this.cache.Clear();
+                    this.cache.AddRange(members);
+                    this.lastCached = DateTime.Now;
+                }
+                return this.cache;
             }
         }
 
         public bool Expire()
         {
-            int count = this.members.RemoveWhere(m => m.IsExpired);
-            return (count > 0);
+            int count;
+            bool retval;
+
+            count = this.members.RemoveWhere(m => m.IsExpired);
+            if (count > 0)
+            {
+                this.lastUpdated = DateTime.Now;
+                retval = true;
+            } else
+            {
+                retval = false;
+            }
+            return retval;
         }
 
-        public bool Cancel(Data data)
+        public Buff? Cancel(Data data)
         {
-            int count = this.members.RemoveWhere(m => m.Data == data);
-            return (count > 0);
+            Buff? buff = null;
+            IEnumerable<Buff> members;
+
+            members = this.members.Where(m => m.Data == data);
+            if (members.Count() > 0)
+            {
+                buff = members.First();
+                this.lastUpdated = DateTime.Now;
+            }
+            return buff;
         }
 
-        // TODO: change this to return the buff itself
         public Buff? Apply(Data data)
         {
+            Buff buff;
+            IEnumerable<Buff> buffs;
             Buff? retval = null;
-            IEnumerable<Buff> buffs = this.members.Where(m => m.Data == data);
+            
+            buffs = this.members.Where(m => m.Data == data);
             if (buffs.Count() > 0)
             // check for this buff
             {
-                Buff buff = buffs.First();
+                buff = buffs.First();
                 // complicated logic
                 // if buff is expired, new application; new buff with 1 stack
                 // else if not maxStacks, set stacks to +1
@@ -56,7 +89,7 @@ namespace CSLibs.Buffs
                 bool removed = this.members.Remove(buff);
                 buff = new Buff(data, stacks);
                 bool added = this.members.Add(buff);
-                if (removed && added)
+                if (added)
                 {
                     retval = buff;
                 }
@@ -73,19 +106,23 @@ namespace CSLibs.Buffs
                 if (!this.IsFull)
                 // if we have room, add it
                 {
-                    Buff buff = new Buff(data, 1);
+                    buff = new Buff(data, 1);
                     if (this.members.Add(buff))
                     {
                         retval = buff;
                     }
                 }
             }
+            if (retval != null)
+            {
+                this.lastUpdated = DateTime.Now;
+            }
             return retval;
         }
 
-        public bool Remove(Data data)
+        public Buff? Remove(Data data)
         {
-            bool removed = false;
+            Buff? retval = null;
             IEnumerable<Buff> buffs = this.members.Where(m => m.Data == data);
             if (buffs.Count() > 0)
             {
@@ -93,29 +130,41 @@ namespace CSLibs.Buffs
                 this.members.Remove(buff);
                 if (buff.Stacks > 1)
                 {
-                    this.members.Add(new Buff(buff.Data, buff.Stacks - 1));
+                    retval = new Buff(buff.Data, buff.Stacks - 1, buff.At);
+                    this.members.Add(buff);
+                    this.lastUpdated = DateTime.Now;
                 }
-                removed = true;
             }
-            return removed;
+            return retval;
         }
 
         public bool Contains(Data data)
         {
-            IEnumerable<Buff> buffs = this.members.Where(m => m.Data == data);
+            IEnumerable<Buff> buffs;
+            
+            buffs = this.members.Where(m => m.Data == data);
             return (buffs.Count() > 0);
         }
 
         public bool Clear()
         {
+            bool retval = false;
+
             this.members.Clear();
-            return this.members.Count() == 0;
+            if (this.members.Count() == 0)
+            {
+                retval = true;
+                this.lastUpdated = DateTime.Now;
+            }
+            return retval;
         }
 
         private bool containsSimilar(Data data)
         {
+            IEnumerable<Buff> buffs;
             bool retval = false;
-            IEnumerable<Buff> buffs = this.members
+            
+            buffs = this.members
                 .Where(m => data.IsSimilarTo(m.Data) || m.Data.IsSimilarTo(data));
             retval = (buffs.Count() > 0);
             return retval;
@@ -123,7 +172,9 @@ namespace CSLibs.Buffs
 
         private bool containsBlocker(Data data)
         {
-            IEnumerable<Buff> buffs = this.members.Where(m => m.Data.HasPrecedenceOver(data));
+            IEnumerable<Buff> buffs;
+            
+            buffs = this.members.Where(m => m.Data.HasPrecedenceOver(data));
             return (buffs.Count() > 0);
         }
     }
