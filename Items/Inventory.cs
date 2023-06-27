@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace CSLibs.Inventory
+namespace CSLibs.Items
 {
-    public class Bag
+    public class Inventory
     {
-        public Bag(int maximum, IEnumerable<Slot>? slots = null)
+        public Inventory(int maximum, IEnumerable<Slot>? slots = null)
         {
             this.Maximum = maximum;
             this.members = (slots == null) ? new HashSet<Slot>() : new HashSet<Slot>(slots);
@@ -19,40 +19,41 @@ namespace CSLibs.Inventory
         public bool Store(Data data)
         {
             bool retval = false;
-            IEnumerable<Slot> members = this.members.Where(m => m.Data == data && !m.IsFull);
+            IEnumerable<Slot> members = this.members.Where(m => m.Item.Data == data && !m.IsFull);
             if (members.Count() > 0)
             {
                 Slot slot = members.First();
-                if (!slot.Data.Unique)
+                if (!slot.Item.Data.Unique)
                 {   
                     this.members.Remove(slot);
-                    this.members.Add(new Slot(slot.Data, slot.Number, slot.Stacks + 1));
+                    this.members.Add(new Slot(slot.Item, slot.Number, slot.Stacks + 1));
                     retval = true;
                 }
             } else if (!this.IsFull)
             {
                 HashSet<int> availableSlotNumbers = new HashSet<int>(Enumerable.Range(1, this.Maximum));
-                HashSet<int> usedSlotNumbers = new HashSet<int>(this.members.Select(m => m.Data.Id));
+                HashSet<int> usedSlotNumbers = new HashSet<int>(this.members.Select(m => m.Item.Data.Id));
                 availableSlotNumbers.ExceptWith(usedSlotNumbers);
+                Item item = new Item(data);
                 if (availableSlotNumbers.Count() > 0)
                 {
-                    retval = this.members.Add(new Slot(data, availableSlotNumbers.First()));
+                    retval = this.members.Add(new Slot(item, availableSlotNumbers.First()));
                 }
             }
             return retval;
         }
 
-        public bool Remove(Data data)
+        public bool Remove(Item item)
         {
             bool removed = false;
-            IEnumerable<Slot> members = this.members.Where(m => m.Data == data).OrderBy(m => m.Stacks);
+            IEnumerable<Slot> members = this.members.Where(m => m.Item == item).OrderBy(m => m.Stacks);
             if (members.Count() > 0)
             {
                 Slot slot = members.First();
                 this.members.Remove(slot);
                 if (slot.Stacks > 1)
                 {
-                    this.members.Add(new Slot(slot.Data, slot.Number, slot.Stacks - 1));
+                    this.members.Add(new Slot(slot.Item, slot.Number, slot.Stacks - 1));
                 }
                 removed = true;
             }
@@ -61,7 +62,7 @@ namespace CSLibs.Inventory
 
         public bool Contains(Data data)
         {
-            var members = this.members.Where(m => m.Data == data && m.Stacks > 0);
+            var members = this.members.Where(m => m.Item.Data == data && m.Stacks > 0);
             return members.Count() > 0;
         }
 
@@ -83,16 +84,32 @@ namespace CSLibs.Inventory
                 if (slotA != null)
                 {
                     this.members.Remove(slotA);
-                    this.members.Add(new Slot(slotA.Data, slotNumberB, slotA.Stacks));
+                    this.members.Add(new Slot(slotA.Item, slotNumberB, slotA.Stacks));
                     retval = true;
                 }
                 if (slotB != null)
                 {
                     this.members.Remove(slotB);
-                    this.members.Add(new Slot(slotB.Data, slotNumberA, slotB.Stacks));
+                    this.members.Add(new Slot(slotB.Item, slotNumberA, slotB.Stacks));
                     retval = true;
                 }
             }
+            return retval;
+        }
+        public bool CanUse(int slotNumber)
+        {
+            bool retval;
+
+            Slot? slot = this.Slot(slotNumber);
+            retval = (
+                slot != null  // have slot
+                && slot.Item.IsUsable  // isn't on cooldown itself
+                && this.members
+                    .Where(
+                        m => slot.Item.Data.SharesCoolDown(m.Item.Data.Id)
+                        && m.Item.OnCoolDown
+                    ).Count() == 0  // nothing else on cooldown
+            );
             return retval;
         }
     }
