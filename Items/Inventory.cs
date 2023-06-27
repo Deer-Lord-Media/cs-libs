@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace CSLibs.Items
 {
@@ -19,25 +20,31 @@ namespace CSLibs.Items
         public bool Store(Data data)
         {
             bool retval = false;
-            IEnumerable<Slot> members = this.members.Where(m => m.Item.Data == data && !m.IsFull);
-            if (members.Count() > 0)
-            {
-                Slot slot = members.First();
-                if (!slot.Item.Data.Unique)
-                {   
-                    this.members.Remove(slot);
-                    this.members.Add(new Slot(slot.Item, slot.Number, slot.Stacks + 1));
-                    retval = true;
-                }
-            } else if (!this.IsFull)
-            {
-                HashSet<int> availableSlotNumbers = new HashSet<int>(Enumerable.Range(1, this.Maximum));
-                HashSet<int> usedSlotNumbers = new HashSet<int>(this.members.Select(m => m.Item.Data.Id));
-                availableSlotNumbers.ExceptWith(usedSlotNumbers);
-                Item item = new Item(data);
-                if (availableSlotNumbers.Count() > 0)
+
+            IEnumerable<Slot> members = this.members.Where(m => m.Item.Data == data);
+            int numberOwned = members.Select(m => m.Item.Data.Id).Sum();
+            if (numberOwned < data.MaxOwned)
+            {     
+                members = members.Where(m => !m.IsFull);
+                if (members.Count() > 0)
                 {
-                    retval = this.members.Add(new Slot(item, availableSlotNumbers.First()));
+                    Slot slot = members.First();
+                    if (!slot.Item.Data.Unique)
+                    {   
+                        this.members.Remove(slot);
+                        this.members.Add(new Slot(slot.Item, slot.Number, slot.Stacks + 1));
+                        retval = true;
+                    }
+                } else if (!this.IsFull)
+                {
+                    HashSet<int> availableSlotNumbers = new HashSet<int>(Enumerable.Range(1, this.Maximum));
+                    HashSet<int> usedSlotNumbers = new HashSet<int>(this.members.Select(m => m.Item.Data.Id));
+                    availableSlotNumbers.ExceptWith(usedSlotNumbers);
+                    Item item = new Item(data);
+                    if (availableSlotNumbers.Count() > 0)
+                    {
+                        retval = this.members.Add(new Slot(item, availableSlotNumbers.First()));
+                    }
                 }
             }
             return retval;

@@ -23,7 +23,7 @@ namespace CSLibs.Items
             {
                 if (this.Data.MaxCharges > 0)
                 {
-                    this.charges = this.Charges - 1;
+                    this.Charges = this.Charges - 1;
                 }
                 retval = true;
             }
@@ -34,7 +34,8 @@ namespace CSLibs.Items
         {
             get
             {
-                return (this.Count > 0 && this.Charges > 0 && this.CoolDown.Ready);
+                bool chargesAvailable = this.Data.MaxCharges == 0 || this.Charges > 0;
+                return (chargesAvailable && this.CoolDown.Ready);
             }
         }
     }

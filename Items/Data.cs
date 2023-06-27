@@ -9,7 +9,6 @@ namespace CSLibs.Items
             int id,
             string name,
             string? description = null,
-            bool unique = false,
             int maxStacks = 1,
             int maxCharges = 0,
             TimeSpan? coolDown = null,
@@ -19,7 +18,6 @@ namespace CSLibs.Items
             this.Id = id;
             this.Name = name;
             this.Description = (description == null) ? "" : (string)description;
-            this.Unique = unique;
             this.MaxStacks = maxStacks;
             this.MaxCharges = maxCharges;
             this.CoolDown = (coolDown == null) ? new TimeSpan(0, 0, 0, 0, 0) : (TimeSpan)coolDown;
