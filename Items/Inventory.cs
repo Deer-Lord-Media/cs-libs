@@ -12,59 +12,70 @@ namespace CSLibs.Items
             this.members = (slots == null) ? new HashSet<Slot>() : new HashSet<Slot>(slots);
         }
 
+        private Dictionary<int, CoolDown> coolDowns = new Dictionary<int, CoolDown>();
         public int Maximum { get; }
         public bool IsFull { get { return this.members.Count() >= this.Maximum; } }
         public List<Slot> Slots { get { return new List<Slot>(this.members.OrderBy(m => m.Number)); } }
         private HashSet<Slot> members;
 
-        public bool Store(Data data)
+        public bool Store(Item item)
+        {
+            Slot slot;
+            bool added = false;
+
+            var members = this.members.Where(m => m.Item.Data == item.Data);
+            if (members.Count() > 0)
+            {
+                var member = members.First();
+
+                if (!member.IsFull)
+                {
+                    this.members.Remove(member);
+                    slot = new Slot(member.Item, member.Number, member.Stacks + 1);
+                    this.members.Add(slot);
+                    added = true;
+                }
+            }
+            if (!added && !this.IsFull)
+            {
+                HashSet<int> availableSlotNumbers = new HashSet<int>(Enumerable.Range(1, this.Maximum));
+                HashSet<int> usedSlotNumbers = new HashSet<int>(this.members.Select(m => m.Number));
+
+                availableSlotNumbers.ExceptWith(usedSlotNumbers);
+
+                if (availableSlotNumbers.Count() > 0)
+                {
+                    // get the first free slot number
+                    int number = availableSlotNumbers.OrderBy(i => i).First();
+
+                    // see if we have any items that share this cooldown
+                    members = this.members
+                        .Where(m => m.Item.Data.SharesCoolDown(item.Data));
+                    // get the cooldown if so, else make a new one
+                    CoolDown coolDown = (members.Count() > 0)
+                        ? members.First().Item.CoolDown
+                        : new CoolDown(item.Data.CoolDown);
+                    // create a new item
+                    item = new Item(item.Data, item.Charges, coolDown: coolDown);
+                    // create a new slot
+                    slot = new Slot(item, number, 1);
+                    added = true;
+                }
+            }
+            return added;
+        }
+
+        public bool UseSlot(int number)
         {
             bool retval = false;
 
-            IEnumerable<Slot> members = this.members.Where(m => m.Item.Data == data);
-            int numberOwned = members.Select(m => m.Item.Data.Id).Sum();
-            if (numberOwned < data.MaxOwned)
-            {     
-                members = members.Where(m => !m.IsFull);
-                if (members.Count() > 0)
-                {
-                    Slot slot = members.First();
-                    if (!slot.Item.Data.Unique)
-                    {   
-                        this.members.Remove(slot);
-                        this.members.Add(new Slot(slot.Item, slot.Number, slot.Stacks + 1));
-                        retval = true;
-                    }
-                } else if (!this.IsFull)
-                {
-                    HashSet<int> availableSlotNumbers = new HashSet<int>(Enumerable.Range(1, this.Maximum));
-                    HashSet<int> usedSlotNumbers = new HashSet<int>(this.members.Select(m => m.Item.Data.Id));
-                    availableSlotNumbers.ExceptWith(usedSlotNumbers);
-                    Item item = new Item(data);
-                    if (availableSlotNumbers.Count() > 0)
-                    {
-                        retval = this.members.Add(new Slot(item, availableSlotNumbers.First()));
-                    }
-                }
+            IEnumerable<Slot> slots = this.members.Where(m => m.Number == number);
+            if (slots.Count() > 0)
+            {
+                Slot slot = slots.First();
+                retval = slot.Item.Use();
             }
             return retval;
-        }
-
-        public bool Remove(Item item)
-        {
-            bool removed = false;
-            IEnumerable<Slot> members = this.members.Where(m => m.Item == item).OrderBy(m => m.Stacks);
-            if (members.Count() > 0)
-            {
-                Slot slot = members.First();
-                this.members.Remove(slot);
-                if (slot.Stacks > 1)
-                {
-                    this.members.Add(new Slot(slot.Item, slot.Number, slot.Stacks - 1));
-                }
-                removed = true;
-            }
-            return removed;
         }
 
         public bool Contains(Data data)
@@ -101,22 +112,6 @@ namespace CSLibs.Items
                     retval = true;
                 }
             }
-            return retval;
-        }
-        public bool CanUse(int slotNumber)
-        {
-            bool retval;
-
-            Slot? slot = this.Slot(slotNumber);
-            retval = (
-                slot != null  // have slot
-                && slot.Item.IsUsable  // isn't on cooldown itself
-                && this.members
-                    .Where(
-                        m => slot.Item.Data.SharesCoolDown(m.Item.Data.Id)
-                        && m.Item.OnCoolDown
-                    ).Count() == 0  // nothing else on cooldown
-            );
             return retval;
         }
     }

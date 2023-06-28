@@ -8,7 +8,8 @@ namespace CSLibs.Items
         {
             this.Duration = duration;
         }
-        public DateTime StartedAt { get; }
+        private DateTime startedAt;
+        public DateTime StartedAt { get { return this.startedAt; } }
         public TimeSpan Duration { get; }
 
         public bool Start()
@@ -16,7 +17,7 @@ namespace CSLibs.Items
             bool retval = false;
             if (this.Ready)
             {
-                this.StartedAt = DateTime.Now;
+                this.startedAt = DateTime.Now;
                 retval = true;
             }
             return retval;
@@ -26,7 +27,7 @@ namespace CSLibs.Items
         {
             get
             {
-                return DateTime.Now - this.StartedAt < this.Duration;
+                return DateTime.Now - this.StartedAt <= this.Duration;
             }
         }
 
@@ -34,7 +35,7 @@ namespace CSLibs.Items
         {
             get
             {
-                return DateTime.Now - this.StartedAt > this.Duration;
+                return !this.OnCoolDown;
             }
         }
     }

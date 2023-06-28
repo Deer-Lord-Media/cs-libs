@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CSLibs.Items
 {
@@ -44,9 +45,7 @@ namespace CSLibs.Items
 
         public bool SharesCoolDown(Data data)
         {
-             return (this.sharesCoolDownWith.Count() > 0)
-                ? this.sharesCoolDownWith.Contains(data.Id)
-                : false;
+            return this.sharesCoolDownWith.Contains(data.Id);
         }
 
         public override int GetHashCode()
