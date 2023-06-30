@@ -12,7 +12,7 @@ namespace CSLibs.Items
             string? description = null,
             int maxStacks = 1,
             int maxCharges = 0,
-            TimeSpan? coolDown = null,
+            TimeSpan? coolDownDuration = null,
             HashSet<int>? sharesCoolDownWith = null
         )
         {
@@ -21,7 +21,7 @@ namespace CSLibs.Items
             this.Description = (description == null) ? "" : (string)description;
             this.MaxStacks = maxStacks;
             this.MaxCharges = maxCharges;
-            this.CoolDown = (coolDown == null) ? new TimeSpan(0, 0, 0, 0, 0) : (TimeSpan)coolDown;
+            this.CoolDownDuration = (coolDownDuration == null) ? new TimeSpan(0, 0, 0, 0, 0) : (TimeSpan)coolDownDuration;
             this.sharesCoolDownWith = (sharesCoolDownWith == null)
                 ? new HashSet<int>()
                 : new HashSet<int>(sharesCoolDownWith);
@@ -33,7 +33,7 @@ namespace CSLibs.Items
         public int MaxStacks { get; }
         public int MaxOwned { get; }
         public int MaxCharges { get; }
-        public TimeSpan CoolDown { get; }
+        public TimeSpan CoolDownDuration { get; }
         private HashSet<int> sharesCoolDownWith = new HashSet<int>();
         public bool IsUnique
         {

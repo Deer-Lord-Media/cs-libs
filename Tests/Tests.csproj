@@ -24,9 +24,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Buffs\Buffs.csproj" />
-    <ProjectReference Include="..\Inventory\Inventory.csproj" />
     <ProjectReference Include="..\Quests\Quests.csproj" />
     <ProjectReference Include="..\Resource\Resource.csproj" />
+    <ProjectReference Include="..\Items\Items.csproj" />
   </ItemGroup>
 
 </Project>

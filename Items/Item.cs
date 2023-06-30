@@ -8,7 +8,7 @@ namespace CSLibs.Items
         {
             this.Data = data;
             this.charges = (charges == null) ? this.Data.MaxCharges : (int)charges;
-            this.CoolDown = (coolDown == null) ? new CoolDown(data.CoolDown) : (CoolDown)coolDown;
+            this.CoolDown = (coolDown == null) ? new CoolDown(data.CoolDownDuration) : (CoolDown)coolDown;
         }
         public Data Data { get; }
         public CoolDown CoolDown { get; }
@@ -19,7 +19,7 @@ namespace CSLibs.Items
         {
             bool retval = false;
 
-            if (this.CoolDown.Start())
+            if (this.IsUsable && this.CoolDown.Start())
             {
                 if (this.Data.MaxCharges > 0)
                 {
