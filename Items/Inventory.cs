@@ -15,9 +15,7 @@ namespace CSLibs.Items
         private Dictionary<int, CoolDown> coolDowns = new Dictionary<int, CoolDown>();
         public int Maximum { get; }
         public bool IsFull { get { return this.members.Count() >= this.Maximum; } }
-        public List<Slot> Slots { get { return new List<Slot>(this.members.OrderBy(m => m.Number)); } }
         private HashSet<Slot> members;
-        public HashSet<Slot> Members { get { return this.members; } }
 
         private Slot? putInFreeSlot(Item item, int amount, int start, int end)
         {

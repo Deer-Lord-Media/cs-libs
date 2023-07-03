@@ -130,16 +130,12 @@ public class TestBag
         var second = bag.Slot(2);
         Assert.Equal(1, first.Item.Data.Id);
         Assert.Equal(2, second.Item.Data.Id);
-        Assert.Equal(1, first.Number);
-        Assert.Equal(2, second.Number);
         bool success = bag.SwapSlots(1, 2);
         Assert.True(success);
-        first = bag.Slots[0];
-        second = bag.Slots[1];
+        first = bag.Slot(1);
+        second = bag.Slot(2);
         Assert.Equal(2, first.Item.Data.Id);
         Assert.Equal(1, second.Item.Data.Id);
-        Assert.Equal(1, first.Number);
-        Assert.Equal(2, second.Number);
     }
 
     [Fact]
@@ -150,11 +146,15 @@ public class TestBag
         var bag = new CSLibs.Items.Inventory(2);
         int amount = bag.Store(item);
         Assert.Equal(1, amount);
-        var slot = bag.Slots.First();
-        Assert.Equal(1, slot.Number);
+        var slot = bag.Slot(1);
+        Assert.NotNull(slot);
+        slot = bag.Slot(2);
+        Assert.Null(slot);
         bool success = bag.SwapSlots(1, 2);
         Assert.True(success);
-        slot = bag.Slots.First();
-        Assert.Equal(2, slot.Number);
+        slot = bag.Slot(1);
+        Assert.Null(slot);
+        slot = bag.Slot(2);
+        Assert.NotNull(slot);
     }
 }
