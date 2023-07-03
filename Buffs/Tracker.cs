@@ -10,48 +10,29 @@ namespace CSLibs.Buffs
         {
             this.Maximum = maximum;
             this.members = (buffs == null) ? new HashSet<Buff>() : new HashSet<Buff>(buffs);
-            this.lastCached = DateTime.Now;
-            this.lastUpdated = DateTime.Now;
         }
 
         public HashSet<Buff> members;
         public int Maximum { get; }
         public bool IsFull { get { return this.members.Count() >= this.Maximum; } }
 
-        private DateTime lastUpdated;
-        private DateTime lastCached;
         private List<Buff> cache = new List<Buff>();
 
         public List<Buff> Active
         {
             get
             {
-                if (this.lastUpdated >= this.lastCached)
-                {
-                    IEnumerable<Buff> members = this.members.Where(m => !m.IsExpired && m.Stacks > 0);
-                    this.cache.Clear();
-                    this.cache.AddRange(members);
-                    this.lastCached = DateTime.Now;
-                }
-                return this.cache;
+                IEnumerable<Buff> members = this.members.Where(m => !m.IsExpired && m.Stacks > 0);
+                return new List<Buff>(members);
             }
         }
 
         public bool Expire()
         {
             int count;
-            bool retval;
 
             count = this.members.RemoveWhere(m => m.IsExpired);
-            if (count > 0)
-            {
-                this.lastUpdated = DateTime.Now;
-                retval = true;
-            } else
-            {
-                retval = false;
-            }
-            return retval;
+            return count > 0;
         }
 
         public Buff? Cancel(Data data)
@@ -60,11 +41,7 @@ namespace CSLibs.Buffs
             IEnumerable<Buff> members;
 
             members = this.members.Where(m => m.Data == data);
-            if (members.Count() > 0)
-            {
-                buff = members.First();
-                this.lastUpdated = DateTime.Now;
-            }
+            if (members.Count() > 0) buff = members.First();
             return buff;
         }
 
@@ -113,10 +90,6 @@ namespace CSLibs.Buffs
                     }
                 }
             }
-            if (retval != null)
-            {
-                this.lastUpdated = DateTime.Now;
-            }
             return retval;
         }
 
@@ -132,7 +105,6 @@ namespace CSLibs.Buffs
                 {
                     retval = new Buff(buff.Data, buff.Stacks - 1, buff.At);
                     this.members.Add(buff);
-                    this.lastUpdated = DateTime.Now;
                 }
             }
             return retval;
@@ -148,14 +120,10 @@ namespace CSLibs.Buffs
 
         public bool Clear()
         {
-            bool retval = false;
+            bool retval;
 
             this.members.Clear();
-            if (this.members.Count() == 0)
-            {
-                retval = true;
-                this.lastUpdated = DateTime.Now;
-            }
+            retval = this.members.Count() == 0;
             return retval;
         }
 
