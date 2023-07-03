@@ -10,10 +10,10 @@ public class TestBag
     {
         int charges = 10;
         TimeSpan duration = new TimeSpan(0, 0, 0, 0, 1000);
-        var data = new CSLibs.Items.Data(
+        var data = new Data(
             1, "NAME", maxCharges: charges, coolDownDuration: duration
         );
-        var item = new CSLibs.Items.Item(data);
+        var item = new Item(data);
         // initial creation from data
         Assert.Equal(charges, item.Charges);
         Assert.Equal(duration, item.CoolDown.Duration);
@@ -26,10 +26,10 @@ public class TestBag
     public void TestCoolDown()
     {
         var duration = new TimeSpan(0, 0, 1);
-        var data = new CSLibs.Items.Data(
+        var data = new Data(
             1, "NAME", maxCharges: 10, coolDownDuration: duration
         );
-        var item = new CSLibs.Items.Item(data);
+        var item = new Item(data);
         Assert.True(item.IsUsable);
         var used = item.Use();
         Assert.True(used);
@@ -61,10 +61,10 @@ public class TestBag
     {
         var inventory = new Inventory(10);
         var duration = new TimeSpan(0, 0, 1);
-        var data = new CSLibs.Items.Data(
+        var data = new Data(
             1, "NAME", maxCharges: 10, coolDownDuration: duration, maxStacks: 2
         );
-        var item = new CSLibs.Items.Item(data);
+        var item = new Item(data);
         Assert.False(inventory.IsFull);
         int amount = inventory.Store(item);
         Assert.Equal(1, amount);
@@ -88,10 +88,10 @@ public class TestBag
     {
         var inventory = new Inventory(2);
         var duration = new TimeSpan(0, 0, 1);
-        var data = new CSLibs.Items.Data(
+        var data = new Data(
             1, "NAME", maxCharges: 10, coolDownDuration: duration, maxStacks: 1
         );
-        var item = new CSLibs.Items.Item(data);
+        var item = new Item(data);
         int added;
         Assert.False(inventory.IsFull);
         // seems to work fine the first time
@@ -110,10 +110,10 @@ public class TestBag
         int amount;
         var inventory = new Inventory(20);
         var duration = new TimeSpan(0, 0, 1);
-        var data = new CSLibs.Items.Data(
+        var data = new Data(
             1, "NAME", maxCharges: 10, coolDownDuration: duration, maxStacks: 1
         );
-        var item = new CSLibs.Items.Item(data);
+        var item = new Item(data);
         var range = new Tuple<int, int>(2, 3);
         Assert.False(inventory.IsFull);
         foreach(int i in Enumerable.Range(0, 2))
@@ -148,9 +148,9 @@ public class TestBag
     [Fact]
     public void SwapSlotsTwoItems()
     {
-        var data1 = new CSLibs.Items.Data(1, "NAME");
-        var data2 = new CSLibs.Items.Data(2, "NAME");
-        var bag = new CSLibs.Items.Inventory(2);
+        var data1 = new Data(1, "NAME");
+        var data2 = new Data(2, "NAME");
+        var bag = new Inventory(2);
         var item1 = new Item(data1);
         var item2 = new Item(data2);
         int amount = bag.Store(item1);
@@ -172,9 +172,9 @@ public class TestBag
     [Fact]
     public void SwapSlotsItemToEmpty()
     {
-        var data = new CSLibs.Items.Data(1, "NAME");
-        var item = new CSLibs.Items.Item(data);
-        var bag = new CSLibs.Items.Inventory(2);
+        var data = new Data(1, "NAME");
+        var item = new Item(data);
+        var bag = new Inventory(2);
         int amount = bag.Store(item);
         Assert.Equal(1, amount);
         var slot = bag.Slot(1);
