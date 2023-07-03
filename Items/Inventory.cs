@@ -174,7 +174,7 @@ namespace CSLibs.Items
             return retval;
         }
 
-      public bool UseSlot(int number)
+        public bool UseSlot(int number)
         {
             bool retval = false;
 

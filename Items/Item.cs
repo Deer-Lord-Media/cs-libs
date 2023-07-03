@@ -17,21 +17,20 @@ namespace CSLibs.Items
         public Data Data { get; }
         public CoolDown CoolDown { get; }
         private int charges;
-        public int Charges { get { return this.charges; } set { this.charges =  Math.Max(0, value); } }
+        public int Charges
+        {
+            get { return this.charges; }
+            set { this.charges =  Math.Max(0, value); }
+        }
 
         public bool Use()
         {
-            bool retval = false;
-
-            if (this.IsUsable && this.CoolDown.Start())
+            bool started = this.IsUsable && this.CoolDown.Start();
+            if (started && this.Data.MaxCharges > 0)
             {
-                if (this.Data.MaxCharges > 0)
-                {
-                    this.Charges = this.Charges - 1;
-                }
-                retval = true;
+                this.Charges = this.Charges - 1;
             }
-            return retval;
+            return started;
         }
 
         public bool IsUsable
