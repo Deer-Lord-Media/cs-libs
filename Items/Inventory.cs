@@ -130,7 +130,7 @@ namespace CSLibs.Items
             // we need more space than we can stack on
             if (totalFree < amount)
             {
-                int total = end - start;
+                int total = end+1 - start;
                 int numFreeSlots = total - usedSlots.Count();
                 int numFreeStacks = numFreeSlots * item.Data.MaxStacks;
                 if (amount - totalFree > numFreeStacks)

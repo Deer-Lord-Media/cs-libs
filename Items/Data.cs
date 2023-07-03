@@ -12,6 +12,7 @@ namespace CSLibs.Items
             string? description = null,
             int maxStacks = 1,
             int maxCharges = 0,
+            int maxOwned = 0,
             TimeSpan? coolDownDuration = null,
             HashSet<int>? sharesCoolDownWith = null
         )
@@ -21,6 +22,7 @@ namespace CSLibs.Items
             this.Description = (description == null) ? "" : (string)description;
             this.MaxStacks = maxStacks;
             this.MaxCharges = maxCharges;
+            this.MaxOwned = maxOwned;
             this.CoolDownDuration = (coolDownDuration == null) ? new TimeSpan(0, 0, 0, 0, 0) : (TimeSpan)coolDownDuration;
             this.sharesCoolDownWith = (sharesCoolDownWith == null)
                 ? new HashSet<int>()
