@@ -4,11 +4,14 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
 
-    <PackageId>Inventory</PackageId>
-    <Version>0.0.3</Version>
+    <PackageId>Items</PackageId>
+    <Version>0.0.1</Version>
     <Authors>William DaFriend</Authors>
     <Company>Deer Lord Media</Company>
-    <PackageDescription>Inventory Management</PackageDescription>
+    <PackageDescription>Item system. 
+      Provides facilities inventory management and using owned items,
+      complete with shareable cooldowns.
+    </PackageDescription>
     <RepositoryUrl>https://github.com/Deer-Lord-Media/cs-libs</RepositoryUrl>
   </PropertyGroup>
 
