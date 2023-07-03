@@ -7,8 +7,12 @@ namespace CSLibs.Items
         public Item(Data data, int? charges = null, CoolDown? coolDown = null)
         {
             this.Data = data;
-            this.charges = (charges == null) ? this.Data.MaxCharges : (int)charges;
-            this.CoolDown = (coolDown == null) ? new CoolDown(data.CoolDownDuration) : (CoolDown)coolDown;
+            this.charges = (charges == null)
+                ? this.Data.MaxCharges
+                : (int)charges;
+            this.CoolDown = (coolDown == null)
+                ? new CoolDown(data.CoolDownDuration)
+                : (CoolDown)coolDown;
         }
         public Data Data { get; }
         public CoolDown CoolDown { get; }

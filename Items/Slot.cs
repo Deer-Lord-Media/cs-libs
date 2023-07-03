@@ -23,5 +23,13 @@ namespace CSLibs.Items
                 return this.Stacks >= this.Item.Data.MaxStacks;
             }
         }
+
+        public int FreeSpace
+        {
+            get
+            {
+                return this.Item.Data.MaxStacks - this.Stacks;
+            }
+        }
     }
 }

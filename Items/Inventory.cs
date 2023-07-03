@@ -67,11 +67,30 @@ namespace CSLibs.Items
             return slot;
         }
 
-        public bool Store(Item item, int amount = 1, Tuple<int, int>? range = null)
+        private bool addStacksToSlot(int slotNumber, int amount)
         {
+            bool retval = false;
+            Slot? slot = this.Slot(slotNumber);
+            if (slot != null)
+            {
+                int stacks = slot.Stacks + amount;
+                this.members.Remove(slot);
+                Slot updated = new Slot(slot.Item, slot.Number, stacks);
+                retval = this.members.Add(updated);
+                if (!retval)
+                {
+                    this.members.Add(slot);
+                }
+            }
+            return retval;
+        }
+
+        // returns how many are added
+        public int Store(Item item, int amount = 1, Tuple<int, int>? range = null)
+        {
+            int retval = 0;
             int start;
             int end;
-            Slot? slot;
 
             if (range == null)
             {
@@ -79,51 +98,85 @@ namespace CSLibs.Items
             }
             start = Math.Max(1, range.Item1);
             end = Math.Min(this.Maximum, range.Item2);
-           
-            // try to stack on existing items
-            IEnumerable<Slot> members = this.members
-                .Where(
-                    m => m.Item.Data == item.Data 
-                        && m.Stacks < item.Data.MaxStacks
-                        && m.Number >= start
-                        && m.Number <= end
-                )
-                .OrderBy(m => m.Number);
-            if (members.Count() > 0)
-            {
-                Slot member = members.First();
-                amount = member.Stacks + amount;
-                // amount = 10 + 20;
-                // amount = 30;
-                int stacks = Math.Min(member.Item.Data.MaxStacks, amount);
-                // stacks = Math.Min(20, 30);
-                // stacks = 20;
-                int remainder = Math.Max(0, amount - member.Item.Data.MaxStacks);
-                // remainder = Math.Max(0, 30 - 20);
-                // remainder = Math.Max(0, 10);
-                // remainder = 10;
 
-                // replace existing slot
-                this.members.Remove(member);
-                slot = this.putInFreeSlot(member.Item, stacks, start, end);
-
-                if (
-                    slot != null
-                    && remainder > 0
-                    && !this.Store(item, remainder, range)
-                )
-                {
-                    this.members.Remove(slot);
-                    this.members.Add(member);
-                }
-            } else
+            // check for unique
+            var itemSlots = this.members.Where(m => m.Item.Data == item.Data);
+            if (
+                item.Data.IsUnique
+                && itemSlots.Count() > 0
+            )
             {
-                slot = this.putInFreeSlot(item, amount, start, end);
+                return retval;
             }
-            return (slot != null);
+
+            // check that we wont override 
+            int totalOwned = itemSlots.Select(m => m.Stacks).Sum();
+            if (item.Data.MaxOwned != 0 && item.Data.MaxOwned < totalOwned + amount)
+            {
+                amount = Math.Max(0, item.Data.MaxOwned - totalOwned);
+            }
+
+            var usedSlots = this.members.Where(
+                m => m.Number >= start && m.Number <= end  
+            );
+            itemSlots = usedSlots.Where(m => m.Item.Data == item.Data);
+
+            // find how many unfilled stacks can we fill up
+            // we should also check for current total to see if we'll exceed MaxOwned
+            int totalFree = itemSlots
+                .Select(m => m.Item.Data.MaxStacks - m.Stacks)
+                .Sum();
+
+            // we need more space than we can stack on
+            if (totalFree < amount)
+            {
+                int total = end - start;
+                int numFreeSlots = total - usedSlots.Count();
+                int numFreeStacks = numFreeSlots * item.Data.MaxStacks;
+                if (amount - totalFree > numFreeStacks)
+                {
+                    // we don't have space!!
+                    return retval;
+                }
+            }
+
+            // members = this.members.Where(
+            //     m => m.Number >= start
+            //         && m.Number <= end 
+            //         && m.Item.Data == item.Data
+            // );
+            var slotData = new List<Tuple<int, int>>(
+                this.members
+                .Where(
+                    m => m.Number >= start
+                        && m.Number <= end
+                        && m.Item.Data == item.Data
+                )
+                .Select(m => new Tuple<int, int>(m.Number, m.Stacks))
+            );
+            foreach (Tuple<int, int> data in slotData)
+            {
+                int number = data.Item1;
+                int stacks = data.Item2;
+                int freeSpace = item.Data.MaxStacks - stacks;
+                int toAdd = Math.Max(0, Math.Min(freeSpace, amount));
+                if (this.addStacksToSlot(number, toAdd))
+                {
+                    amount = Math.Max(0, amount - toAdd);
+                    retval = retval + toAdd;
+                }
+            }
+            while (amount > 0)
+            {
+                int stacks = Math.Max(0, Math.Min(amount, item.Data.MaxStacks));
+                this.putInFreeSlot(item, stacks, start, end);
+                amount = Math.Max(0, amount - stacks);
+                retval = retval + stacks;
+            }
+            return retval;
         }
 
-        public bool UseSlot(int number)
+      public bool UseSlot(int number)
         {
             bool retval = false;
 
