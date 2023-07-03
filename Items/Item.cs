@@ -20,7 +20,7 @@ namespace CSLibs.Items
         public int Charges
         {
             get { return this.charges; }
-            set { this.charges =  Math.Max(0, value); }
+            set { this.charges = Math.Min(Data.MaxCharges, Math.Max(0, value)); }
         }
 
         public bool Use()

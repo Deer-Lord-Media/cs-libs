@@ -23,6 +23,21 @@ namespace CSLibs.Items
             return retval;
         }
 
+        public bool Reset()
+        {
+            bool retval;
+
+            if (this.OnCoolDown)
+            {
+                this.startedAt = DateTime.Now - this.Duration;
+                retval = true;
+            } else
+            {
+                retval = false;
+            }
+            return retval;
+        }
+
         public bool OnCoolDown
         {
             get

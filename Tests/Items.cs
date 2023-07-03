@@ -39,6 +39,24 @@ public class TestBag
     }
 
     [Fact]
+    public void ResetCoolDown()
+    {
+        var duration = new TimeSpan(0, 0, 1);
+        var coolDown = new CoolDown(duration);
+        Assert.True(coolDown.Ready);
+        Assert.False(coolDown.OnCoolDown);
+        var started = coolDown.Start();
+        Assert.True(started);
+        Assert.False(coolDown.Ready);
+        Assert.True(coolDown.OnCoolDown);
+        started = coolDown.Start();
+        Assert.False(started);
+        var reset = coolDown.Reset();
+        Assert.True(reset);
+        Assert.True(coolDown.Ready);
+        Assert.False(coolDown.OnCoolDown);
+    }
+    [Fact]
     public void StoreAndStackItem()
     {
         var inventory = new Inventory(10);
@@ -96,7 +114,6 @@ public class TestBag
             1, "NAME", maxCharges: 10, coolDownDuration: duration, maxStacks: 1
         );
         var item = new CSLibs.Items.Item(data);
-        bool stored;
         var range = new Tuple<int, int>(2, 3);
         Assert.False(inventory.IsFull);
         foreach(int i in Enumerable.Range(0, 2))
@@ -111,7 +128,21 @@ public class TestBag
     [Fact]
     public void RespectSharedCoolDowns()
     {
-
+        var data1 = new Data(1, "NAME", maxCharges: 5);
+        var data2 = new Data(1, "NAME", maxCharges: 5);
+        var coolDown = new CoolDown(new TimeSpan(0, 0, 1));
+        var item1 = new Item(data1, coolDown: coolDown);
+        var item2 = new Item(data2, coolDown: coolDown);
+        var item3 = new Item(data1);
+        Assert.True(item1.IsUsable);
+        Assert.True(item2.IsUsable);
+        bool used = item1.Use();
+        Assert.True(used);
+        Assert.False(item1.IsUsable);
+        Assert.False(item2.IsUsable);
+        used = item2.Use();
+        Assert.False(used);
+        Assert.True(item3.IsUsable);
     }
 
     [Fact]
