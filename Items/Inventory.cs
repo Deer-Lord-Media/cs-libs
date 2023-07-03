@@ -107,61 +107,65 @@ namespace CSLibs.Items
                 return retval;
             }
 
-            // check that we wont override 
+            // check that we wont overflow the max
             int totalOwned = itemSlots.Select(m => m.Stacks).Sum();
             if (item.Data.MaxOwned != 0 && item.Data.MaxOwned < totalOwned + amount)
             {
+                // cap amount to the total possible free space
                 amount = Math.Max(0, item.Data.MaxOwned - totalOwned);
             }
 
+            // slots in our range only
             var usedSlots = this.members.Where(
                 m => m.Number >= start && m.Number <= end  
             );
+            // where the slot has the item in question
             itemSlots = usedSlots.Where(m => m.Item.Data == item.Data);
 
-            // find how many unfilled stacks can we fill up
-            // we should also check for current total to see if we'll exceed MaxOwned
-            int totalFree = itemSlots
+            // find existing stacks of item
+            // total the free space these slots have
+            int stackableFree = itemSlots
                 .Select(m => m.Item.Data.MaxStacks - m.Stacks)
                 .Sum();
 
             // we need more space than we can stack on
-            if (totalFree < amount)
+            if (stackableFree < amount)
             {
-                int total = end+1 - start;
-                int numFreeSlots = total - usedSlots.Count();
+                int totalSlots = end+1 - start;  // preventing off by one bugs!
+                int numFreeSlots = totalSlots - usedSlots.Count();
                 int numFreeStacks = numFreeSlots * item.Data.MaxStacks;
-                if (amount - totalFree > numFreeStacks)
+                int stacksRemaining = amount - stackableFree;
+                if (stacksRemaining > numFreeStacks)
                 {
                     // we don't have space!!
                     return retval;
                 }
             }
 
-            // members = this.members.Where(
-            //     m => m.Number >= start
-            //         && m.Number <= end 
-            //         && m.Item.Data == item.Data
-            // );
+            // which slots we can try to top up,and how much space is free
             var slotData = new List<Tuple<int, int>>(
                 this.members
                 .Where(
                     m => m.Number >= start
                         && m.Number <= end
                         && m.Item.Data == item.Data
+                        && m.Stacks < m.Item.Data.MaxStacks
                 )
-                .Select(m => new Tuple<int, int>(m.Number, m.Stacks))
+                .Select(
+                    m => new Tuple<int, int>(
+                        m.Number,
+                        m.Item.Data.MaxStacks - m.Stacks
+                    )
+                )
             );
             foreach (Tuple<int, int> data in slotData)
             {
                 int number = data.Item1;
                 int stacks = data.Item2;
-                int freeSpace = item.Data.MaxStacks - stacks;
-                int toAdd = Math.Max(0, Math.Min(freeSpace, amount));
-                if (this.addStacksToSlot(number, toAdd))
+                if (this.addStacksToSlot(number, stacks))
                 {
-                    amount = Math.Max(0, amount - toAdd);
-                    retval = retval + toAdd;
+                    amount = Math.Max(0, amount - stacks);
+                    retval = retval + stacks;
                 }
             }
             while (amount > 0)

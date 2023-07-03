@@ -42,7 +42,7 @@ namespace CSLibs.Items
         {
             get
             {
-                return DateTime.Now - this.StartedAt <= this.Duration;
+                return DateTime.Now - this.StartedAt < this.Duration;
             }
         }
 
