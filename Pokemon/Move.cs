@@ -1,91 +1,115 @@
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace monsters
 {
-    public enum MoveType
-    {
-        Normal,
-        Fire,
-        Water,
-        Electric,
-        Grass,
-        Ice,
-        Fighting,
-        Poison,
-        Ground,
-        Flying,
-        Psychic,
-        Bug,
-        Rock,
-        Ghost,
-        Dragon
-    }
+    
 
-    public enum StatType
-    {
-        Health,
-        Attack,
-        Defense,
-        Special,
-        Speed,
-        SpecialAttack,
-        SpecialDefense
-    }
 
     public struct Move
     {
         public Move(
             int power,
             int accuracy,
-            MoveType type,
-            StatType stat
+            Element type,
+            StatName stat
         )
         {
             this.Power = power;
             this.Accuracy = accuracy;
             this.Type = type;
             this.Stat = stat;
+            this.randomizer = new Random();
+            this.hitCheck = new Random();
         }
 
         public int Power;
         public int Accuracy;
-        public MoveType Type;
-        public StatType Stat;
-        
-        public int Damage(BattleStats userStats, BattleStats targetStats)
+        public Element Type;
+        public StatName Stat;
+        private Random hitCheck;
+        private Random randomizer;
+        private double random(int value)
         {
-            int modifier;
-            int blocker;
+            double retval = value;
+            
+            if (value > 1)
+            {
+                retval = this.randomizer.Next(217, 256);
+                retval /= 255;
+            }
+            return retval;
+        }
+        
+        public int Damage(Pokemon user, Pokemon target)
+        {
+            int attack;
+            int defense;
             int retval = 0;
 
             if (this.Power != 0)
-            { 
-                modifier = this.Stat switch
+            {
+                var userStats = user.CurrentStats;
+                var targetStats = target.CurrentStats;
+                attack = this.Stat switch
                 {
-                    StatType.Attack => (int)userStats.Attack,
-                    StatType.Defense => (int)userStats.Defense,
-                    StatType.Special => (int)userStats.Special,
-                    StatType.Speed => (int)userStats.Speed,
-                    StatType.SpecialAttack => (int)userStats.SpecialAttack,
-                    StatType.SpecialDefense => (int)userStats.SpecialDefense,
+                    StatName.Attack => (int)userStats.Attack,
+                    StatName.Defense => (int)userStats.Defense,
+                    StatName.Special => (int)userStats.Special,
+                    StatName.Speed => (int)userStats.Speed,
+                    StatName.SpecialAttack => (int)userStats.SpecialAttack,
+                    StatName.SpecialDefense => (int)userStats.SpecialDefense,
                     _ => this.Power,
                 };
-                blocker = this.Stat switch
+                defense = this.Stat switch
                 {
-                    StatType.Attack => (int)targetStats.Attack,
-                    StatType.Defense => (int)targetStats.Defense,
-                    StatType.Special => (int)targetStats.Special,
-                    StatType.Speed => (int)targetStats.Speed,
-                    StatType.SpecialAttack => (int)targetStats.SpecialAttack,
-                    StatType.SpecialDefense => (int)targetStats.SpecialDefense,
-                    _ => 0,
+                    StatName.Attack => (int)targetStats.Defense,
+                    StatName.Defense => (int)targetStats.Attack,
+                    StatName.Special => (int)targetStats.Special,
+                    StatName.Speed => (int)targetStats.Speed,
+                    StatName.SpecialAttack => (int)targetStats.SpecialDefense,
+                    StatName.SpecialDefense => (int)targetStats.SpecialAttack,
+                    _ => target.PermanentStats.Level,
                 };
-                retval = Math.Clamp(
-                    ((modifier + this.Power) / 2) - blocker,
-                    0,
-                    targetStats.Health
-                );
+
+                // base formula
+                double _ = (2 * user.PermanentStats.Level) / 5 + 2;
+                int level = (int)Math.Ceiling(_);
+                _ = this.Power * (attack/defense);
+                int power = (int)Math.Ceiling(_);
+                int numerator = level * power;
+                _ = numerator / 50;
+                int value = (int)Math.Ceiling(_) + 2;
+                // STAB: same-type attack bonus
+                if (user.Type1 == this.Type || user.Type2 != null && user.Type2 == this.Type)
+                {
+                    value = (int)Math.Ceiling(value * 1.5);
+                }
+                // type matchups
+                double modifier1 = Matchups.Table[this.Type][target.Type1];
+                double modifier2 = 1;
+                if (target.Type2 != null)
+                {
+                    Element type2 = (Element)target.Type2;
+                    modifier2 = Matchups.Table[this.Type][type2];
+                }
+                double modifier = modifier1 * modifier2;
+
+                retval = (int)Math.Ceiling(value * modifier);  // * this.random(value));
             }
+            return retval;
+        }
+
+        public bool Hit(Pokemon user, Pokemon target)
+        {
+            bool retval = false;
+            int hitCheck;
+
+            hitCheck = this.hitCheck.Next(100) - user.HitReduction;
+            // how to use speed for accuracy/avoidance?
+            retval = hitCheck * 2 >= target.CurrentStats.Speed;
+
             return retval;
         }
     }

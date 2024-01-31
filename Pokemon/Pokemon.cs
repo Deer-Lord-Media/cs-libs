@@ -4,28 +4,22 @@ namespace monsters
 {
     public class Pokemon
     {
-        public Pokemon()
+        public Pokemon(MonsterStats permanentStats, Element type1, Element? type2 = null, Move[]? moves = null)
         {
-            // Tackle
-            Move move = new Move(40, 200, MoveType.Normal, StatType.Attack);
-            this.Moves[0] = move;
-            this.Type1 = MoveType.Normal;
-
-            BaseStats baseStats = new BaseStats(20, 10, 12, 18, 22);
-            BaseStats ivs = new BaseStats(3, 3, 3, 3, 3);
-            BaseStats evs = new BaseStats(0, 0, 0, 0, 0);
-            MonsterStats permanentStats = new MonsterStats(1, baseStats, ivs, evs);
             this.PermanentStats = permanentStats;
+            this.Moves = (moves == null) ? new Move[4] : moves;
             this.health = permanentStats.Health;
+            this.Type1 = type1;
+            this.Type2 = type2;
+
         }
 
-        public MoveType? Type1 = null;
-        public MoveType? Type2 = null;
+        public Element Type1;
+        public Element? Type2 = null;
         public MonsterStats PermanentStats;
         private BaseStats battleModifiers = new BaseStats(1, 1, 1, 1, 1);
         public Move[] Moves = new Move[4];
-        private Random hitCheck = new Random();
-        private int hitReduction = 0;
+        public int HitReduction = 0;
         private int health;
         public int Health
         {
@@ -61,14 +55,9 @@ namespace monsters
             int damage = 0;
             var move = this.Moves[index];
 
-            // accuracy check
-            if (hitCheck.Next(100) - hitReduction <= move.Accuracy)
+            if (move.Hit(this, target))
             {
-                damage = move.Damage(this.CurrentStats, target.CurrentStats);
-                if (this.Type1 == move.Type || this.Type2 != null && this.Type2 == move.Type)
-                {
-                    damage = (int)(damage * 1.5);
-                }   
+                damage = move.Damage(this, target);
                 target.TakeDamage(damage);
             }
             return damage;
