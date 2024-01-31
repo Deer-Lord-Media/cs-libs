@@ -27,7 +27,7 @@
     <ProjectReference Include="..\Quests\Quests.csproj" />
     <ProjectReference Include="..\Resource\Resource.csproj" />
     <ProjectReference Include="..\Items\Items.csproj" />
-    <ProjectReference Include="..\pokemon\pokemon.csproj" />
+    <ProjectReference Include="..\Pokemon\Pokemon.csproj" />
   </ItemGroup>
 
 </Project>
