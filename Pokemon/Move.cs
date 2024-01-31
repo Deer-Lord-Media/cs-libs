@@ -49,6 +49,7 @@ namespace monsters
 
             if (this.Power != 0)
             {
+                // find stat values used for attack and defense calculation
                 var userStats = user.CurrentStats;
                 var targetStats = target.CurrentStats;
                 attack = this.Stat switch
@@ -73,17 +74,15 @@ namespace monsters
                 };
 
                 // base formula
-                double _ = (2 * user.PermanentStats.Level) / 5 + 2;
-                int level = (int)Math.Ceiling(_);
-                _ = this.Power * (attack/defense);
-                int power = (int)Math.Ceiling(_);
-                _ = (level * power) / 50;
-                int value = (int)Math.Ceiling(_) + 2;
+                double value = (2 * user.PermanentStats.Level) / 5 + 2;
+                value *= this.Power * (attack/defense);
+                value /= 50;
+                value = Math.Ceiling(value) + 2;
                 
                 // STAB: same-type attack bonus
                 if (user.Type1 == this.Type || user.Type2 != null && user.Type2 == this.Type)
                 {
-                    value = (int)Math.Ceiling(value * 1.5);
+                    value = Math.Ceiling(value * 1.5);
                 }
                 
                 // type matchups
@@ -94,9 +93,9 @@ namespace monsters
                     Element type2 = (Element)target.Type2;
                     modifier2 = Matchups.Table[this.Type][type2];
                 }
-                double modifier = modifier1 * modifier2;
+                value *= modifier1 * modifier2;
 
-                retval = (int)Math.Ceiling(value * modifier);
+                retval = (int)Math.Ceiling(value);
                 // retval = this.randomize(retval);
             }
             return retval;

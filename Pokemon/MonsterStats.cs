@@ -36,11 +36,11 @@ namespace monsters
         {
             get
             {
-                int baseValue = (int)(this.Base.Health + this.IVs.Health) * 2;
-                int ev = (int)Math.Ceiling(Math.Sqrt(this.EVs.Health) / 4);
-                int numerator = (baseValue + ev) * this.Level;
-                int divisor = (int)Math.Ceiling((double)(numerator / 100));
-                int retval = divisor + this.Level + 10;
+                double baseValue = (this.Base.Health + this.IVs.Health) * 2;
+                double ev = Math.Sqrt(this.EVs.Health) / 4;
+                double numerator = (baseValue + ev) * this.Level;
+                double divisor = numerator / 100;
+                int retval = (int)Math.Ceiling(divisor + this.Level + 10);
                 return retval;
             }
         }
@@ -49,11 +49,11 @@ namespace monsters
         {
             get
             {
-                int baseValue = (int)(this.Base.Attack + this.IVs.Attack) * 2;
-                int ev = (int)Math.Ceiling(Math.Sqrt(this.EVs.Attack) / 4);
-                int numerator = (baseValue + ev) * this.Level;
-                int divisor = (int)Math.Ceiling((double)(numerator / 100));
-                int retval = divisor + this.Level;
+                double baseValue = (this.Base.Attack + this.IVs.Attack) * 2;
+                double ev = Math.Sqrt(this.EVs.Attack) / 4;
+                double numerator = (baseValue + ev) * this.Level;
+                double divisor = numerator / 100;
+                int retval = (int)Math.Ceiling(divisor + this.Level);
                 return retval;
             }
         }
@@ -62,11 +62,11 @@ namespace monsters
         {
             get
             {
-                int baseValue = (int)(this.Base.Defense + this.IVs.Defense) * 2;
-                int ev = (int)Math.Ceiling(Math.Sqrt(this.EVs.Defense) / 4);
-                int numerator = (baseValue + ev) * this.Level;
-                int divisor = (int)Math.Ceiling((double)(numerator / 100));
-                int retval = divisor + this.Level;
+                double baseValue = (this.Base.Defense + this.IVs.Defense) * 2;
+                double ev = Math.Sqrt(this.EVs.Defense) / 4;
+                double numerator = (baseValue + ev) * this.Level;
+                double divisor = numerator / 100;
+                int retval = (int)Math.Ceiling(divisor + this.Level);
                 return retval;
             }
         }
@@ -75,11 +75,11 @@ namespace monsters
         {
             get
             {
-                int baseValue = (int)(this.Base.Speed + this.IVs.Speed) * 2;
-                int ev = (int)Math.Ceiling(Math.Sqrt(this.EVs.Speed) / 4);
-                int numerator = (baseValue + ev) * this.Level;
-                int divisor = (int)Math.Ceiling((double)(numerator / 100));
-                int retval = divisor + this.Level;
+                double baseValue = (this.Base.Speed + this.IVs.Speed) * 2;
+                double ev = Math.Sqrt(this.EVs.Speed) / 4;
+                double numerator = (baseValue + ev) * this.Level;
+                double divisor = numerator / 100;
+                int retval = (int)Math.Ceiling(divisor + this.Level);
                 return retval;
             }
         }
@@ -88,11 +88,11 @@ namespace monsters
         {
             get
             {
-                int baseValue = (int)(this.Base.Special + this.IVs.Special) * 2;
-                int ev = (int)Math.Ceiling(Math.Sqrt(this.EVs.Special) / 4);
-                int numerator = (baseValue + ev) * this.Level;
-                int divisor = (int)Math.Ceiling((double)(numerator / 100));
-                int retval = divisor + this.Level;
+                double baseValue = (this.Base.Special + this.IVs.Special) * 2;
+                double ev = Math.Sqrt(this.EVs.Special) / 4;
+                double numerator = (baseValue + ev) * this.Level;
+                double divisor = numerator / 100;
+                int retval = (int)Math.Ceiling(divisor + this.Level);
                 return retval;
             }
         }

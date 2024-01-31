@@ -11,7 +11,6 @@ namespace monsters
             this.health = permanentStats.Health;
             this.Type1 = type1;
             this.Type2 = type2;
-
         }
 
         public Element Type1;
@@ -29,7 +28,7 @@ namespace monsters
             }
             set
             {
-                this.health = Math.Clamp(value, 0, this.PermanentStats.Health);
+                this.health = Math.Clamp(value, 0, this.CurrentStats.Health);
             }
         }
 
