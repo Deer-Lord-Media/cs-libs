@@ -16,6 +16,10 @@ namespace CSLibs.Quests
         public IEnumerable<Quest> Current {
             get { return this.members.Where(m => !m.IsComplete) ; }
         }
+
+        public IEnumerable<Quest> All {
+            get { return this.members; }
+        }
         public bool IsFull { get { return this.Current.Count() >= this.Maximum; } }
 
         public bool Add(Data data)

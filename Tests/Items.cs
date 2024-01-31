@@ -128,7 +128,7 @@ public class TestBag
     [Fact]
     public void RespectSharedCoolDowns()
     {
-        var data1 = new Data(1, "NAME", maxCharges: 5);
+        var data1 = new Data(1, "NAME", maxCharges: 5, coolDownDuration: new TimeSpan(0, 0, 5));
         var data2 = new Data(1, "NAME", maxCharges: 5);
         var coolDown = new CoolDown(new TimeSpan(0, 0, 1));
         var item1 = new Item(data1, coolDown: coolDown);

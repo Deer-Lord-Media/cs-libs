@@ -7,7 +7,7 @@ namespace monsters
         public Pokemon()
         {
             // Tackle
-            Move move = new Move(40, 100, MoveType.Normal, StatType.Attack);
+            Move move = new Move(40, 200, MoveType.Normal, StatType.Attack);
             this.Moves[0] = move;
             this.Type1 = MoveType.Normal;
 
@@ -56,23 +56,22 @@ namespace monsters
             }
         }
 
-        public bool UseMove(int index, Pokemon target)
+        public int UseMove(int index, Pokemon target)
         {
-            bool retval = false;
+            int damage = 0;
             var move = this.Moves[index];
 
             // accuracy check
-            if (hitCheck.Next() - hitReduction <= move.Accuracy)
+            if (hitCheck.Next(100) - hitReduction <= move.Accuracy)
             {
-                int damage = move.Damage(this.CurrentStats, target.CurrentStats);
+                damage = move.Damage(this.CurrentStats, target.CurrentStats);
                 if (this.Type1 == move.Type || this.Type2 != null && this.Type2 == move.Type)
                 {
                     damage = (int)(damage * 1.5);
                 }   
                 target.TakeDamage(damage);
-                retval = true;
             }
-            return retval;
+            return damage;
         }
 
         public void TakeDamage(int damage)

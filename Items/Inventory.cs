@@ -112,7 +112,8 @@ namespace CSLibs.Items
             if (item.Data.MaxOwned != 0 && item.Data.MaxOwned < totalOwned + amount)
             {
                 // cap amount to the total possible free space
-                amount = Math.Max(0, item.Data.MaxOwned - totalOwned);
+                int maxOwned = item.Data.MaxOwned ?? 0 ;
+                amount = Math.Max(0, maxOwned - totalOwned);
             }
 
             // slots in our range only

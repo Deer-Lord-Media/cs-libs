@@ -46,7 +46,7 @@ namespace CSLibs.Items
                     // has a cooldown
                     (this.CoolDown.Duration != TimeSpan.Zero)
                     // if it has charges, make sure we have some left
-                    && (this.Data.MaxCharges == 0 || this.Charges > 0)
+                    && (this.Data.MaxCharges == null || this.Charges > 0)
                     // make sure we're off cooldown
                     && this.CoolDown.Ready
                 );
