@@ -44,17 +44,17 @@ public class TestBag
         var duration = new TimeSpan(0, 0, 1);
         var coolDown = new CoolDown(duration);
         Assert.True(coolDown.Ready);
-        Assert.False(coolDown.OnCoolDown);
+        Assert.False(coolDown.Busy);
         var started = coolDown.Start();
         Assert.True(started);
         Assert.False(coolDown.Ready);
-        Assert.True(coolDown.OnCoolDown);
+        Assert.True(coolDown.Busy);
         started = coolDown.Start();
         Assert.False(started);
         var reset = coolDown.Reset();
         Assert.True(reset);
         Assert.True(coolDown.Ready);
-        Assert.False(coolDown.OnCoolDown);
+        Assert.False(coolDown.Busy);
     }
     [Fact]
     public void StoreAndStackItem()

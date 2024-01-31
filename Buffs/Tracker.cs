@@ -60,7 +60,7 @@ namespace CSLibs.Buffs
                 // if buff is expired, new application; new buff with 1 stack
                 // else if not maxStacks, set stacks to +1
                 // else just refresh with maxStacks
-                int stacks = (buff.IsExpired)
+                int stacks = buff.IsExpired
                     ? 1
                     : Math.Min(data.MaxStacks, buff.Stacks + 1);
                 bool removed = this.members.Remove(buff);
@@ -115,7 +115,7 @@ namespace CSLibs.Buffs
             IEnumerable<Buff> buffs;
             
             buffs = this.members.Where(m => m.Data == data);
-            return (buffs.Count() > 0);
+            return buffs.Count() > 0;
         }
 
         public bool Clear()
@@ -134,7 +134,7 @@ namespace CSLibs.Buffs
             
             buffs = this.members
                 .Where(m => data.IsSimilarTo(m.Data) || m.Data.IsSimilarTo(data));
-            retval = (buffs.Count() > 0);
+            retval = buffs.Count() > 0;
             return retval;
         }
 
@@ -143,7 +143,7 @@ namespace CSLibs.Buffs
             IEnumerable<Buff> buffs;
             
             buffs = this.members.Where(m => m.Data.HasPrecedenceOver(data));
-            return (buffs.Count() > 0);
+            return buffs.Count() > 0;
         }
     }
 }

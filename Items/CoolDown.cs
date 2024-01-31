@@ -7,6 +7,7 @@ namespace CSLibs.Items
         public CoolDown(TimeSpan duration)
         {
             this.Duration = duration;
+            this.startedAt = DateTime.Now - duration;
         }
         private DateTime startedAt;
         public DateTime StartedAt { get { return this.startedAt; } }
@@ -27,7 +28,7 @@ namespace CSLibs.Items
         {
             bool retval;
 
-            if (this.OnCoolDown)
+            if (this.Busy)
             {
                 this.startedAt = DateTime.Now - this.Duration;
                 retval = true;
@@ -38,11 +39,11 @@ namespace CSLibs.Items
             return retval;
         }
 
-        public bool OnCoolDown
+        public bool Busy
         {
             get
             {
-                return DateTime.Now - this.StartedAt < this.Duration;
+                return DateTime.Now - this.Duration < this.startedAt;
             }
         }
 
@@ -50,7 +51,7 @@ namespace CSLibs.Items
         {
             get
             {
-                return !this.OnCoolDown;
+                return !this.Busy;
             }
         }
     }

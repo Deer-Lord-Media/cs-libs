@@ -13,22 +13,23 @@ namespace CSLibs.Quests
 
         public int Maximum { get; }
         private HashSet<Quest> members { get; }
-        public HashSet<Quest> All { get { return new HashSet<Quest>(this.members); } }
-        public bool IsFull { get { return this.members.Count() >= this.Maximum; } }
+        public IEnumerable<Quest> Current {
+            get { return this.members.Where(m => !m.IsComplete) ; }
+        }
+        public bool IsFull { get { return this.Current.Count() >= this.Maximum; } }
 
         public bool Add(Data data)
         {
             bool retval = false;
-            var members = this.members.Where(m => m.Data == data);
             if (!this.IsFull && !this.Contains(data))
             {
-            this.members.Add(new Quest(data));
-            retval = true;
+                this.members.Add(new Quest(data));
+                retval = true;
             }
             return retval;
         }
 
-    public bool Remove(Data data)
+        public bool Remove(Data data)
         {
             bool removed;
             int count = this.members.RemoveWhere(m => m.Data == data);

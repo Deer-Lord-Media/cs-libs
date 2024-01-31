@@ -8,11 +8,9 @@ namespace CSLibs.Items
         {
             this.Data = data;
             this.charges = (charges == null)
-                ? this.Data.MaxCharges
+                ? Data.MaxCharges == null ? 0 : (int)Data.MaxCharges // 0 if null
                 : (int)charges;
-            this.CoolDown = (coolDown == null)
-                ? new CoolDown(data.CoolDownDuration)
-                : (CoolDown)coolDown;
+            this.CoolDown = coolDown ?? new CoolDown(data.CoolDownDuration);
         }
         public Data Data { get; }
         public CoolDown CoolDown { get; }
@@ -20,25 +18,38 @@ namespace CSLibs.Items
         public int Charges
         {
             get { return this.charges; }
-            set { this.charges = Math.Min(Data.MaxCharges, Math.Max(0, value)); }
+            set
+            {
+                this.charges = Math.Clamp(
+                    value,
+                    0,
+                    Data.MaxCharges == null ? 0 : (int)Data.MaxCharges
+                );
+            }
         }
 
         public bool Use()
         {
-            bool started = this.IsUsable && this.CoolDown.Start();
-            if (started && this.Data.MaxCharges > 0)
+            bool used = this.IsUsable && this.CoolDown.Start();
+            if (used && this.Data.MaxCharges > 0)
             {
-                this.Charges = this.Charges - 1;
+                this.Charges--;
             }
-            return started;
+            return used;
         }
 
         public bool IsUsable
         {
             get
             {
-                bool chargesAvailable = this.Data.MaxCharges == 0 || this.Charges > 0;
-                return (chargesAvailable && this.CoolDown.Ready);
+                return (
+                    // has a cooldown
+                    (this.CoolDown.Duration != TimeSpan.Zero)
+                    // if it has charges, make sure we have some left
+                    && (this.Data.MaxCharges == 0 || this.Charges > 0)
+                    // make sure we're off cooldown
+                    && this.CoolDown.Ready
+                );
             }
         }
     }

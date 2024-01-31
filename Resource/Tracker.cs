@@ -17,35 +17,37 @@ namespace CSLibs.Resource
         {
             get { return this.amount; }
             // must be between 0 and this.Maximum
-            set { this.amount = Math.Min(this.Maximum, Math.Max(0, value)); }
+            set { this.amount = Math.Clamp(value, 0, this.Maximum); }
         }
 
-        public int Remaining
+        public int FreeSpace
         {
             get { return this.Maximum - this.Amount; }
         }
 
         public bool Consume(int amount)
         {
-            bool retval = false;
-            if (amount < this.Amount)
+            bool consumed;
+            
+            if (amount < Amount)
             {
-                this.Amount = this.Amount - amount;
-                retval = true;
+                amount = Math.Clamp(amount, 0, Amount);
+                this.Amount -= amount;
+                consumed = true;
+            } else
+            {
+                consumed = false;
             }
-            return retval;
+            return consumed;
         }
 
         public int Replenish(int amount)
         {
-            int toAdd = 0;
-            int remaining = this.Remaining;
-            if (remaining > 0)
-            {
-                toAdd = Math.Min(remaining, Math.Max(0, amount));
-                this.Amount = this.Amount + toAdd;
-            }
-            return toAdd;
+            int replinished;
+
+            replinished = Math.Clamp(amount, 0, FreeSpace);
+            this.Amount += replinished;
+            return replinished;
         }
 
         public bool IsFull

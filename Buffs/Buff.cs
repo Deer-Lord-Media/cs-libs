@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace CSLibs.Buffs
 {
@@ -6,20 +7,27 @@ namespace CSLibs.Buffs
     {
         public Buff(Data data, int stacks = 1, DateTime? at = null)
         {
-            this.Data = data;
-            this.Stacks = Math.Max(0, Math.Min(data.MaxStacks, stacks));
-            this.At = (at != null) ? (DateTime)at : DateTime.Now;
+            Data = data;
+            Stacks = Math.Max(0, Math.Min(data.MaxStacks, stacks));
+            At = (at != null) ? (DateTime)at : DateTime.Now;
         }
 
-        public Data Data { get; }
-        public DateTime At { get; }
-        public int Stacks { get; }
+        public readonly Data Data { get; }
+        public readonly DateTime At { get; }
+        public readonly int Stacks { get; }
+        
+        private readonly TimeSpan _zero {
+            get
+            {
+                return new TimeSpan(0, 0, 0, 0, 0);
+            }
+        }
 
         public bool IsExpired
         {
             get
             {
-                return this.TimeLeft <= new TimeSpan(0, 0, 0, 0, 0);
+                return (Data.Duration != _zero) && TimeLeft <= _zero;
             } 
         }
 
@@ -27,7 +35,7 @@ namespace CSLibs.Buffs
         {
             get
             {
-                return this.Data.Duration - this.TimePassed;
+                return Data.Duration - TimePassed;
             }
         }
 
@@ -35,7 +43,7 @@ namespace CSLibs.Buffs
         {
             get
             {
-                return (DateTime.Now - this.At);
+                return DateTime.Now - At;
             }
         }
     }

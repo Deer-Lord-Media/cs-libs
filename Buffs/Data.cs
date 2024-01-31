@@ -39,12 +39,17 @@ namespace CSLibs.Buffs
 
         public bool IsSimilarTo(Data data)
         {
-            return (this.similarTo.Count() > 0) ? this.similarTo.Contains(data.Id) : false;
+            return (this.similarTo.Count() > 0) && this.similarTo.Contains(data.Id);
         }
 
         public bool HasPrecedenceOver(Data data)
         {
-            return (this.precedenceOver.Count() > 0) ? this.precedenceOver.Contains(data.Id) : false;
+            return (this.precedenceOver.Count() > 0) && this.precedenceOver.Contains(data.Id);
+        }
+
+        public bool HasPriorityOver(Data data)
+        {
+            return this.PriorityLevel >= data.PriorityLevel;
         }
 
         public override int GetHashCode()

@@ -101,7 +101,7 @@ namespace CSLibs.Items
             var itemSlots = this.members.Where(m => m.Item.Data == item.Data);
             if (
                 item.Data.IsUnique
-                && itemSlots.Count() > 0
+                && this.Contains(item.Data)
             )
             {
                 return retval;

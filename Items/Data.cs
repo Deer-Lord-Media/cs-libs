@@ -11,8 +11,8 @@ namespace CSLibs.Items
             string name,
             string? description = null,
             int maxStacks = 1,
-            int maxCharges = 0,
-            int maxOwned = 0,
+            int? maxCharges = null,
+            int? maxOwned = null,
             TimeSpan? coolDownDuration = null,
             HashSet<int>? sharesCoolDownWith = null
         )
@@ -33,8 +33,8 @@ namespace CSLibs.Items
         public string Name { get; }
         public string Description { get; }
         public int MaxStacks { get; }
-        public int MaxOwned { get; }
-        public int MaxCharges { get; }
+        public int? MaxOwned { get; }
+        public int? MaxCharges { get; }
         public TimeSpan CoolDownDuration { get; }
         private HashSet<int> sharesCoolDownWith = new HashSet<int>();
         public bool IsUnique

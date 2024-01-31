@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -12,6 +11,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resource", "Resource\Resource.csproj", "{85961809-EA58-4EAA-9E13-DD1F90577142}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{90C1AE7A-07A7-4C92-BC66-DA85F1D269BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokemon", "Pokemon\Pokemon.csproj", "{09BE9470-83D3-45AD-B4A9-38CC4A35FB32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +43,9 @@ Global
 		{90C1AE7A-07A7-4C92-BC66-DA85F1D269BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90C1AE7A-07A7-4C92-BC66-DA85F1D269BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90C1AE7A-07A7-4C92-BC66-DA85F1D269BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09BE9470-83D3-45AD-B4A9-38CC4A35FB32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09BE9470-83D3-45AD-B4A9-38CC4A35FB32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09BE9470-83D3-45AD-B4A9-38CC4A35FB32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09BE9470-83D3-45AD-B4A9-38CC4A35FB32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
