@@ -15,8 +15,10 @@ public class PokemonTest
         MonsterStats permanentStats = new MonsterStats(5, baseStats, ivs, evs);
         var player = new monsters.Pokemon(permanentStats, Element.Normal, moves: moves);
         var opponent = new monsters.Pokemon(permanentStats, Element.Normal, moves: moves);
+        Assert.Equal(17, opponent.Health);
         var damage = player.UseMove(0, opponent);
         Assert.Equal(5, damage);
+        Assert.Equal(12, opponent.Health);
     }
 
     [Fact]

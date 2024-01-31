@@ -53,20 +53,15 @@ namespace monsters
         public int UseMove(int index, Pokemon target)
         {
             int damage = 0;
-            var move = this.Moves[index];
+            Move move = this.Moves[index];
 
             if (move.Hit(this, target))
             {
                 damage = move.Damage(this, target);
-                target.TakeDamage(damage);
+                // this can probably be more robust
+                target.Health -= damage;
             }
             return damage;
-        }
-
-        public void TakeDamage(int damage)
-        {
-            // check for other mitigations
-            this.Health -= damage;
         }
     }
 }
