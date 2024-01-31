@@ -4,9 +4,6 @@ using System.Text.RegularExpressions;
 
 namespace monsters
 {
-    
-
-
     public struct Move
     {
         public Move(
@@ -30,14 +27,16 @@ namespace monsters
         public StatName Stat;
         private Random hitCheck;
         private Random randomizer;
-        private double random(int value)
+        private int randomize(int value)
         {
-            double retval = value;
+            int retval = value;
             
             if (value > 1)
             {
-                retval = this.randomizer.Next(217, 256);
-                retval /= 255;
+                double _ = this.randomizer.Next(217, 256);
+                _ /= 255;
+                _ *= value;
+                retval = (int)Math.Ceiling(_);
             }
             return retval;
         }
@@ -78,14 +77,15 @@ namespace monsters
                 int level = (int)Math.Ceiling(_);
                 _ = this.Power * (attack/defense);
                 int power = (int)Math.Ceiling(_);
-                int numerator = level * power;
-                _ = numerator / 50;
+                _ = (level * power) / 50;
                 int value = (int)Math.Ceiling(_) + 2;
+                
                 // STAB: same-type attack bonus
                 if (user.Type1 == this.Type || user.Type2 != null && user.Type2 == this.Type)
                 {
                     value = (int)Math.Ceiling(value * 1.5);
                 }
+                
                 // type matchups
                 double modifier1 = Matchups.Table[this.Type][target.Type1];
                 double modifier2 = 1;
@@ -96,19 +96,17 @@ namespace monsters
                 }
                 double modifier = modifier1 * modifier2;
 
-                retval = (int)Math.Ceiling(value * modifier);  // * this.random(value));
+                retval = (int)Math.Ceiling(value * modifier);
+                // retval = this.randomize(retval);
             }
             return retval;
         }
 
         public bool Hit(Pokemon user, Pokemon target)
         {
-            bool retval = false;
-            int hitCheck;
-
-            hitCheck = this.hitCheck.Next(100) - user.HitReduction;
+            int hitCheck = this.hitCheck.Next(100) + user.HitReduction;
             // how to use speed for accuracy/avoidance?
-            retval = hitCheck * 2 >= target.CurrentStats.Speed;
+            bool retval = hitCheck <= this.Accuracy;
 
             return retval;
         }
