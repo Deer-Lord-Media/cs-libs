@@ -12,4 +12,8 @@
     <RepositoryUrl>https://github.com/Deer-Lord-Media/cs-libs</RepositoryUrl>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Items\Items.csproj" />
+  </ItemGroup>
+
 </Project>

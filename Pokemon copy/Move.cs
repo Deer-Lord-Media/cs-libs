@@ -36,7 +36,7 @@ namespace monsters
                 double _ = this.randomizer.Next(217, 256);
                 _ /= 255;
                 _ *= value;
-                retval = (int)Math.Ceiling(_);
+                retval = (int)Math.Floor(_);
             }
             return retval;
         }
@@ -96,7 +96,7 @@ namespace monsters
                 value *= modifier1 * modifier2;
 
                 retval = (int)Math.Ceiling(value);
-                // retval = this.randomize(retval);
+                retval = this.randomize(retval);
             }
             return retval;
         }

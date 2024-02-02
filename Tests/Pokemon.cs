@@ -1,39 +1,53 @@
 namespace Tests;
-using monsters;
+using Pokemon;
 
 public class PokemonTest
 {
     [Fact]
-    public void TestAttack()
+    public void TestStats()
     {
-        Move[] moves = new Move[4];
-        moves[0] = new Move(40, 100, Element.Fire, StatName.Attack);
+        Pokemon.MonsterData data = new MonsterData(Pokemon.Type.Fire, Pokemon.Type.Dragon);
+        Pokemon.Stats baseStats = new Pokemon.Stats(20, 10, 8, 12, 30);
+        Pokemon.Stats ivs = new Pokemon.Stats(3, 3, 3, 3, 3);
+        Pokemon.Stats evs = new Pokemon.Stats(5, 5, 5 ,5 ,5);
+        Pokemon.Monster pokemon = new Pokemon.Monster(
+            5, 0, baseStats, ivs, evs, data
+        );
+        Stats stats = pokemon.Stats;
+        Assert.Equal(18, stats.Health);
+        Assert.Equal(7, stats.Attack);
+        Assert.Equal(7, stats.Defense);
+        Assert.Equal(7, stats.Speed);
+        Assert.Equal(9, stats.Special);
+        Assert.Equal(8, stats.SpcAttack);
+        Assert.Equal(8, stats.SpcDefense);
 
-        BaseStats baseStats = new BaseStats(20, 10, 12, 18, 22);
-        BaseStats ivs = new BaseStats(3, 3, 3, 3, 3);
-        BaseStats evs = new BaseStats(0, 0, 0, 0, 0);
-        MonsterStats permanentStats = new MonsterStats(5, baseStats, ivs, evs);
-        var player = new monsters.Pokemon(permanentStats, Element.Normal, moves: moves);
-        var opponent = new monsters.Pokemon(permanentStats, Element.Normal, moves: moves);
-        Assert.Equal(18, opponent.Health);
-        var damage = player.UseMove(0, opponent);
-        Assert.Equal(6, damage);
-        Assert.Equal(12, opponent.Health);
+        pokemon.BaseStats += baseStats;
+        stats = pokemon.Stats;
+        Assert.Equal(20, stats.Health);
+        Assert.Equal(8, stats.Attack);
+        Assert.Equal(7, stats.Defense);
+        Assert.Equal(8, stats.Speed);
+        Assert.Equal(12, stats.Special);
+        Assert.Equal(10, stats.SpcAttack);
+        Assert.Equal(9, stats.SpcDefense);
     }
 
     [Fact]
-    public void TestStats()
+    public void TestDamage()
     {
-        BaseStats baseStats = new BaseStats(20, 10, 12, 18, 22);
-        BaseStats ivs = new BaseStats(3, 3, 3, 3, 3);
-        BaseStats evs = new BaseStats(1, 1, 1, 1, 1);
-        MonsterStats monsterStats = new MonsterStats(5, baseStats, ivs, evs);
-        Assert.Equal(18, monsterStats.Health);
-        Assert.Equal(7, monsterStats.Attack);
-        Assert.Equal(7, monsterStats.Defense);
-        Assert.Equal(8, monsterStats.Speed);
-        Assert.Equal(8, monsterStats.Special);
-        Assert.Equal(8, monsterStats.SpecialAttack);
-        Assert.Equal(8, monsterStats.SpecialDefense);
+        Pokemon.MonsterData data = new MonsterData(Pokemon.Type.Fire, Pokemon.Type.Dragon);
+        Pokemon.Stats baseStats = new Pokemon.Stats(20, 10, 8, 12, 30);
+        Pokemon.Stats ivs = new Pokemon.Stats(3, 3, 3, 3, 3);
+        Pokemon.Stats evs = new Pokemon.Stats(5, 5, 5 ,5 ,5);
+        Pokemon.Ability ability = new Pokemon.Ability(40, 100, Pokemon.Type.Fire, Pokemon.StatName.Attack);
+        Pokemon.Ability[] abilities = new Pokemon.Ability[]{
+            ability
+        };
+        Pokemon.Monster pokemon = new Pokemon.Monster(
+            5, 0, baseStats, ivs, evs, data, abilities
+        );
+        int damage = pokemon.UseAbility(0, pokemon);
+        Assert.Equal(3, damage);
     }
 }
