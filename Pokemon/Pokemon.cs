@@ -123,35 +123,32 @@ namespace Pokemon
         public void Defeat(Monster target)
         {
             int level = this.Stats.Level;
-            Pokemon.Stats.Basic baseStats = this.Stats.Base;
+            int health = 0;
+            int attack = 0;
+            int defense = 0;
+            int speed = 0;
+            int special = 0;
             int experience = this.Stats.Experience;
             // get experience from target
             
             if (this.Data.Experience.Needed(this.Stats.Level + 1) >= experience)
             {
                 level += 1;
-
-                int health = this.Data.BaseStats.Health / 50 + this.Stats.EVs.Health / 100;
-                int attack = this.Data.BaseStats.Attack / 50 + this.Stats.EVs.Attack / 100;
-                int defense = this.Data.BaseStats.Defense / 50 + this.Stats.EVs.Defense / 100;
-                int speed = this.Data.BaseStats.Speed / 50 + this.Stats.EVs.Speed / 100;
-                int special = this.Data.BaseStats.Special / 50 + this.Stats.EVs.Special / 100;
-                baseStats += new Pokemon.Stats.Basic(
-                    health,
-                    attack,
-                    defense,
-                    speed,
-                    special
-                );
+                health = this.Data.BaseStats.Health / 50 + this.Stats.EVs.Health / 100;
+                attack = this.Data.BaseStats.Attack / 50 + this.Stats.EVs.Attack / 100;
+                defense = this.Data.BaseStats.Defense / 50 + this.Stats.EVs.Defense / 100;
+                speed = this.Data.BaseStats.Speed / 50 + this.Stats.EVs.Speed / 100;
+                special = this.Data.BaseStats.Special / 50 + this.Stats.EVs.Special / 100;
             }
 
-            Pokemon.Stats.Basic evs = new Pokemon.Stats.Basic(
-                target.Stats.EVs.Health / target.Stats.Level,
-                target.Stats.EVs.Attack / target.Stats.Level,
-                target.Stats.EVs.Defense / target.Stats.Level,
-                target.Stats.EVs.Speed / target.Stats.Level,
-                target.Stats.EVs.Special / target.Stats.Level
+            Pokemon.Stats.Basic baseStats = new Pokemon.Stats.Basic(
+                this.Stats.Base.Health + health,
+                this.Stats.Base.Attack + attack,
+                this.Stats.Base.Defense + defense,
+                this.Stats.Base.Speed + speed,
+                this.Stats.Base.Special + special
             );
+            Pokemon.Stats.Basic evs = this.Stats.EVs + target.Data.EVs;
 
             this.stats = new Pokemon.Stats.Calculated(
                 level,

@@ -10,6 +10,7 @@ public class PokemonTest
         Pokemon.Data.Model data = new(
             1,
             dataStats,
+            dataStats,
             Pokemon.Data.Type.Fire
         );
         Pokemon.Stats.Basic baseStats = new(20, 10, 8, 12, 30);
