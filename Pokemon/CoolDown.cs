@@ -10,7 +10,22 @@ namespace Pokemon
             this.duration = TimeSpan.Zero;
         }
 
+        public DateTime StartedAt
+        {
+            get
+            {
+                return startedAt;
+            }
+        }
         private DateTime startedAt;
+
+        public TimeSpan Duration
+        {
+            get
+            {
+                return duration;
+            }
+        }
         private TimeSpan duration;
 
         public bool Start(TimeSpan duration)

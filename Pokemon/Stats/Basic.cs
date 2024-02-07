@@ -1,19 +1,8 @@
-namespace Pokemon
+namespace Pokemon.Stats
 {
-    public enum StatName
+    public readonly struct Basic
     {
-        Health,
-        Attack,
-        Defense,
-        Speed,
-        Special,
-        SpcAttack,
-        SpcDefense
-    }
-
-    public struct Stats
-    {
-        public Stats(
+        public Basic(
             int health,
             int attack,
             int defense,
@@ -27,13 +16,13 @@ namespace Pokemon
             Speed = speed;
             Special = special;
         }
-        public int Health;
-        public int Attack;
-        public int Defense;
-        public int Speed;
-        public int Special;
+        public readonly int Health;
+        public readonly int Attack;
+        public readonly int Defense;
+        public readonly int Speed;
+        public readonly int Special;
 
-        public int SpcAttack
+        public readonly int SpcAttack
         {
             get
             {
@@ -41,7 +30,7 @@ namespace Pokemon
             }
         }
 
-        public int SpcDefense
+        public readonly int SpcDefense
         {
             get
             {
@@ -49,9 +38,9 @@ namespace Pokemon
             }
         }
 
-        public static Stats operator+ (Stats b, Stats c)
+        public static Basic operator+ (Basic b, Basic c)
         {
-            Stats a = new Stats(
+            Basic a = new Basic(
                 b.Health + c.Health,
                 b.Attack + c.Attack,
                 b.Defense + c.Defense,
@@ -61,26 +50,14 @@ namespace Pokemon
             return a;
         }
 
-        public static Stats operator- (Stats b, Stats c)
+        public static Basic operator- (Basic b, Basic c)
         {
-            Stats a = new Stats(
+            Basic a = new Basic(
                 b.Health - c.Health,
                 b.Attack - c.Attack,
                 b.Defense - c.Defense,
                 b.Speed - c.Speed,
                 b.Special - c.Special
-            );
-            return a;
-        }
-
-        public static Stats operator* (Stats b, Stats c)
-        {
-            Stats a = new Stats(
-                b.Health * c.Health,
-                b.Attack * c.Attack,
-                b.Defense * c.Defense,
-                b.Speed * c.Speed,
-                b.Special * c.Special
             );
             return a;
         }

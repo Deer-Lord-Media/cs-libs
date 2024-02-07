@@ -1,31 +1,18 @@
 using System;
 
-namespace Pokemon
+namespace Pokemon.Data
 {
-    public enum ExperienceType
+    public readonly struct Experience
     {
-        Fast,
-        MediumFast,
-        MediumSlow,
-        Slow,
-        Erratic
-    }
-
-    public readonly struct MonsterData
-    {
-        public MonsterData(Type Type1, Type? Type2 = null, ExperienceType expType = ExperienceType.MediumSlow)
+        public Experience(ExperienceType expType)
         {
-            this.Type1 = Type1;
-            this.Type2 = Type2;
-            this.ExpType = expType;
+            this.expType = expType;
         }
-        public readonly Type Type1;
-        public readonly Type? Type2;
-        public readonly ExperienceType ExpType;
 
-        public int ExperienceNeeded(int level)
+        private readonly ExperienceType expType;
+        public int Needed(int level)
         {
-            int exp = this.ExpType switch
+            int exp = this.expType switch
             {
                 ExperienceType.Fast => this.experienceFast(level),
                 ExperienceType.MediumFast => this.experienceMediumFast(level),

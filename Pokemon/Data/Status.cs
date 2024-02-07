@@ -1,4 +1,4 @@
-namespace Pokemon
+namespace Pokemon.Data
 {
     public enum Status
     {
@@ -6,6 +6,8 @@ namespace Pokemon
         Burn,
         Paralyze,
         Freeze,
-        Sleep
+        Sleep,
+        Poison,
+        Confusion
     }
 }
