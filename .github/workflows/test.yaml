@@ -10,7 +10,8 @@ jobs:
     runs-on: [self-hosted, linux]
     strategy:
       fail-fast: false
-
+    env:
+      HOME: "/tmp"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
