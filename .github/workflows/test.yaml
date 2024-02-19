@@ -12,6 +12,7 @@ jobs:
       fail-fast: false
     env:
       HOME: "/tmp"
+      DOTNET_CLI_HOME: "/tmp"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
