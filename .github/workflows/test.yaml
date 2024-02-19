@@ -10,6 +10,9 @@ jobs:
     runs-on: [self-hosted, linux]
     strategy:
       fail-fast: false
+    env:
+      HOME: "/tmp"
+      DOTNET_CLI_HOME: "/tmp"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -20,9 +23,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '7.0.x'
-      # - name: Restore Dependencies
-      #   run: dotnet restore
+      - name: Restore Dependencies
+        run: dotnet restore
       - name: Build Libraries
-        run: dotnet build # --no-restore
+        run: dotnet build --no-restore
       - name: Test Libraries
         run: dotnet test --no-build --verbosity normal
