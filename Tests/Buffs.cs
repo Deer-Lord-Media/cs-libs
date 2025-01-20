@@ -90,11 +90,11 @@ public class TestContainer
         buffs.Apply(buff);
         Thread.Sleep(wait);
         tracker = buffs.Active.First();
-        TimeSpan timeLeft = tracker.TimeLeft;
-        Assert.True(tracker.TimeLeft <= (duration - wait));
+        TimeSpan timeLeft = tracker.TimeRemaining;
+        Assert.True(tracker.TimeRemaining <= (duration - wait));
         buffs.Apply(buff);
         tracker = buffs.Active.First();
-        Assert.True(tracker.TimeLeft > timeLeft);
+        Assert.True(tracker.TimeRemaining > timeLeft);
     }
 
     [Fact]

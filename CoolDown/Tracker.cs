@@ -44,10 +44,19 @@ namespace CoolDown
             return retval;
         }
 
-        public bool Reset()
+        public bool Clear()
         {
+            if (this.IsReady)
+            {
+                return false;
+            }
             this.startedAt = DateTime.Now - this.Duration;
             return true;
+        }
+
+        public bool Refresh()
+        {
+            return this.Clear() && this.Start();
         }
     }
 }

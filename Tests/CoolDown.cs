@@ -12,7 +12,7 @@ public class CoolDownTest
         Assert.True(started);
         Assert.InRange<TimeSpan>(coolDown.TimeRemaining, new TimeSpan(1), duration);
         Assert.False(coolDown.IsReady);
-        var reset = coolDown.Reset();
+        var reset = coolDown.Clear();
         Assert.True(reset);
         Assert.True(coolDown.IsReady);
     }

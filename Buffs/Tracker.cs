@@ -4,6 +4,68 @@ using System.Linq;
 
 namespace CSLibs.Buffs
 {
+    public class TrackerCD
+    {
+        public TrackerCD(IEnumerable<BuffCD>? buffs = null)
+        {
+            this.members = (buffs == null) ? new HashSet<BuffCD>() : new HashSet<BuffCD>(buffs);
+        }
+
+        public readonly HashSet<BuffCD> members;
+        private int maximum;
+        public IEnumerable<BuffCD> buffs
+        {
+            get
+            {
+                return this.members.Where(m => !m.isExpired && m.stacks > 0);
+            }
+        }
+
+        public BuffCD? Apply(Data data)
+        {
+            var buffs = this.members.Where(m => m.data == data);
+            // apply the buff
+            if (buffs.Count() == 0)
+            {
+                BuffCD? removed = null;
+                if (this.buffs.Count() == maximum)
+                {
+                    var removable = (List<BuffCD>)this.buffs.Where(m => data.HasPrecedenceOver(m.data) || data.HasPriorityOver(m.data));
+                    if (removable.Count() == 0)
+                    {
+                        return null;
+                    }
+                    removed = removable.First();
+                    if (!this.members.Remove((BuffCD)removed))
+                    {
+                        return null;
+                    }
+                }
+                var buff = new BuffCD(data);
+                if (this.members.Add(buff))
+                {
+                    return buff;
+                } else if (removed != null)
+                {
+                    if (!this.members.Add((BuffCD)removed))
+                    {
+                        // serious error!!!
+                    }
+                    return null;
+                }
+            } else {
+            // increase stacks
+                var buff = buffs.First();
+                buff = new BuffCD(data, buff.stacks + 1, buff.coolDown);
+                buff.coolDown.Refresh();
+                if (this.members.Add(buff))
+                {
+                    return buff;
+                }
+            }
+            return null;
+        }
+    }
     public class Tracker
     {
         public Tracker(int maximum, IEnumerable<Buff>? buffs = null)
