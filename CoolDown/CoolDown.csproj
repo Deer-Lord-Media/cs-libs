@@ -1,19 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
 
-    <PackageId>Pokemon</PackageId>
+    <PackageId>CoolDown</PackageId>
     <Version>0.0.1</Version>
     <Authors>William DaFriend</Authors>
     <Company>Deer Lord Media</Company>
-    <PackageDescription></PackageDescription>
+    <PackageDescription>A cooldown class for other libraries</PackageDescription>
     <RepositoryUrl>https://github.com/Deer-Lord-Media/cs-libs</RepositoryUrl>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Items\Items.csproj" />
-  </ItemGroup>
 
 </Project>

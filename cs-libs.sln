@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resource", "Resource\Resour
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{90C1AE7A-07A7-4C92-BC66-DA85F1D269BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokemon", "Pokemon\Pokemon.csproj", "{09BE9470-83D3-45AD-B4A9-38CC4A35FB32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolDown", "CoolDown\CoolDown.csproj", "{879248E1-10BA-42E7-868D-5F6F29D5B772}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,5 +47,9 @@ Global
 		{09BE9470-83D3-45AD-B4A9-38CC4A35FB32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09BE9470-83D3-45AD-B4A9-38CC4A35FB32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09BE9470-83D3-45AD-B4A9-38CC4A35FB32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{879248E1-10BA-42E7-868D-5F6F29D5B772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{879248E1-10BA-42E7-868D-5F6F29D5B772}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{879248E1-10BA-42E7-868D-5F6F29D5B772}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{879248E1-10BA-42E7-868D-5F6F29D5B772}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
