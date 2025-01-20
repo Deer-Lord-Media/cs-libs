@@ -4,8 +4,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buffs", "Buffs\Buffs.csproj", "{C73C8E2E-75E9-4011-8F52-251595057398}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Items", "Items\Items.csproj", "{53BCCFC0-A584-474F-AC14-C2F0BA6AE91E}"
-EndProject
+# Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Items", "Items\Items.csproj", "{53BCCFC0-A584-474F-AC14-C2F0BA6AE91E}"
+# EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quests", "Quests\Quests.csproj", "{12233E8B-DF18-4E54-8011-F97F5D4B5BCF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resource", "Resource\Resource.csproj", "{85961809-EA58-4EAA-9E13-DD1F90577142}"
