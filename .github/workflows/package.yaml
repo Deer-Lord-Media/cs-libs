@@ -34,6 +34,10 @@ jobs:
         with:
           repository: ${{ github.repo }}
           ref: ${{ github.ref }}
+      - name: Install Dotnet Manually
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dotnet-sdk-7.0
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v4
         with:
