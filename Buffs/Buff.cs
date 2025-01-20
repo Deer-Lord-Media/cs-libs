@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 
 namespace CSLibs.Buffs
 {
@@ -10,7 +9,10 @@ namespace CSLibs.Buffs
             Data = data;
             Stacks = Math.Max(0, Math.Min(data.MaxStacks, stacks));
             At = (at != null) ? (DateTime)at : DateTime.Now;
+            coolDown = new CoolDown.Tracker(data.Duration);
         }
+
+        public readonly CoolDown.Tracker coolDown { get; }
 
         public readonly Data Data { get; }
         public readonly DateTime At { get; }

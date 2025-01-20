@@ -19,14 +19,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - packageName: Buffs
-            packageVersion: "0.0.4"
+          # - packageName: Buffs
+          #   packageVersion: "0.0.4"
           - packageName: CoolDown
             packageVersion: "0.0.1"
-          - packageName: Quests
-            packageVersion: "0.0.3"
-          - packageName: Resource
-            packageVersion: "0.0.3"
+          # - packageName: Quests
+          #   packageVersion: "0.0.3"
+          # - packageName: Resource
+          #   packageVersion: "0.0.3"
 
     steps:
       - name: Checkout Repository

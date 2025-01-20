@@ -12,4 +12,13 @@
     <RepositoryUrl>https://github.com/Deer-Lord-Media/cs-libs</RepositoryUrl>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CoolDown" Version="0.0.1" />
+  </ItemGroup>
+
+  <PropertyGroup> 
+    <!-- GitHub Package Registry -->
+    <RestoreAdditionalProjectSources>https://nuget.pkg.github.com/Deer-Lord-Media/index.json</RestoreAdditionalProjectSources>
+    <RestoreCredentialsFile>~/.nuget/NuGet/NuGet.Config</RestoreCredentialsFile>
+  </PropertyGroup>
 </Project>
