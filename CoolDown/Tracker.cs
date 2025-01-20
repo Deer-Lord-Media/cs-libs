@@ -17,6 +17,10 @@ namespace CoolDown
             get 
             {
                 var timeRemaining = (this.startedAt + this.Duration) - DateTime.Now;
+                if (timeRemaining < new TimeSpan(0))
+                {
+                    timeRemaining = new TimeSpan(0);
+                }
                 return timeRemaining;
             }
         }
