@@ -25,6 +25,14 @@ namespace CoolDown
             }
         }
 
+        public bool IsReady
+        {
+            get
+            {
+                return this.TimeRemaining.Milliseconds <= 0;
+            }
+        }
+
         public bool Start()
         {
             bool retval = false;
@@ -40,14 +48,6 @@ namespace CoolDown
         {
             this.startedAt = DateTime.Now - this.Duration;
             return true;
-        }
-
-        public bool IsReady
-        {
-            get
-            {
-                return this.TimeRemaining.Milliseconds <= 0;
-            }
         }
     }
 }
