@@ -57,8 +57,7 @@ namespace CoolDown
         {            
             this.startedAt = DateTime.Now;
             this.ActionOccurred(Action.Start);
-            var timePassed = this.duration - (DateTime.Now - this.startedAt);
-            this.PendEvent(Action.Expire, timePassed);
+            this.PendExpiry(this.timeRemaining);
             return;
         }
 
@@ -67,8 +66,7 @@ namespace CoolDown
             this.startedAt = DateTime.Now;
             this.ActionOccurred(Action.Refresh);
             this.CancelPending();
-            var timePassed = this.duration - (DateTime.Now - this.startedAt);
-            this.PendEvent(Action.Expire, timePassed);
+            this.PendExpiry(this.timeRemaining);
         }
 
         public void Clear()
@@ -83,11 +81,14 @@ namespace CoolDown
             return;
         }
 
-        private void PendEvent(Action action, TimeSpan duration)
+        private void PendExpiry(TimeSpan duration)
         {
             this.pendingCancellation = true;
             // timer to wait
-            this.ActionOccurred(action);
+            if (this.pendingCancellation)
+            {
+                this.ActionOccurred(Action.Expire);
+            }
         }
 
         private void CancelPending()
