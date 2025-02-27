@@ -12,6 +12,7 @@ namespace CoolDown
         }
 
         private event EventHandler<Message>? Notify;
+        private bool pendingCancellation;
         private readonly string id;
         private DateTime startedAt;
         public DateTime StartedAt { get { return this.startedAt; } }
@@ -56,10 +57,18 @@ namespace CoolDown
         {            
             this.startedAt = DateTime.Now;
             this.ActionOccurred(Action.Start);
-            /*
-                TODO: set a timer
-            */
+            var timePassed = this.duration - (DateTime.Now - this.startedAt);
+            this.PendEvent(Action.Expire, timePassed);
             return;
+        }
+
+        public void Refresh()
+        {
+            this.startedAt = DateTime.Now;
+            this.ActionOccurred(Action.Refresh);
+            this.CancelPending();
+            var timePassed = this.duration - (DateTime.Now - this.startedAt);
+            this.PendEvent(Action.Expire, timePassed);
         }
 
         public void Clear()
@@ -68,12 +77,22 @@ namespace CoolDown
             {
                 return;
             }
-            /*
-                TODO: clear the timer
-            */
             this.startedAt = DateTime.Now - this.Duration;
+            this.CancelPending();
             this.ActionOccurred(Action.Expire);
             return;
+        }
+
+        private void PendEvent(Action action, TimeSpan duration)
+        {
+            this.pendingCancellation = true;
+            // timer to wait
+            this.ActionOccurred(action);
+        }
+
+        private void CancelPending()
+        {
+            this.pendingCancellation = false;
         }
     }
 }
