@@ -4,16 +4,35 @@ namespace CoolDown
 {
     public class Tracker
     {
-        public Tracker(TimeSpan duration)
+        public Tracker(TimeSpan duration, string id)
         {
             this.duration = duration;
             this.startedAt = DateTime.Now - duration;
+            this.id = id;
         }
+
+        private event EventHandler<Message>? Notify;
+        private readonly string id;
         private DateTime startedAt;
         public DateTime StartedAt { get { return this.startedAt; } }
-        private TimeSpan duration;
+        private readonly TimeSpan duration;
         public TimeSpan Duration { get { return this.duration; } }
-        public TimeSpan TimeRemaining {
+
+        public void RegisterListener(EventHandler<Message> listener)
+        {
+            this.Notify += listener;
+        }
+
+        protected virtual void ActionOccurred(Action action)
+        {
+            var message = new Message();
+            message.Action = action;
+            message.Id = this.id;
+
+            Notify?.Invoke(this, message);
+        }
+
+        public TimeSpan timeRemaining {
             get 
             {
                 var timeRemaining = (this.startedAt + this.Duration) - DateTime.Now;
@@ -29,34 +48,32 @@ namespace CoolDown
         {
             get
             {
-                return this.TimeRemaining.Milliseconds <= 0;
+                return this.timeRemaining.Milliseconds <= 0;
             }
         }
 
-        public bool Start()
-        {
-            bool retval = false;
-            if (this.IsReady)
-            {
-                this.startedAt = DateTime.Now;
-                retval = true;
-            }
-            return retval;
+        public void Start()
+        {            
+            this.startedAt = DateTime.Now;
+            this.ActionOccurred(Action.Start);
+            /*
+                TODO: set a timer
+            */
+            return;
         }
 
-        public bool Clear()
+        public void Clear()
         {
             if (this.IsReady)
             {
-                return false;
+                return;
             }
+            /*
+                TODO: clear the timer
+            */
             this.startedAt = DateTime.Now - this.Duration;
-            return true;
-        }
-
-        public bool Refresh()
-        {
-            return this.Clear() && this.Start();
+            this.ActionOccurred(Action.Expire);
+            return;
         }
     }
 }

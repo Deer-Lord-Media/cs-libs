@@ -7,13 +7,11 @@ public class CoolDownTest
     public void TestTracker()
     {
         var duration = new TimeSpan(0, 0, 0, 5, 0);
-        CoolDown.Tracker coolDown = new CoolDown.Tracker(duration);
-        var started = coolDown.Start();
-        Assert.True(started);
-        Assert.InRange<TimeSpan>(coolDown.TimeRemaining, new TimeSpan(1), duration);
+        CoolDown.Tracker coolDown = new CoolDown.Tracker(duration, "ID");
+        coolDown.Start();
+        Assert.InRange<TimeSpan>(coolDown.timeRemaining, new TimeSpan(1), duration);
         Assert.False(coolDown.IsReady);
-        var reset = coolDown.Clear();
-        Assert.True(reset);
+        coolDown.Clear();
         Assert.True(coolDown.IsReady);
     }
 }
