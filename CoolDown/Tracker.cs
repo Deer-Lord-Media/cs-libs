@@ -53,36 +53,49 @@ namespace CoolDown
             }
         }
 
-        public void Start()
+        public bool Start()
         {            
+            if (this.IsReady)
+            {
+                return false;
+            }
             this.startedAt = DateTime.Now;
             this.ActionOccurred(Action.Start);
             this.PendExpiry(this.timeRemaining);
-            return;
+            return true;
         }
 
-        public void Refresh()
+        public bool Refresh()
         {
+            if (!this.IsReady)
+            {
+                return false;
+            }
             this.startedAt = DateTime.Now;
             this.ActionOccurred(Action.Refresh);
             this.CancelPending();
             this.PendExpiry(this.timeRemaining);
+            return true;
         }
 
-        public void Clear()
+        public bool Clear()
         {
-            if (this.IsReady)
+            if (!this.IsReady)
             {
-                return;
+                return false;
             }
             this.startedAt = DateTime.Now - this.Duration;
             this.CancelPending();
             this.ActionOccurred(Action.Expire);
-            return;
+            return true;
         }
 
         private void PendExpiry(TimeSpan duration)
         {
+            if (duration <= new TimeSpan(0))
+            {
+                return;
+            }
             this.pendingCancellation = true;
             // timer to wait
             if (this.pendingCancellation)
