@@ -3,7 +3,7 @@
 set -euo pipefail
 
 dotnet nuget add source \
-    --username $GITHUB_USER \
+    --username $GITHUB_USERNAME \
     --password $GITHUB_TOKEN \
     --store-password-in-clear-text \
     --name github \
