@@ -21,7 +21,9 @@ jobs:
         include:
           - packageName: CoolDown
             packageVersion: "0.0.2"
-
+    env:
+      GITHUB_USERNAME: ${{ secrets.NUGET_USERNAME }}
+      GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -33,4 +35,4 @@ jobs:
         run: make package MODULE=${{ matrix.packageName }}
       - name: Publish Library
         # run: dotnet nuget push --skip-duplicate "${{ matrix.packageName }}/bin/Release/${{ matrix.packageName }}.${{ matrix.packageVersion }}.nupkg" --source "https://nuget.pkg.github.com/Deer-Lord-Media/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
-        run: make push MODULE=${{ matrix.packageName }} VERSION=${{ matrix.packageVersion }} TOKEN=${{ secrets.GITHUB_TOKEN }}
+        run: make push MODULE=${{ matrix.packageName }} VERSION=${{ matrix.packageVersion }}

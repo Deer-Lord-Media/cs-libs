@@ -12,4 +12,4 @@ package: test
 	$(RUN_CONTAINER) dotnet pack Libs/$(MODULE) --configuration Release
 
 push: test
-	$(RUN_CONTAINER) dotnet nuget push --skip-duplicate "Libs/$(MODULE)/bin/Release/$(MODULE).$(VERSION).nupkg" --source "https://nuget.pkg.github.com/Deer-Lord-Media/index.json" --api-key $(TOKEN)
+	$(RUN_CONTAINER) dotnet nuget push --skip-duplicate "Libs/$(MODULE)/bin/Release/$(MODULE).$(VERSION).nupkg" --source "https://nuget.pkg.github.com/Deer-Lord-Media/index.json" --api-key $(GITHUB_TOKEN)
