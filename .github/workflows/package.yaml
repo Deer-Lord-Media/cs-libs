@@ -2,14 +2,12 @@ name: Package Library
 on:
   workflow_dispatch:
     inputs:
-      packageName:
-        description: 'Name of the package'
+      MODULE:
+        description: 'name of the package'
         required: true
-        default: 'CoolDown'
-      packageVersion:
-        description: 'Version of the package'
+      VERSION:
+        description: 'version of the package'
         required: true
-        default: '0.0.2'
   pull_request:
     branches:
       - main
@@ -26,15 +24,11 @@ jobs:
     runs-on: [self-hosted, linux]
     strategy:
       fail-fast: false
-      # matrix:
-      #   include:
-      #     - packageName: CoolDown
-      #       packageVersion: "0.0.2"
     env:
       GITHUB_USERNAME: ${{ secrets.NUGET_USERNAME }}
       GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
-      MODULE: ${{ github.event.inputs.packageName }}
-      VERSION: ${{ github.event.inputs.packageVersion }}
+      MODULE: ${{ github.event.inputs.MODULE }}
+      VERSION: ${{ github.event.inputs.VERSION }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -42,8 +36,6 @@ jobs:
           repository: ${{ github.repo }}
           ref: ${{ github.ref }}
       - name: Package Library
-        # run: dotnet pack ${{ matrix.packageName }} --configuration Release
-        run: make package  # MODULE=${{ matrix.packageName }}
+        run: make package 
       - name: Publish Library
-        # run: dotnet nuget push --skip-duplicate "${{ matrix.packageName }}/bin/Release/${{ matrix.packageName }}.${{ matrix.packageVersion }}.nupkg" --source "https://nuget.pkg.github.com/Deer-Lord-Media/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
-        run: make push  # MODULE=${{ matrix.packageName }} VERSION=${{ matrix.packageVersion }}
+        run: make push
