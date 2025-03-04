@@ -50,7 +50,7 @@ namespace CoolDown
                 return false;
             }
             this.startedAt = DateTime.Now;
-            this.events.Publish(Action.Start, this.id, this.startedAt, this.duration);
+            this.events.Publish(this.id, Action.Start, this.startedAt, this.duration);
             return this.PendExpiry(this.TimeRemaining);
         }
 
@@ -61,7 +61,7 @@ namespace CoolDown
                 return false;
             }
             this.startedAt = DateTime.Now;
-            this.events.Publish(Action.Start, this.id, this.startedAt, this.duration);
+            this.events.Publish(this.id, Action.Start, this.startedAt, this.duration);
             return this.PendExpiry(this.TimeRemaining);
         }
 
@@ -73,7 +73,7 @@ namespace CoolDown
             }
             this.startedAt = DateTime.Now - this.duration;
             this.CancelExpiry();
-            this.events.Publish(Action.Expire, this.id, this.startedAt, this.duration);
+            this.events.Publish(this.id, Action.Expire, this.startedAt, this.duration);
             return true;
         }
 
@@ -91,7 +91,7 @@ namespace CoolDown
                 {
                     await Task.Delay(duration, this.cancel.Token);
                     this.Expire();
-                    this.events.Publish(Action.Expire, this.id, this.StartedAt, this.duration);  // Fire the event, replace with your event logic
+                    this.events.Publish(this.id, Action.Expire, this.StartedAt, this.duration);  // Fire the event, replace with your event logic
                 }
                 catch (OperationCanceledException)
                 {
@@ -105,7 +105,7 @@ namespace CoolDown
         private void Expire()
         {
             this.startedAt = DateTime.Now - this.duration;
-            this.events.Publish(Action.Start, this.id, this.startedAt, this.duration);
+            this.events.Publish(this.id, Action.Start, this.startedAt, this.duration);
         }
 
         private void CancelExpiry()

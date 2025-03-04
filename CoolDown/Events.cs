@@ -6,17 +6,17 @@ namespace CoolDown
     {
         private event EventHandler<Message>? Notify;
 
-        public void Subscribe(EventHandler<Message> listener)
+        public void Subscribe(EventHandler<Message> subscriber)
         {
-            this.Notify += listener;
+            this.Notify += subscriber;
         }
 
-        public void Unsubscribe(EventHandler<Message> listener)
+        public void Unsubscribe(EventHandler<Message> subscriber)
         {
-            this.Notify -= listener;
+            this.Notify -= subscriber;
         }
 
-        public void Publish(Action action, String id, DateTime startedAt, TimeSpan duration)
+        public void Publish(String id, Action action, DateTime startedAt, TimeSpan duration)
         {
             var message = new Message(
                 id,
