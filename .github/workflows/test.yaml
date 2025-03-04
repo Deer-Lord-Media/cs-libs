@@ -1,4 +1,4 @@
-name: Test Libraries
+name: Test Library
 on:
   workflow_dispatch: {}
   pull_request:
@@ -6,10 +6,13 @@ on:
       - main
 
 jobs:
-  Test-Libraries:  
+  Test-Library:  
     runs-on: [self-hosted, linux]
     strategy:
       fail-fast: false
+      matrix:
+        include:
+          - packageName: CoolDown
     env:
       HOME: "/tmp"
       DOTNET_CLI_HOME: "/tmp"
@@ -19,17 +22,7 @@ jobs:
         with:
           repository: ${{ github.repo }}
           ref: ${{ github.ref }}  
-      # - name: Install Dotnet Manually
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y dotnet-sdk-7.0
-      # - name: Setup Dotnet
-      #   uses: actions/setup-dotnet@v4
-      #   with:
-      #     dotnet-version: '7.0.x'
-      - name: Restore Dependencies
-        run: dotnet restore
-      - name: Build Libraries
-        run: dotnet build --no-restore
-      - name: Test Libraries
-        run: dotnet test --no-build --verbosity normal
+      - name: Build Container
+        run: make build MODULE=${{ matrix.packageName }}
+      - name: Test Library
+        run: make build MODULE=${{ matrix.packageName }}

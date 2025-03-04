@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Libs\CoolDown\CoolDown.csproj" />
+    <ProjectReference Include="..\Libs\CoolDown\CoolDown.csproj" Condition="Exists('..\Libs\CoolDown\CoolDown.csproj')" />
   </ItemGroup>
 
   <ItemGroup>
