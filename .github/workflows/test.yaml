@@ -16,6 +16,8 @@ jobs:
     env:
       HOME: "/tmp"
       DOTNET_CLI_HOME: "/tmp"
+      GITHUB_USERNAME: ${{ secrets.NUGET_USERNAME }}
+      GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -23,6 +25,6 @@ jobs:
           repository: ${{ github.repo }}
           ref: ${{ github.ref }}  
       - name: Build Container
-        run: make build MODULE=${{ matrix.packageName }} GITHUB_USERNAME="${{ secrets.NUGET_USERNAME }}" GITHUB_TOKEN=${{ secrets.NUGET_TOKEN}}
+        run: make build MODULE=${{ matrix.packageName }}
       - name: Test Library
-        run: make test MODULE=${{ matrix.packageName }} GITHUB_USERNAME="${{ secrets.NUGET_USERNAME }}" GITHUB_TOKEN=${{ secrets.NUGET_TOKEN}}
+        run: make test MODULE=${{ matrix.packageName }}
