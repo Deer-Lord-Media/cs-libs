@@ -1,6 +1,6 @@
 # Convert MODULE to lowercase
 IMAGE_NAME := cs-libs-$(shell echo $(MODULE) | tr '[:upper:]' '[:lower:]')
-RUN_CONTAINER := docker run -e GITHUB_USERNAME=$(GITHUB_USERNAME) -e GITHUB_TOKEN=$(GITHUB_TOKEN) -it $(IMAGE_NAME)
+RUN_CONTAINER := docker run -e GITHUB_USERNAME=$(GITHUB_USERNAME) -e GITHUB_TOKEN=$(GITHUB_TOKEN) -t $(IMAGE_NAME)
 
 build:
 	docker build --build-arg MODULE=$(MODULE) -t $(IMAGE_NAME) .
