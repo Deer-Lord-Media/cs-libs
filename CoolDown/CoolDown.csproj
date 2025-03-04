@@ -12,4 +12,10 @@
     <RepositoryUrl>https://github.com/Deer-Lord-Media/cs-libs</RepositoryUrl>
   </PropertyGroup>
 
+  <ItemGroup>
+      <None Update="docs\README.md">
+          <Pack>true</Pack>
+          <PackagePath>docs/README.md</PackagePath>
+      </None>
+  </ItemGroup>
 </Project>

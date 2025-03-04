@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,48 +7,30 @@ namespace CoolDown
 {
     public class Tracker
     {
-        public Tracker(TimeSpan duration, string id)
+        public Tracker(TimeSpan duration, string id, ISender events)
         {
             this.duration = duration;
             this.startedAt = DateTime.Now - duration;
             this.id = id;
             this.cancel = new CancellationTokenSource();
+            this.events = events;
         }
 
         public readonly string id;
         private DateTime startedAt;
         public DateTime StartedAt { get { return this.startedAt; } }
         public readonly TimeSpan duration;
-        private event EventHandler<Message>? Notify;
         private CancellationTokenSource cancel;
-        public void Register(EventHandler<Message> listener)
-        {
-            this.Notify += listener;
-        }
-
-        public void Deregister(EventHandler<Message> listener)
-        {
-            this.Notify -= listener;
-        }
-
-        protected virtual void SendEvent(Action action)
-        {
-            var message = new Message
-            {
-                Action = action,
-                Id = this.id
-            };
-            Notify?.Invoke(this, message);
-        }
+        private ISender events;
 
         public TimeSpan TimeRemaining
         {
             get
             {
                 var timeRemaining = (this.startedAt + this.duration) - DateTime.Now;
-                if (timeRemaining < new TimeSpan(0))
+                if (timeRemaining < TimeSpan.Zero)
                 {
-                    timeRemaining = new TimeSpan(0);
+                    timeRemaining = TimeSpan.Zero;
                 }
                 return timeRemaining;
             }
@@ -57,7 +40,7 @@ namespace CoolDown
         {
             get
             {
-                return this.TimeRemaining == new TimeSpan(0);
+                return this.TimeRemaining == TimeSpan.Zero;
             }
         }
 
@@ -68,9 +51,8 @@ namespace CoolDown
                 return false;
             }
             this.startedAt = DateTime.Now;
-            this.SendEvent(Action.Start);
-            this.PendExpiry(this.TimeRemaining);
-            return true;
+            this.events.SendEvent(Action.Start, this.id, this.startedAt, this.duration);
+            return this.PendExpiry(this.TimeRemaining);
         }
 
         public bool Refresh()
@@ -80,9 +62,8 @@ namespace CoolDown
                 return false;
             }
             this.startedAt = DateTime.Now;
-            this.SendEvent(Action.Refresh);
-            this.PendExpiry(this.TimeRemaining);
-            return true;
+            this.events.SendEvent(Action.Refresh, this.id, this.startedAt, this.duration);
+            return this.PendExpiry(this.TimeRemaining);
         }
 
         public bool Clear()
@@ -93,15 +74,15 @@ namespace CoolDown
             }
             this.startedAt = DateTime.Now - this.duration;
             this.CancelExpiry();
-            this.SendEvent(Action.Expire);
+            this.events.SendEvent(Action.Expire, this.id, this.startedAt, this.duration);
             return true;
         }
 
-        private void PendExpiry(TimeSpan duration)
+        private bool PendExpiry(TimeSpan duration)
         {
-            if (duration <= new TimeSpan(0))
+            if (duration <= TimeSpan.Zero)
             {
-                return;
+                return false;
             }
 
             this.CancelExpiry();
@@ -109,20 +90,23 @@ namespace CoolDown
             {
                 try
                 {
-                    await Task.Delay(duration.Milliseconds, this.cancel.Token);
+                    await Task.Delay(duration, this.cancel.Token);
                     this.Expire();
-                    this.SendEvent(Action.Expire);
+                    this.events.SendEvent(Action.Expire, this.id, this.StartedAt, this.duration);  // Fire the event, replace with your event logic
                 }
                 catch (OperationCanceledException)
                 {
                     return;
                 }
             });
+
+            return true;
         }
 
         private void Expire()
         {
             this.startedAt = DateTime.Now - this.duration;
+            this.events.SendEvent(Action.Start, this.id, this.startedAt, this.duration);
         }
 
         private void CancelExpiry()

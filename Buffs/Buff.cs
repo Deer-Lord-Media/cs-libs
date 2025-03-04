@@ -8,9 +8,9 @@ namespace CSLibs.Buffs
         public BuffCD(Data data, int stacks = 1, CoolDown.Tracker? coolDown = null)
         {
             this.data = data;
-            this.stacks = Math.Max(0, Math.Min(data.MaxStacks, stacks));    
+            this.stacks = Math.Max(0, Math.Min(data.MaxStacks, stacks));
             this.coolDown = (coolDown == null)
-                ? new CoolDown.Tracker(data.Duration)
+                ? new CoolDown.Tracker(data.Duration, "")
                 : coolDown;
         }
 
@@ -37,7 +37,7 @@ namespace CSLibs.Buffs
             this.Data = data;
             this.Stacks = Math.Max(0, Math.Min(data.MaxStacks, stacks));
             this.At = (at != null) ? (DateTime)at : DateTime.Now;
-            this.CoolDown = new CoolDown.Tracker(data.Duration);
+            this.CoolDown = new CoolDown.Tracker(data.Duration, "");
         }
 
         public readonly Data Data { get; }
@@ -45,8 +45,9 @@ namespace CSLibs.Buffs
         public readonly int Stacks { get; }
 
         public readonly CoolDown.Tracker? CoolDown;
-        
-        private readonly TimeSpan _zero {
+
+        private readonly TimeSpan _zero
+        {
             get
             {
                 return new TimeSpan(0, 0, 0, 0, 0);
@@ -58,7 +59,7 @@ namespace CSLibs.Buffs
             get
             {
                 return (Data.Duration != _zero) && TimeRemaining <= _zero;
-            } 
+            }
         }
 
         public TimeSpan TimeRemaining
