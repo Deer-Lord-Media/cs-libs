@@ -6,6 +6,12 @@ clean:
 restore:
 	dotnet restore
 
+build-docker:
+	docker build --no-cache -t cs-libs .
+
+test-docker: build-docker
+	docker run --env-file .env -it cs-libs dotnet test
+
 build-all: restore
 	dotnet build
 

@@ -1,8 +1,9 @@
-using System.IO.Compression;
-using System.Reflection.Metadata;
+using System;
+using System.Threading;
 using CoolDown;
-namespace Tests;
+using Xunit;
 
+namespace Tests;
 public class CoolDownTest
 {
     [Fact]

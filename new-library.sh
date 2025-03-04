@@ -4,11 +4,11 @@ NAME="${1}"
 DESC="${2}"
 
 create-library() {
-  dotnet new classlib --framework "netstandard2.1" -o "${NAME}"
+  dotnet new classlib --framework "netstandard2.1" -o "Libs/${NAME}"
 }
 
 insert-nuget-xml() {
-  csproj="${NAME}/${NAME}.csproj"
+  csproj="Libs/${NAME}/${NAME}.csproj"
 
   # clear end tags
   sed -e '/<\/PropertyGroup>/ d' -e '/<\/Project>/ d' -i "$csproj"
@@ -33,12 +33,12 @@ create-tests() {
     return 1
   fi
   cat > "Tests/${NAME}.cs" <<EOF
-namespace Tests;
 
+namespace Tests;
 public class ${NAME}Test
 {
     [Fact]
-    public void Test1()
+    public void Test${NAME}()
     {
 
     }
@@ -47,7 +47,7 @@ EOF
 }
 
 add-to-solution() {
-  libproj="${NAME}/${NAME}.csproj"
+  libproj="Libs/${NAME}/${NAME}.csproj"
   testproj="Tests/Tests.csproj"
   dotnet sln add "${libproj}"
   dotnet sln add "${testproj}"
