@@ -3,9 +3,8 @@ on:
   workflow_dispatch:
     inputs:
       MODULE:
-        description: 'Name of the module'
+        description: 'name of the module'
         required: true
-        default: 'CoolDown'
   pull_request:
     branches:
       - main
@@ -15,9 +14,6 @@ jobs:
     runs-on: [self-hosted, linux]
     strategy:
       fail-fast: false
-      # matrix:
-      #   include:
-      #     - packageName: CoolDown
     env:
       GITHUB_USERNAME: ${{ secrets.NUGET_USERNAME }}
       GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
