@@ -22,7 +22,7 @@ jobs:
           # - packageName: Buffs
           #   packageVersion: "0.0.4"
           - packageName: CoolDown
-            packageVersion: "0.0.1"
+            packageVersion: "0.0.2"
           # - packageName: Quests
           #   packageVersion: "0.0.3"
           # - packageName: Resource

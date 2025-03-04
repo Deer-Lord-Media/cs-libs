@@ -10,4 +10,4 @@ build: restore
 	dotnet build $(MODULE)
 
 test: build
-	dotnet test --no-build --verbosity normal $(MODULE)
+	dotnet test --no-build --verbosity normal

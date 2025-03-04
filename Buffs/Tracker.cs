@@ -6,14 +6,15 @@ namespace CSLibs.Buffs
 {
     public class TrackerCD
     {
-        public TrackerCD(IEnumerable<BuffCD>? buffs = null)
+        public TrackerCD(int maximum, IEnumerable<BuffCD>? buffs = null)
         {
+            this.maximum = maximum;
             this.members = (buffs == null) ? new HashSet<BuffCD>() : new HashSet<BuffCD>(buffs);
         }
 
-        public readonly HashSet<BuffCD> members;
+        private HashSet<BuffCD> members;
         private int maximum;
-        public IEnumerable<BuffCD> buffs
+        public IEnumerable<BuffCD> Buffs
         {
             get
             {
@@ -27,16 +28,23 @@ namespace CSLibs.Buffs
             // apply the buff
             if (buffs.Count() == 0)
             {
-                BuffCD? removed = null;
-                if (this.buffs.Count() == maximum)
+                // bail if we are blocked
+                if (this.Buffs.Where(m => data.IsSimilarTo(m.data)).Count() > 0)
                 {
-                    var removable = (List<BuffCD>)this.buffs.Where(m => data.HasPrecedenceOver(m.data) || data.HasPriorityOver(m.data));
+                    return null;
+                }
+
+                // handle remove
+                BuffCD? removed = null;
+                if (this.Buffs.Count() == maximum)
+                {
+                    var removable = this.Buffs.Where(m => data.HasPrecedenceOver(m.data) || data.HasPriorityOver(m.data));
                     if (removable.Count() == 0)
                     {
                         return null;
                     }
                     removed = removable.First();
-                    if (!this.members.Remove((BuffCD)removed))
+                    if (!this.Cancel(((BuffCD)removed).data))
                     {
                         return null;
                     }
@@ -51,13 +59,15 @@ namespace CSLibs.Buffs
                     {
                         // serious error!!!
                     }
-                    return null;
                 }
             } else {
             // increase stacks
                 var buff = buffs.First();
                 buff = new BuffCD(data, buff.stacks + 1, buff.coolDown);
-                buff.coolDown.Refresh();
+                if (buff.coolDown != null)
+                {
+                    buff.coolDown.Refresh();
+                }
                 if (this.members.Add(buff))
                 {
                     return buff;
@@ -65,7 +75,19 @@ namespace CSLibs.Buffs
             }
             return null;
         }
+
+        public bool Cancel(Data data)
+        {
+            var members = this.members.Where(m => m.data == data);
+            if (members.Count() > 0)
+            {
+                var buff = members.First();
+                return this.members.Remove(buff);
+            }
+            return false;
+        }
     }
+
     public class Tracker
     {
         public Tracker(int maximum, IEnumerable<Buff>? buffs = null)
