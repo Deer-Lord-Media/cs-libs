@@ -21,10 +21,10 @@ public class CoolDownTest
             Assert.Equal("ID", e.Id);
             handledStart = true;
         }
-        events.Register(HandleStart);
+        events.Subscribe(HandleStart);
         var started = coolDown.Start();
         Assert.True(started);
-        events.Deregister(HandleStart);
+        events.Unsubscribe(HandleStart);
         Assert.True(handledStart);
         Assert.InRange<TimeSpan>(coolDown.TimeRemaining, new TimeSpan(1), duration);
 
@@ -34,11 +34,11 @@ public class CoolDownTest
             Assert.Equal("ID", e.Id);
             handledRefresh = true;
         }
-        events.Register(HandleRefresh);
+        events.Subscribe(HandleRefresh);
 
         var refreshed = coolDown.Refresh();
         Assert.True(refreshed);
-        events.Deregister(HandleRefresh);
+        events.Unsubscribe(HandleRefresh);
         Assert.True(handledRefresh);
 
         void HandleClear(object? sender, Message e)
@@ -47,10 +47,10 @@ public class CoolDownTest
             Assert.Equal("ID", e.Id);
             handledClear = true;
         }
-        events.Register(HandleClear);
+        events.Subscribe(HandleClear);
         var cleared = coolDown.Clear();
         Assert.True(cleared);
-        events.Deregister(HandleClear);
+        events.Unsubscribe(HandleClear);
         Assert.True(handledClear);
     }
 
@@ -73,12 +73,12 @@ public class CoolDownTest
         var duration = new TimeSpan(0, 0, 0, 1, 0);
         var events = new Events();
         var coolDown = new CoolDown.Tracker(duration, "ID", events);
-        events.Register(Handle);
+        events.Subscribe(Handle);
         var started = coolDown.Start();
         Assert.True(started);
         Thread.Sleep(new TimeSpan(0, 0, 0, 3, 0));
         Assert.True(expired);
-        events.Deregister(Handle);
+        events.Unsubscribe(Handle);
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public class CoolDownTest
         var duration = new TimeSpan(0, 0, 0, 5, 0);
         var events = new Events();
         var coolDown = new CoolDown.Tracker(duration, "ID", events);
-        events.Register(HandleExpire);
+        events.Subscribe(HandleExpire);
 
         var started = coolDown.Start();
         Assert.True(started);
@@ -109,7 +109,7 @@ public class CoolDownTest
         Assert.True(cleared);
         Assert.NotNull(expiredAt);
 
-        events.Deregister(HandleExpire);
+        events.Unsubscribe(HandleExpire);
     }
 
     [Fact]
@@ -130,7 +130,7 @@ public class CoolDownTest
         var duration = new TimeSpan(0, 0, 0, 1, 0);
         var events = new Events();
         CoolDown.Tracker coolDown = new CoolDown.Tracker(duration, "ID", events);
-        events.Register(HandleExpire);
+        events.Subscribe(HandleExpire);
 
         var started = coolDown.Start();
         Assert.True(started);
@@ -142,6 +142,6 @@ public class CoolDownTest
         Thread.Sleep(duration * 2);
         Assert.NotNull(expiredAt);
 
-        events.Deregister(HandleExpire);
+        events.Unsubscribe(HandleExpire);
     }
 }

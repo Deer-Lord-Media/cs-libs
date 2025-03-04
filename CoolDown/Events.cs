@@ -17,32 +17,32 @@ namespace CoolDown
         public TimeSpan Duration { get; set; }
     }
 
-    public interface ISender
+    public interface IPublisher
     {
-        void SendEvent(Action action, String id, DateTime startedAt, TimeSpan duration);
+        void Publish(Action action, String id, DateTime startedAt, TimeSpan duration);
     }
 
-    public interface IReceiver
+    public interface ISubscriber
     {
-        void Register(EventHandler<Message> listener);
-        void Deregister(EventHandler<Message> listener);
+        void Subscribe(EventHandler<Message> listener);
+        void Unsubscribe(EventHandler<Message> listener);
     }
 
-    public class Events : ISender, IReceiver
+    public class Events : IPublisher, ISubscriber
     {
         private event EventHandler<Message>? Notify;
 
-        public void Register(EventHandler<Message> listener)
+        public void Subscribe(EventHandler<Message> listener)
         {
             this.Notify += listener;
         }
 
-        public void Deregister(EventHandler<Message> listener)
+        public void Unsubscribe(EventHandler<Message> listener)
         {
             this.Notify -= listener;
         }
 
-        public void SendEvent(Action action, String id, DateTime startedAt, TimeSpan duration)
+        public void Publish(Action action, String id, DateTime startedAt, TimeSpan duration)
         {
             var message = new Message
             {

@@ -7,7 +7,7 @@ namespace CoolDown
 {
     public class Tracker
     {
-        public Tracker(TimeSpan duration, string id, ISender events)
+        public Tracker(TimeSpan duration, string id, IPublisher events)
         {
             this.duration = duration;
             this.startedAt = DateTime.Now - duration;
@@ -21,7 +21,7 @@ namespace CoolDown
         public DateTime StartedAt { get { return this.startedAt; } }
         public readonly TimeSpan duration;
         private CancellationTokenSource cancel;
-        private ISender events;
+        private IPublisher events;
 
         public TimeSpan TimeRemaining
         {
@@ -51,7 +51,7 @@ namespace CoolDown
                 return false;
             }
             this.startedAt = DateTime.Now;
-            this.events.SendEvent(Action.Start, this.id, this.startedAt, this.duration);
+            this.events.Publish(Action.Start, this.id, this.startedAt, this.duration);
             return this.PendExpiry(this.TimeRemaining);
         }
 
@@ -62,7 +62,7 @@ namespace CoolDown
                 return false;
             }
             this.startedAt = DateTime.Now;
-            this.events.SendEvent(Action.Refresh, this.id, this.startedAt, this.duration);
+            this.events.Publish(Action.Refresh, this.id, this.startedAt, this.duration);
             return this.PendExpiry(this.TimeRemaining);
         }
 
@@ -74,7 +74,7 @@ namespace CoolDown
             }
             this.startedAt = DateTime.Now - this.duration;
             this.CancelExpiry();
-            this.events.SendEvent(Action.Expire, this.id, this.startedAt, this.duration);
+            this.events.Publish(Action.Expire, this.id, this.startedAt, this.duration);
             return true;
         }
 
@@ -92,7 +92,7 @@ namespace CoolDown
                 {
                     await Task.Delay(duration, this.cancel.Token);
                     this.Expire();
-                    this.events.SendEvent(Action.Expire, this.id, this.StartedAt, this.duration);  // Fire the event, replace with your event logic
+                    this.events.Publish(Action.Expire, this.id, this.StartedAt, this.duration);  // Fire the event, replace with your event logic
                 }
                 catch (OperationCanceledException)
                 {
@@ -106,7 +106,7 @@ namespace CoolDown
         private void Expire()
         {
             this.startedAt = DateTime.Now - this.duration;
-            this.events.SendEvent(Action.Start, this.id, this.startedAt, this.duration);
+            this.events.Publish(Action.Start, this.id, this.startedAt, this.duration);
         }
 
         private void CancelExpiry()
