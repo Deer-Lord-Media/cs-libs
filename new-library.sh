@@ -1,19 +1,37 @@
 #/bin/bash
 
+set -euo pipefail
+
 NAME="${1}"
 DESC="${2}"
+LIBDIR="Libs/${NAME}"
+LIBPROJ="${LIBDIR}/${NAME}.csproj"
+TESTFILE="Tests/${NAME}Test.cs"
+
+pre-flight() {
+  if [ -e "$LIBDIR"]
+  then
+    return 1
+  fi
+  if [ -e "$LIBPROJ" ]
+  then
+    return 2
+  fi
+  if [ -e "$TESTFILE" ]
+  then
+    return 3
+  fi
+}
 
 create-library() {
-  dotnet new classlib --framework "netstandard2.1" -o "Libs/${NAME}"
+  dotnet new classlib --framework "netstandard2.1" -o "$LIBDIR"
 }
 
 insert-nuget-xml() {
-  csproj="Libs/${NAME}/${NAME}.csproj"
-
   # clear end tags
-  sed -e '/<\/PropertyGroup>/ d' -e '/<\/Project>/ d' -i "$csproj"
+  sed -e '/<\/PropertyGroup>/ d' -e '/<\/Project>/ d' -i "$LIBPROJ"
 
-  cat >> "$csproj" <<EOF
+  cat >> "$LIBPROJ" <<EOF
     <PackageId>${NAME}</PackageId>
     <Version>0.0.1</Version>
     <Authors>William DaFriend</Authors>
@@ -27,12 +45,7 @@ EOF
 }
 
 create-tests() {
-  testfile="Tests/${NAME}.cs"
-  if [ -e "${testfile}" ]
-  then
-    return 1
-  fi
-  cat > "Tests/${NAME}.cs" <<EOF
+  cat > "$TESTFILE" <<EOF
 
 namespace Tests;
 public class ${NAME}Test
@@ -47,21 +60,18 @@ EOF
 }
 
 add-to-solution() {
-  libproj="Libs/${NAME}/${NAME}.csproj"
   testproj="Tests/Tests.csproj"
-  dotnet sln add "${libproj}"
+  dotnet sln add "$LIBPROJ"
   dotnet sln add "${testproj}"
-  dotnet add "${testproj}" reference "${libproj}"
+  dotnet add "${testproj}" reference "$LIBPROJ"
 }
 
 main() {
-  if [ ! -e "${NAME}" ]
-  then
-    create-library
-    insert-nuget-xml
-    create-tests
-    add-to-solution
-  fi
+  pre-flight
+  create-library
+  insert-nuget-xml
+  create-tests
+  add-to-solution
 }
 
 main
