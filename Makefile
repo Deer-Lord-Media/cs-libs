@@ -1,26 +1,14 @@
-
-clean:
-	dotnet nuget locals all --clear
-	dotnet clean
-
-restore:
-	dotnet restore
-
-build-docker:
+build:
 	docker build --no-cache -t cs-libs .
 
-test-docker: build-docker
-	docker run --env-file .env -it cs-libs dotnet test
+test: build
+	docker run --env-file .env -it cs-libs dotnet test --no-build --verbosity normal
 
-build-all: restore
-	dotnet build
+test-module: build
+	docker run --env-file .env -it cs-libs dotnet test --no-build --verbosity normal --filter "FullyQualifiedName~$(MODULE)Test"
 
-build-module:
-	dotnet build $(MODULE)
+package:
+	docker run --env-file .env -it cs-libs dotnet pack Libs/$(MODULE) --configuration Release
 
-test-all: build
-	dotnet test --no-build --verbosity normal
-
-test-module:
-	dotnet build $(MODULE)
-	dotnet test --no-build --verbosity normal --filter "FullyQualifiedName~$(MODULE)Test"
+push:
+	dotnet nuget push --skip-duplicate "Libs/$(MODULE)/bin/Release/$(MODULE).$(VERSION).nupkg" --source "https://nuget.pkg.github.com/Deer-Lord-Media/index.json" --api-key $(TOKEN)
