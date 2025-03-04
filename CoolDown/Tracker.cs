@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,7 +20,7 @@ namespace CoolDown
         public DateTime StartedAt { get { return this.startedAt; } }
         public readonly TimeSpan duration;
         private CancellationTokenSource cancel;
-        private IPublisher events;
+        private readonly IPublisher events;
 
         public TimeSpan TimeRemaining
         {
