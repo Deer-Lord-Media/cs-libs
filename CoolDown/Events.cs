@@ -18,13 +18,12 @@ namespace CoolDown
 
         public void Publish(Action action, String id, DateTime startedAt, TimeSpan duration)
         {
-            var message = new Message
-            {
-                Action = action,
-                Id = id,
-                StartedAt = startedAt,
-                Duration = duration
-            };
+            var message = new Message(
+                id,
+                action,
+                startedAt,
+                duration
+            );
             Notify?.Invoke(this, message);
         }
     }

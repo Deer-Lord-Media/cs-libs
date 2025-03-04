@@ -61,7 +61,7 @@ namespace CoolDown
                 return false;
             }
             this.startedAt = DateTime.Now;
-            this.events.Publish(Action.Refresh, this.id, this.startedAt, this.duration);
+            this.events.Publish(Action.Start, this.id, this.startedAt, this.duration);
             return this.PendExpiry(this.TimeRemaining);
         }
 

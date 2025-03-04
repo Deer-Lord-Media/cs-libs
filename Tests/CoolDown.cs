@@ -30,7 +30,7 @@ public class CoolDownTest
 
         void HandleRefresh(object? sender, Message e)
         {
-            Assert.Equal<CoolDown.Action>(CoolDown.Action.Refresh, e.Action);
+            Assert.Equal<CoolDown.Action>(CoolDown.Action.Start, e.Action);
             Assert.Equal("ID", e.Id);
             handledRefresh = true;
         }
