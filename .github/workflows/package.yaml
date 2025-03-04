@@ -19,14 +19,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # - packageName: Buffs
-          #   packageVersion: "0.0.4"
           - packageName: CoolDown
             packageVersion: "0.0.2"
-          # - packageName: Quests
-          #   packageVersion: "0.0.3"
-          # - packageName: Resource
-          #   packageVersion: "0.0.3"
 
     steps:
       - name: Checkout Repository
@@ -35,8 +29,8 @@ jobs:
           repository: ${{ github.repo }}
           ref: ${{ github.ref }}
       - name: Package Library
-        run: dotnet pack ${{ matrix.packageName }} --configuration Release
-        # run: make package MODULE=${{ matrix.packageName }}
+        # run: dotnet pack ${{ matrix.packageName }} --configuration Release
+        run: make package MODULE=${{ matrix.packageName }}
       - name: Publish Library
-        run: dotnet nuget push --skip-duplicate "${{ matrix.packageName }}/bin/Release/${{ matrix.packageName }}.${{ matrix.packageVersion }}.nupkg" --source "https://nuget.pkg.github.com/Deer-Lord-Media/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
-        # run: make push MODULE=${{ matrix.packageName }} VERSION=${{ matrix.packageVersion }} TOKEN=${{ secrets.GITHUB_TOKEN }}
+        # run: dotnet nuget push --skip-duplicate "${{ matrix.packageName }}/bin/Release/${{ matrix.packageName }}.${{ matrix.packageVersion }}.nupkg" --source "https://nuget.pkg.github.com/Deer-Lord-Media/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
+        run: make push MODULE=${{ matrix.packageName }} VERSION=${{ matrix.packageVersion }} TOKEN=${{ secrets.GITHUB_TOKEN }}
