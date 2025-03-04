@@ -23,6 +23,6 @@ jobs:
           repository: ${{ github.repo }}
           ref: ${{ github.ref }}  
       - name: Build Container
-        run: make build MODULE=${{ matrix.packageName }}
+        run: make build MODULE=${{ matrix.packageName }} GITHUB_USERNAME="${{ secrets.NUGET_USERNAME }}" GITHUB_TOKEN=${{ secrets.NUGET_TOKEN}}
       - name: Test Library
-        run: make build MODULE=${{ matrix.packageName }}
+        run: make build MODULE=${{ matrix.packageName }} GITHUB_USERNAME="${{ secrets.NUGET_USERNAME }}" GITHUB_TOKEN=${{ secrets.NUGET_TOKEN}}

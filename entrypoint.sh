@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 dotnet nuget add source \
     --username $GITHUB_USER \
     --password $GITHUB_TOKEN \
