@@ -14,8 +14,6 @@ jobs:
         include:
           - packageName: CoolDown
     env:
-      HOME: "/tmp"
-      DOTNET_CLI_HOME: "/tmp"
       GITHUB_USERNAME: ${{ secrets.NUGET_USERNAME }}
       GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
     steps:
