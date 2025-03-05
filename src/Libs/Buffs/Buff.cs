@@ -21,6 +21,16 @@ namespace Buffs
             return this.data.Id;
         }
 
+        public override bool Equals(object? obj)
+        {
+            if (obj == null || !(obj is Buff))
+            {
+                return false;
+            }
+
+            return (Buff)obj == this;
+        }
+
         public static bool operator >(Buff? b1, Buff? b2)
         {
             if (b1 is null && b2 is null) return false;
