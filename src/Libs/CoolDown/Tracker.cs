@@ -24,6 +24,14 @@ namespace CoolDown
         public readonly ISubscriber subscriber;
         private readonly IPublisher publisher;
 
+        public bool IsActive
+        {
+            get
+            {
+                return this.TimeRemaining > TimeSpan.Zero;
+            }
+        }
+
         public TimeSpan TimeRemaining
         {
             get

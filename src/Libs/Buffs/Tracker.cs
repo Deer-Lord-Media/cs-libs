@@ -53,12 +53,12 @@ namespace Buffs
                 if (toRemove.coolDown.Clear()) active.Remove(toRemove);
             }
 
-            // exit if tracker is still full
+            // no room for buffs
             if (active.Count >= this.maxMembers) return false;
 
+            // add buff and register handler
             if (!this.members.Add(buff))
             {
-                buff.coolDown.Clear();
                 return false;
             }
             buff.coolDown.subscriber.Subscribe(this.HandleExpiry);

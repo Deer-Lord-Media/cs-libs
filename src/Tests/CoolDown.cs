@@ -14,7 +14,7 @@ public class CoolDownTest
         var handledStart = false;
         var handledRefresh = false;
         var handledClear = false;
-        CoolDown.Tracker coolDown = new CoolDown.Tracker(duration, 1, events);
+        Tracker coolDown = new Tracker(duration, 1, events);
 
         void HandleStart(object? sender, Message e)
         {
@@ -25,6 +25,7 @@ public class CoolDownTest
         events.Subscribe(HandleStart);
         var started = coolDown.Start();
         Assert.True(started);
+        Assert.True(coolDown.IsActive);
         events.Unsubscribe(HandleStart);
         Assert.True(handledStart);
         Assert.InRange<TimeSpan>(coolDown.TimeRemaining, new TimeSpan(1), duration);
@@ -73,10 +74,11 @@ public class CoolDownTest
 
         var duration = new TimeSpan(0, 0, 0, 1, 0);
         var events = new Events();
-        var coolDown = new CoolDown.Tracker(duration, 1, events);
+        var coolDown = new Tracker(duration, 1, events);
         events.Subscribe(Handle);
         var started = coolDown.Start();
         Assert.True(started);
+        Assert.True(coolDown.IsActive);
         Thread.Sleep(new TimeSpan(0, 0, 0, 3, 0));
         Assert.True(expired);
         events.Unsubscribe(Handle);
@@ -99,11 +101,12 @@ public class CoolDownTest
 
         var duration = new TimeSpan(0, 0, 0, 5, 0);
         var events = new Events();
-        var coolDown = new CoolDown.Tracker(duration, 1, events);
+        var coolDown = new Tracker(duration, 1, events);
         events.Subscribe(HandleExpire);
 
         var started = coolDown.Start();
         Assert.True(started);
+        Assert.True(coolDown.IsActive);
 
         Assert.Null(expiredAt);
         var cleared = coolDown.Clear();
@@ -130,11 +133,12 @@ public class CoolDownTest
 
         var duration = new TimeSpan(0, 0, 0, 1, 0);
         var events = new Events();
-        CoolDown.Tracker coolDown = new CoolDown.Tracker(duration, 1, events);
+        Tracker coolDown = new Tracker(duration, 1, events);
         events.Subscribe(HandleExpire);
 
         var started = coolDown.Start();
         Assert.True(started);
+        Assert.True(coolDown.IsActive);
 
         Assert.Null(expiredAt);
         var cleared = coolDown.Refresh();

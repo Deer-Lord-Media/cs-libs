@@ -18,7 +18,7 @@ namespace Buffs
 
         public override int GetHashCode()
         {
-            return this.data.Id;
+            return (this.data.Id * 397) ^ (this.coolDown.IsActive ? 1 : 0);
         }
 
         public override bool Equals(object? obj)
