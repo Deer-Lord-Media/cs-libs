@@ -35,7 +35,7 @@ namespace Buffs
         {
             if (b1 is null && b2 is null) return true;
             if (b1 is null || b2 is null) return false;
-            return b1.data.EqualTo.Contains(b2.data);
+            return b1.data.EqualTo.Contains(b2.data) || b2.data.EqualTo.Contains(b1.data);
         }
 
         public static bool operator !=(Buff? b1, Buff? b2)
@@ -44,7 +44,13 @@ namespace Buffs
             if (b1 is null || b2 is null) return false;
             // buffs are not the same buff
             // buffs are not in precedence categories
-            return !b1.data.EqualTo.Contains(b2.data) && !b2.data.EqualTo.Contains(b1.data) && !b1.data.PrecedenceOver.Contains(b2.data) && !b2.data.PrecedenceOver.Contains(b1.data);
+            return (
+                b1.data.Id != b2.data.Id  // buffs are not the same
+                && !b1.data.EqualTo.Contains(b2.data) // buffs not in same category
+                && !b2.data.EqualTo.Contains(b1.data)
+                && !b1.data.PrecedenceOver.Contains(b2.data) // buffs don't have some kind of precedence link
+                && !b2.data.PrecedenceOver.Contains(b1.data)
+            );
         }
     }
 }
