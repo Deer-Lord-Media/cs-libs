@@ -4,12 +4,13 @@ set -euo pipefail
 
 NAME="${1}"
 DESC="${2}"
-LIBDIR="Libs/${NAME}"
+SOLUTIONFILE="src/cs-libs.sln"
+LIBDIR="src/Libs/${NAME}"
 LIBPROJ="${LIBDIR}/${NAME}.csproj"
-TESTFILE="Tests/${NAME}Test.cs"
+TESTFILE="src/Tests/${NAME}Test.cs"
 
 pre-flight() {
-  if [ -e "$LIBDIR"]
+  if [ -e "$LIBDIR" ]
   then
     return 1
   fi
@@ -60,9 +61,9 @@ EOF
 }
 
 add-to-solution() {
-  testproj="Tests/Tests.csproj"
-  dotnet sln add "$LIBPROJ"
-  dotnet sln add "${testproj}"
+  testproj="src/Tests/Tests.csproj"
+  dotnet sln "$SOLUTIONFILE" add "$LIBPROJ"
+  dotnet sln "$SOLUTIONFILE" add "${testproj}"
   dotnet add "${testproj}" reference "$LIBPROJ"
 }
 

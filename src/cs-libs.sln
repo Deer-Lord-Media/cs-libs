@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolDown", "Libs\CoolDown\C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{D9DFBA7E-7A0E-4A95-9B21-B4163E22D1E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buffs", "Libs\Buffs\Buffs.csproj", "{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,11 +45,24 @@ Global
 		{D9DFBA7E-7A0E-4A95-9B21-B4163E22D1E3}.Release|x64.Build.0 = Release|Any CPU
 		{D9DFBA7E-7A0E-4A95-9B21-B4163E22D1E3}.Release|x86.ActiveCfg = Release|Any CPU
 		{D9DFBA7E-7A0E-4A95-9B21-B4163E22D1E3}.Release|x86.Build.0 = Release|Any CPU
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}.Debug|x64.Build.0 = Debug|Any CPU
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}.Debug|x86.Build.0 = Debug|Any CPU
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}.Release|x64.ActiveCfg = Release|Any CPU
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}.Release|x64.Build.0 = Release|Any CPU
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}.Release|x86.ActiveCfg = Release|Any CPU
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2C8337F7-7BB5-41C1-9172-271F13C62522} = {6C4D298B-81FB-2B6B-5AB6-46205EDDC72C}
+		{332AA49F-3C08-4623-9B83-A6FE0FD7A89E} = {6C4D298B-81FB-2B6B-5AB6-46205EDDC72C}
 	EndGlobalSection
 EndGlobal

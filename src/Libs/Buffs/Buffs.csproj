@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+
+    <PackageId>Buffs</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>William DaFriend</Authors>
+    <Company>Deer Lord Media</Company>
+    <PackageDescription>active buffs</PackageDescription>
+    <RepositoryUrl>https://github.com/Deer-Lord-Media/cs-libs</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CoolDown\CoolDown.csproj" />
+  </ItemGroup>
+
+</Project>
