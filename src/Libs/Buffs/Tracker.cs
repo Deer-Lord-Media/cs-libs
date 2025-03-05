@@ -21,7 +21,7 @@ namespace Buffs
             }
         }
 
-        private void HandleExpiry(object sender, CoolDown.Message e)
+        private void HandleExpiry(object? sender, CoolDown.Message e)
         {
             if (e.Action != CoolDown.Action.Expire)
             {
