@@ -16,7 +16,7 @@ namespace CoolDown
             this.Notify -= subscriber;
         }
 
-        public void Publish(String id, Action action, DateTime startedAt, TimeSpan duration)
+        public void Publish(int id, Action action, DateTime startedAt, TimeSpan duration)
         {
             var message = new Message(
                 id,

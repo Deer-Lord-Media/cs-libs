@@ -21,33 +21,48 @@ namespace Buffs
             }
         }
 
-        public bool Add(Buff buff)
+        private void HandleExpiry(object sender, CoolDown.Message e)
         {
-            HashSet<Buff> active = (HashSet<Buff>)this.Active;
-            var exact = active.Where(m => m.data.Id == buff.data.Id).FirstOrDefault();
-            if (exact != null)
+            if (e.Action != CoolDown.Action.Expire)
             {
-                return exact.coolDown.Refresh();
+                return;
             }
-            var excluded = active.Where(m => buff == m || buff < m).FirstOrDefault();
-            if (excluded != null)
+
+            foreach (Buff buff in this.members.Where(m => m.coolDown.id == e.Id))
             {
+                buff.coolDown.subscriber.Unsubscribe(this.HandleExpiry);
+                this.members.Remove(buff);
+            }
+        }
+
+        public bool Apply(Buff buff)
+        {
+            var active = new HashSet<Buff>(this.Active);
+
+            // refresh buff if it's already applied and active
+            var exact = active.Where(m => m.data.Id == buff.data.Id).FirstOrDefault();
+            if (exact != null) return exact.coolDown.Refresh();
+
+            // buff can't be applied because it is mutually exclusive or weaker
+            var excluded = active.Where(m => m == buff || m > buff).FirstOrDefault();
+            if (excluded != null) return false;
+
+            // remove weaker buffs
+            foreach (Buff toRemove in active.Where(m => m < buff).ToArray())
+            {
+                if (toRemove.coolDown.Clear()) active.Remove(toRemove);
+            }
+
+            // exit if tracker is still full
+            if (active.Count >= this.maxMembers) return false;
+
+            if (!this.members.Add(buff))
+            {
+                buff.coolDown.Clear();
                 return false;
             }
-            if (active.Count == this.maxMembers)
-            {
-                var pushedOff = active.Where(m => buff > m).FirstOrDefault();
-                if (pushedOff != null)
-                {
-                    var cleared = pushedOff.coolDown.Clear();
-                    if (!cleared)
-                    {
-                        return false;
-                    }
-                    this.members.Remove(pushedOff);
-                }
-            }
-            return this.members.Add(buff);
+            buff.coolDown.subscriber.Subscribe(this.HandleExpiry);
+            return true;
         }
     }
 }

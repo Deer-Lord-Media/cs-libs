@@ -14,12 +14,12 @@ public class CoolDownTest
         var handledStart = false;
         var handledRefresh = false;
         var handledClear = false;
-        CoolDown.Tracker coolDown = new CoolDown.Tracker(duration, "ID", events);
+        CoolDown.Tracker coolDown = new CoolDown.Tracker(duration, 1, events);
 
         void HandleStart(object? sender, Message e)
         {
             Assert.Equal<CoolDown.Action>(CoolDown.Action.Start, e.Action);
-            Assert.Equal("ID", e.Id);
+            Assert.Equal(1, e.Id);
             handledStart = true;
         }
         events.Subscribe(HandleStart);
@@ -32,7 +32,7 @@ public class CoolDownTest
         void HandleRefresh(object? sender, Message e)
         {
             Assert.Equal<CoolDown.Action>(CoolDown.Action.Start, e.Action);
-            Assert.Equal("ID", e.Id);
+            Assert.Equal(1, e.Id);
             handledRefresh = true;
         }
         events.Subscribe(HandleRefresh);
@@ -45,7 +45,7 @@ public class CoolDownTest
         void HandleClear(object? sender, Message e)
         {
             Assert.Equal<CoolDown.Action>(CoolDown.Action.Expire, e.Action);
-            Assert.Equal("ID", e.Id);
+            Assert.Equal(1, e.Id);
             handledClear = true;
         }
         events.Subscribe(HandleClear);
@@ -73,7 +73,7 @@ public class CoolDownTest
 
         var duration = new TimeSpan(0, 0, 0, 1, 0);
         var events = new Events();
-        var coolDown = new CoolDown.Tracker(duration, "ID", events);
+        var coolDown = new CoolDown.Tracker(duration, 1, events);
         events.Subscribe(Handle);
         var started = coolDown.Start();
         Assert.True(started);
@@ -94,12 +94,12 @@ public class CoolDownTest
                     expiredAt = DateTime.Now;
                     break;
             }
-            Assert.Equal("ID", e.Id);
+            Assert.Equal(1, e.Id);
         }
 
         var duration = new TimeSpan(0, 0, 0, 5, 0);
         var events = new Events();
-        var coolDown = new CoolDown.Tracker(duration, "ID", events);
+        var coolDown = new CoolDown.Tracker(duration, 1, events);
         events.Subscribe(HandleExpire);
 
         var started = coolDown.Start();
@@ -125,12 +125,12 @@ public class CoolDownTest
                     expiredAt = DateTime.Now;
                     break;
             }
-            Assert.Equal("ID", e.Id);
+            Assert.Equal(1, e.Id);
         }
 
         var duration = new TimeSpan(0, 0, 0, 1, 0);
         var events = new Events();
-        CoolDown.Tracker coolDown = new CoolDown.Tracker(duration, "ID", events);
+        CoolDown.Tracker coolDown = new CoolDown.Tracker(duration, 1, events);
         events.Subscribe(HandleExpire);
 
         var started = coolDown.Start();

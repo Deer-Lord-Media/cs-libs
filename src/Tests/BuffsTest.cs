@@ -1,3 +1,4 @@
+using Xunit;
 
 namespace Tests;
 public class BuffsTest

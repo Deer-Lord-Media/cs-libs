@@ -4,7 +4,7 @@ namespace CoolDown
 {
     public interface IPublisher
     {
-        void Publish(String id, Action action, DateTime startedAt, TimeSpan duration);
+        void Publish(int id, Action action, DateTime startedAt, TimeSpan duration);
     }
 
     public interface ISubscriber
