@@ -63,7 +63,12 @@ namespace CoolDown
             }
             this.startedAt = DateTime.Now;
             this.publisher.Publish(this.id, Action.Start, this.startedAt, this.duration);
-            return this.PendExpiry(this.TimeRemaining);
+            if (!this.PendExpiry(this.TimeRemaining))
+            {
+                this.Expire();
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -102,7 +107,6 @@ namespace CoolDown
                 return false;
             }
 
-            // cancel any pending expiry message
             this.CancelExpiry();
             Task.Run(async () =>
             {
