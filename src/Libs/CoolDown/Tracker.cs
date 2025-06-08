@@ -54,13 +54,13 @@ namespace CoolDown
         /// <summary>
         /// Starts the cooldown.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if the cooldown was started.</returns>
         public bool Start()
         {
-            if (this.IsActive)
-            {
-                return false;
-            }
+            // if (this.IsActive)
+            // {
+            //     return false;
+            // }
             this.startedAt = DateTime.Now;
             this.publisher.Publish(this.id, Action.Start, this.startedAt, this.duration);
             if (!this.PendExpiry(this.TimeRemaining))

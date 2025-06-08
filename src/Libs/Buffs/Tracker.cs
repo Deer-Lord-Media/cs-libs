@@ -41,7 +41,7 @@ namespace Buffs
 
             // refresh buff if it's already applied and active
             var exact = active.Where(m => m.data.Id == buff.data.Id).FirstOrDefault();
-            if (exact != null) return exact.coolDown.Refresh();
+            if (exact != null) return exact.coolDown.Start();
 
             // buff can't be applied because it is mutually exclusive or weaker
             var excluded = active.Where(m => m == buff || m > buff).FirstOrDefault();

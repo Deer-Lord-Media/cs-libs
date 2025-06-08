@@ -4,6 +4,8 @@ using CoolDown;
 using Xunit;
 
 namespace Tests;
+#nullable enable
+
 public class CoolDownTest
 {
     [Fact]
@@ -38,7 +40,7 @@ public class CoolDownTest
         }
         events.Subscribe(HandleRefresh);
 
-        var refreshed = coolDown.Refresh();
+        var refreshed = coolDown.Start();
         Assert.True(refreshed);
         events.Unsubscribe(HandleRefresh);
         Assert.True(handledRefresh);
@@ -141,7 +143,7 @@ public class CoolDownTest
         Assert.True(coolDown.IsActive);
 
         Assert.Null(expiredAt);
-        var cleared = coolDown.Refresh();
+        var cleared = coolDown.Start();
         Assert.True(cleared);
         Assert.Null(expiredAt);
         Thread.Sleep(duration * 2);
