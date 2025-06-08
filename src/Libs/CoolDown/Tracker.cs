@@ -24,6 +24,9 @@ namespace CoolDown
         public readonly ISubscriber subscriber;
         private readonly IPublisher publisher;
 
+        /// <summary>
+        /// Returns true if the cooldown is active.
+        /// </summary>
         public bool IsActive
         {
             get
@@ -32,6 +35,9 @@ namespace CoolDown
             }
         }
 
+        /// <summary>
+        /// Returns how much time is left on the active cooldown.
+        /// </summary>
         public TimeSpan TimeRemaining
         {
             get
@@ -45,17 +51,13 @@ namespace CoolDown
             }
         }
 
-        public bool IsReady
-        {
-            get
-            {
-                return this.TimeRemaining == TimeSpan.Zero;
-            }
-        }
-
+        /// <summary>
+        /// Starts the cooldown.
+        /// </summary>
+        /// <returns></returns>
         public bool Start()
         {
-            if (!this.IsReady)
+            if (this.IsActive)
             {
                 return false;
             }
@@ -64,29 +66,35 @@ namespace CoolDown
             return this.PendExpiry(this.TimeRemaining);
         }
 
-        public bool Refresh()
+        /// <summary>
+        /// Forcefully expires the cooldown.
+        /// </summary>
+        private void Expire()
         {
-            if (this.IsReady)
-            {
-                return false;
-            }
-            this.startedAt = DateTime.Now;
-            this.publisher.Publish(this.id, Action.Start, this.startedAt, this.duration);
-            return this.PendExpiry(this.TimeRemaining);
+            this.startedAt = DateTime.Now - this.duration;
+            this.publisher.Publish(this.id, Action.Expire, this.startedAt, this.duration);
         }
 
+        /// <summary>
+        /// Clears the cooldown and it's pending expiration message.
+        /// </summary>
+        /// <returns>Success of the operation.</returns>
         public bool Clear()
         {
-            if (this.IsReady)
+            if (!this.IsActive)
             {
-                return false;
+                return true;
             }
-            this.startedAt = DateTime.Now - this.duration;
             this.CancelExpiry();
-            this.publisher.Publish(this.id, Action.Expire, this.startedAt, this.duration);
+            this.Expire();
             return true;
         }
 
+        /// <summary>
+        /// Creates a pending message that fires when the cooldown expires.
+        /// </summary>
+        /// <param name="duration">How long to wait until the event is fired.</param>
+        /// <returns>Success of creating the event.</returns>
         private bool PendExpiry(TimeSpan duration)
         {
             if (duration <= TimeSpan.Zero)
@@ -94,6 +102,7 @@ namespace CoolDown
                 return false;
             }
 
+            // cancel any pending expiry message
             this.CancelExpiry();
             Task.Run(async () =>
             {
@@ -101,7 +110,6 @@ namespace CoolDown
                 {
                     await Task.Delay(duration, this.cancel.Token);
                     this.Expire();
-                    this.publisher.Publish(this.id, Action.Expire, this.StartedAt, this.duration);  // Fire the event, replace with your event logic
                 }
                 catch (OperationCanceledException)
                 {
@@ -112,12 +120,9 @@ namespace CoolDown
             return true;
         }
 
-        private void Expire()
-        {
-            this.startedAt = DateTime.Now - this.duration;
-            this.publisher.Publish(this.id, Action.Start, this.startedAt, this.duration);
-        }
-
+        /// <summary>
+        /// Cancels any existing expiry message.
+        /// </summary>
         private void CancelExpiry()
         {
             this.cancel.Cancel();
