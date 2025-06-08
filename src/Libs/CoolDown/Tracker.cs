@@ -54,13 +54,10 @@ namespace CoolDown
         /// <summary>
         /// Starts the cooldown.
         /// </summary>
-        /// <returns>True if the cooldown was started.</returns>
+        /// <returns>Success of starting the cooldown and pending the expiry event.</returns>
         public bool Start()
         {
-            // if (this.IsActive)
-            // {
-            //     return false;
-            // }
+            this.Clear();
             this.startedAt = DateTime.Now;
             this.publisher.Publish(this.id, Action.Start, this.startedAt, this.duration);
             if (!this.PendExpiry(this.TimeRemaining))
@@ -69,15 +66,6 @@ namespace CoolDown
                 return false;
             }
             return true;
-        }
-
-        /// <summary>
-        /// Forcefully expires the cooldown.
-        /// </summary>
-        private void Expire()
-        {
-            this.startedAt = DateTime.Now - this.duration;
-            this.publisher.Publish(this.id, Action.Expire, this.startedAt, this.duration);
         }
 
         /// <summary>
@@ -93,6 +81,15 @@ namespace CoolDown
             this.CancelExpiry();
             this.Expire();
             return true;
+        }
+
+        /// <summary>
+        /// Forcefully expires the cooldown.
+        /// </summary>
+        private void Expire()
+        {
+            this.startedAt = DateTime.Now - this.duration;
+            this.publisher.Publish(this.id, Action.Expire, this.startedAt, this.duration);
         }
 
         /// <summary>
