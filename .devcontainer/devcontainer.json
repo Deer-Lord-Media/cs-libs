@@ -8,9 +8,12 @@
 		"ghcr.io/dotnet/aspire-devcontainer-feature/dotnetaspire:1": {}
 	},
 	"mounts": [
-		"source=${localWorkspaceFolder}/.gitconfig,target=/home/${containerUser}/.gitconfig,type=bind"
+		"source=${localEnv:USERPROFILE}\\.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
+		"source=${localEnv:USERPROFILE}\\.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached"
 	],
-	"postCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+	"remoteEnv": {
+		"GIT_SSH_COMMAND": "ssh -i /home/vscode/.ssh/github"
+	},
 	"postAttachCommand": "sudo chown -R vscode /workspaces"
 
 
