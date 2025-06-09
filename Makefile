@@ -3,7 +3,7 @@ build:
 	dotnet build ./src
 
 test: build
-	dotnet pack ./src/Libs/$(MODULE) --configuration Release -o /tmp/output
+	dotnet test ./src/Tests --no-build --verbosity normal --filter "FullyQualifiedName~$(MODULE)Test"
 
 package: test
 	dotnet pack ./src/Libs/$(MODULE) --configuration Release -o /tmp/output
