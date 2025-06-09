@@ -6,7 +6,7 @@ namespace Buffs
     {
         public readonly int Id;
         public readonly string Name;
-        public readonly HashSet<Data> PrecedenceOver;
-        public readonly HashSet<Data> MutuallyExclusive;
+        public readonly HashSet<Data> PrecedenceOver;  // this buff will remove any buffs in this set.
+        public readonly HashSet<Data> MutuallyExclusive; // this buff cannot coexist with any buffs in this set.
     }
 }
