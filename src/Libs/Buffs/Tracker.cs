@@ -30,27 +30,27 @@ namespace Buffs
             var current = active.Where(m => m.data.Equals(buff.data)).FirstOrDefault();
             if (current != null)
             {
-                if (current.coolDown.Start()) return Action.Refreshed;
-                return Action.Noop;
+                if (current.coolDown.Start())
+                    return Action.Refreshed;
+                return Action.Failed;
             }
 
-            // buff can't be applied because it is mutually exclusive or weaker
-            if (active.Where(m => m.data == buff.data || m.data > buff.data).FirstOrDefault() != null) return Action.Blocked;
+            // buff can't be applied because it is mutually exclusive or weaker than existing buff
+            if (active.Where(m => m.data == buff.data || m.data > buff.data).FirstOrDefault() != null)
+                return Action.Blocked;
 
             // remove weaker buffs
             foreach (Buff toRemove in active.Where(m => m.data < buff.data))
-            {
-                if (toRemove.coolDown.Clear()) this.members.Remove(toRemove);
-            }
+                if (toRemove.coolDown.Clear())
+                    this.members.Remove(toRemove);
 
             // no room for buffs
-            if (members.Count >= this.maxMembers) return Action.Full;
+            if (members.Count >= this.maxMembers)
+                return Action.Full;
 
             // add buff and register handler
             if (!this.members.Add(buff))
-            {
-                return Action.Noop;
-            }
+                return Action.Failed;
             buff.coolDown.subscriber.Subscribe(this.HandleExpiry);
             return Action.Applied;
         }
@@ -58,9 +58,7 @@ namespace Buffs
         private void HandleExpiry(object? sender, CoolDown.Message e)
         {
             if (e.Action != CoolDown.Action.Expire)
-            {
                 return;
-            }
 
             foreach (Buff buff in this.members.Where(m => m.coolDown.id == e.Id))
             {

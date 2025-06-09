@@ -3,7 +3,7 @@ namespace Buffs
 
     public enum Action
     {
-        Noop,
+        Failed,
         Applied,
         Refreshed,
         Blocked,
