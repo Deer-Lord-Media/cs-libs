@@ -42,11 +42,9 @@ namespace CoolDown
         {
             get
             {
-                var timeRemaining = (this.startedAt + this.duration) - DateTime.Now;
+                var timeRemaining = this.startedAt.Add(this.duration) - DateTime.Now;
                 if (timeRemaining < TimeSpan.Zero)
-                {
                     timeRemaining = TimeSpan.Zero;
-                }
                 return timeRemaining;
             }
         }
@@ -57,14 +55,16 @@ namespace CoolDown
         /// <returns>Success of starting the cooldown and pending the expiry event.</returns>
         public bool Start()
         {
-            this.Clear();
+            if (this.IsActive)
+                this.CancelExpiry();
+
             this.startedAt = DateTime.Now;
-            this.publisher.Publish(this.id, Action.Start, this.startedAt, this.duration);
             if (!this.PendExpiry(this.TimeRemaining))
             {
                 this.Expire();
                 return false;
             }
+            this.publisher.Publish(this.id, Action.Start, this.startedAt, this.duration);
             return true;
         }
 
@@ -75,9 +75,8 @@ namespace CoolDown
         public bool Clear()
         {
             if (!this.IsActive)
-            {
-                return true;
-            }
+                return false;
+
             this.CancelExpiry();
             this.Expire();
             return true;
@@ -100,9 +99,7 @@ namespace CoolDown
         private bool PendExpiry(TimeSpan duration)
         {
             if (duration <= TimeSpan.Zero)
-            {
                 return false;
-            }
 
             this.CancelExpiry();
             Task.Run(async () =>

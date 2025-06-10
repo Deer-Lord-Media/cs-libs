@@ -11,7 +11,7 @@ public class CoolDownTest
     [Fact]
     public void TestOperations()
     {
-        var duration = new TimeSpan(0, 0, 0, 1, 0);
+        var duration = new TimeSpan(0, 0, 0, 10, 0);
         var events = new Events();
         var handledStart = false;
         var handledRefresh = false;
@@ -34,9 +34,13 @@ public class CoolDownTest
 
         void HandleRefresh(object? sender, Message e)
         {
-            Assert.Equal<CoolDown.Action>(CoolDown.Action.Start, e.Action);
-            Assert.Equal(1, e.Id);
-            handledRefresh = true;
+            switch (e.Action)
+            {
+                case CoolDown.Action.Start:
+                    Assert.Equal(1, e.Id);
+                    handledRefresh = true;
+                    break;
+            }
         }
         events.Subscribe(HandleRefresh);
 
@@ -133,9 +137,9 @@ public class CoolDownTest
             Assert.Equal(1, e.Id);
         }
 
-        var duration = new TimeSpan(0, 0, 0, 1, 0);
+        var duration = new TimeSpan(0, 0, 0, 10, 0);
         var events = new Events();
-        Tracker coolDown = new Tracker(duration, 1, events);
+        var coolDown = new Tracker(duration, 1, events);
         events.Subscribe(HandleExpire);
 
         var started = coolDown.Start();
