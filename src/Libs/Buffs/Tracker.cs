@@ -81,6 +81,12 @@ namespace Buffs
             return Action.Failed;
         }
 
+        public bool Clear()
+        {
+            this.members.Clear();
+            return this.members.Count == 0;
+        }
+
         private void HandleExpiry(object? sender, CoolDown.Message e)
         {
             if (e.Action != CoolDown.Action.Expire)
