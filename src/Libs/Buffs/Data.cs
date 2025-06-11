@@ -5,15 +5,20 @@ namespace Buffs
 {
     public class Data
     {
-        public Data(int id, string name, HashSet<Data> precedenceOver, HashSet<Data> mutuallyExclusive)
+        public Data(int id, string name, int? stacks, HashSet<Data>? precedenceOver, HashSet<Data>? mutuallyExclusive)
         {
             this.id = id;
             this.name = name;
+            stacks ??= 1;
+            this.stacks = (int)stacks;
+            precedenceOver ??= new HashSet<Data>();
             this.precedenceOver = precedenceOver;
+            mutuallyExclusive ??= new HashSet<Data>();
             this.mutuallyExclusive = mutuallyExclusive;
         }
         public readonly int id;
         public readonly string name;
+        public readonly int stacks;
         private readonly HashSet<Data> precedenceOver;  // this buff will remove any buffs in this set.
         private readonly HashSet<Data> mutuallyExclusive; // this buff cannot coexist with any buffs in this set.
 
