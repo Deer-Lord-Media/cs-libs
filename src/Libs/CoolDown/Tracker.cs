@@ -6,17 +6,17 @@ namespace CoolDown
 {
     public class Tracker
     {
-        public Tracker(TimeSpan duration, int id, Events events)
+        public Tracker(TimeSpan duration, Events events)
         {
             this.duration = duration;
             this.startedAt = DateTime.Now - duration;
-            this.id = id;
+            this.id = Guid.NewGuid();
             this.cancel = new CancellationTokenSource();
             this.subscriber = events;
             this.publisher = events;
         }
 
-        public readonly int id;
+        public readonly Guid id;
         private DateTime startedAt;
         public DateTime StartedAt { get { return this.startedAt; } }
         public readonly TimeSpan duration;

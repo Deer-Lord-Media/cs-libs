@@ -31,8 +31,6 @@ namespace Buffs
             {
                 if (current.coolDown.Start())
                 {
-                    if (current.Increment())
-                        return Action.Incremented;
                     return Action.Refreshed;
                 }
                 return Action.Failed;
@@ -63,15 +61,32 @@ namespace Buffs
             return Action.Failed;
         }
 
-        public Action Remove(Data data)
+        public Action Stack(Buff buff)
         {
             var active = new HashSet<Buff>(this.Active);
-            var current = active.Where(m => m.Equals(data)).FirstOrDefault();
+
+            var current = active.Where(m => m.data.Equals(buff.data)).FirstOrDefault();
             if (current != null)
             {
-                if (current.Decrement())
+                if (current.coolDown.Start())
+                {
+                    if (current.stacks.Increment())
+                        return Action.Incremented;
+                    return Action.Refreshed;
+                }
+            }
+            return Action.Failed;
+        }
+
+        public Action Remove(Buff buff)
+        {
+            var active = new HashSet<Buff>(this.Active);
+            var current = active.Where(m => m.Equals(buff.data)).FirstOrDefault();
+            if (current != null)
+            {
+                if (current.stacks.Decrement())
                     return Action.Decremented;
-                var toRemove = active.Where(m => m.data == data).FirstOrDefault();
+                var toRemove = active.Where(m => m.data == buff.data).FirstOrDefault();
                 if (toRemove != null)
                 {
                     if (this.members.Remove(toRemove))
@@ -81,8 +96,11 @@ namespace Buffs
             return Action.Failed;
         }
 
-        public bool Clear()
+        public bool Clear(Buff? buff)
         {
+            if (buff != null)
+                return this.members.Remove(buff);
+
             this.members.Clear();
             return this.members.Count == 0;
         }

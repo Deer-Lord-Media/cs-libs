@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 
 namespace Buffs
 {
     public class Data
     {
-        public Data(int id, string name, int? stacks, HashSet<Data>? precedenceOver, HashSet<Data>? mutuallyExclusive)
+        public Data(int id, string name, TimeSpan duration, int? stacks, HashSet<Data>? precedenceOver, HashSet<Data>? mutuallyExclusive)
         {
             this.id = id;
             this.name = name;
@@ -18,6 +19,7 @@ namespace Buffs
         }
         public readonly int id;
         public readonly string name;
+        public readonly TimeSpan duration;
         public readonly int stacks;
         private readonly HashSet<Data> precedenceOver;  // this buff will remove any buffs in this set.
         private readonly HashSet<Data> mutuallyExclusive; // this buff cannot coexist with any buffs in this set.
