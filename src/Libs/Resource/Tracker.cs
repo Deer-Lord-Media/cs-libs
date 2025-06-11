@@ -49,7 +49,7 @@ namespace Resource
         /// <summary>
         /// Add a specific value to the current value without overflowing the maximum.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">The value to add.</param>
         /// <returns>The amount added.</returns>
         public int Add(int value)
         {
@@ -62,7 +62,7 @@ namespace Resource
         /// <summary>
         /// Subtract a specific value to the current value without underflowing the minimum.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">The value to subract.</param>
         /// <returns>The amount subtracted.</returns>
         public int Sub(int value)
         {
@@ -106,7 +106,7 @@ namespace Resource
         /// <summary>
         /// Change the maximum value of the tracker.
         /// </summary>
-        /// <param name="maxChange"></param>
+        /// <param name="maxChange">Amount to change the maximum by.</param>
         /// <returns>A new instance with the updated maximum.</returns>
         public Tracker Change(int maxChange)
         {

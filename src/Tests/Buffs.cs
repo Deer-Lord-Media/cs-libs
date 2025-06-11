@@ -16,19 +16,20 @@ public class BuffsTest
         var tracker = new Buffs.Tracker(1);
         var coolDown = new CoolDown.Tracker(duration, events);
 
-        var data = new Buffs.Data(0, "TestBuff", duration, null, null, null);
-        var buffOne = new Buffs.Buff(data, coolDown);
-        var action = tracker.Apply(buffOne);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Applied, action);
+        var dataOne = new Buffs.Data(0, "TestBuff", duration, null, null, null);
+        var buffOne = new Buffs.Buff(dataOne, coolDown);
+        var actionOne = tracker.Apply(buffOne);
+        Assert.Equal<Buffs.Action>(Buffs.Action.Applied, actionOne);
 
-        data = new Buffs.Data(1, "TestBuff", duration, null, null, null);
-        var buffTwo = new Buffs.Buff(data, coolDown);
-        action = tracker.Apply(buffTwo);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Full, action);
+        var dataTwo = new Buffs.Data(1, "TestBuff", duration, null, null, null);
+        var buffTwo = new Buffs.Buff(dataTwo, coolDown);
+        var actionTwo = tracker.Apply(buffTwo);
+        Assert.Equal<Buffs.Action>(Buffs.Action.Full, actionTwo);
 
-        action = tracker.Apply(buffOne);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Refreshed, action);
+        actionOne = tracker.Apply(buffOne);
+        Assert.Equal<Buffs.Action>(Buffs.Action.Refreshed, actionOne);
 
+        buffOne = tracker.Get(dataOne);
         Assert.Equal<int>(1, buffOne.stacks.Value);
     }
 
@@ -45,10 +46,14 @@ public class BuffsTest
         var action = tracker.Apply(buffOne);
         Assert.Equal<Buffs.Action>(Buffs.Action.Applied, action);
 
+        var buff = tracker.Get(data);
+        Assert.Equal<int>(1, buff.stacks.Value);
+
         action = tracker.Apply(buffOne);
         Assert.Equal<Buffs.Action>(Buffs.Action.Incremented, action);
 
-        Assert.Equal<int>(2, buffOne.stacks.Value);
+        buff = tracker.Get(data);
+        Assert.Equal<int>(2, buff.stacks.Value);
     }
 
     [Fact]

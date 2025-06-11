@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 
 namespace Buffs
 {
@@ -10,6 +9,7 @@ namespace Buffs
         {
             this.id = id;
             this.name = name;
+            this.duration = duration;
             stacks ??= 1;
             this.stacks = (int)stacks;
             precedenceOver ??= new HashSet<Data>();
@@ -17,6 +17,7 @@ namespace Buffs
             mutuallyExclusive ??= new HashSet<Data>();
             this.mutuallyExclusive = mutuallyExclusive;
         }
+
         public readonly int id;
         public readonly string name;
         public readonly TimeSpan duration;
@@ -28,6 +29,7 @@ namespace Buffs
         {
             return this.id * 397;
         }
+
         public override bool Equals(object? obj)
         {
             if (obj == null || !(obj is Data))
@@ -41,8 +43,8 @@ namespace Buffs
         /// <summary>
         /// Check if d1 takes precedence over d2.
         /// </summary>
-        /// <param name="d1">The first buff to compare.</param>
-        /// <param name="d2">The second buff to compare.</param>
+        /// <param name="d1">The first buff data to compare.</param>
+        /// <param name="d2">The second buff data to compare.</param>
         /// <returns>If precedence is met or not.</returns>
         public static bool operator >(Data? d1, Data? d2)
         {
@@ -54,8 +56,8 @@ namespace Buffs
         /// <summary>
         /// Check if d2 takes precedence over d1.
         /// </summary>
-        /// <param name="d1">The first buff to compare.</param>
-        /// <param name="d2">The second buff to compare.</param>
+        /// <param name="d1">The first buff data to compare.</param>
+        /// <param name="d2">The second buff data to compare.</param>
         /// <returns>If precedence is met or not.</returns>
         public static bool operator <(Data? d1, Data? d2)
         {
@@ -65,10 +67,10 @@ namespace Buffs
         }
 
         /// <summary>
-        /// Compares two buffs to see if they are mutually exclusive with each other.
+        /// Compares two buff data to see if they are mutually exclusive with each other.
         /// </summary>
-        /// <param name="d1">The first buff to compare.</param>
-        /// <param name="d2">The second buff to compare.</param>
+        /// <param name="d1">The first buff data to compare.</param>
+        /// <param name="d2">The second buff data to compare.</param>
         /// <returns>If buffs are mutually exclusive.</returns>
         public static bool operator ==(Data? d1, Data? d2)
         {
@@ -78,10 +80,10 @@ namespace Buffs
         }
 
         /// <summary>
-        /// Compares two buffs to see if they are unrelated to each other.
+        /// Compares two buff data to see if they are unrelated to each other.
         /// </summary>
-        /// <param name="d1">The first buff to compare.</param>
-        /// <param name="d2">The second buff to compare.</param>
+        /// <param name="d1">The first buff data to compare.</param>
+        /// <param name="d2">The second buff data to compare.</param>
         /// <returns>If the buffs are not related.</returns>
         public static bool operator !=(Data? d1, Data? d2)
         {
