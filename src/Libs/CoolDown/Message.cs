@@ -10,10 +10,10 @@ namespace CoolDown
 
     public class Message : EventArgs
     {
-        public Guid Id { get; }
-        public Action Action { get; }
-        public DateTime StartedAt { get; }
-        public TimeSpan Duration { get; }
+        public readonly Guid Id;
+        public readonly Action Action;
+        public readonly DateTime StartedAt;
+        public readonly TimeSpan Duration;
 
         public Message(Guid id, Action action, DateTime startedAt, TimeSpan duration)
         {

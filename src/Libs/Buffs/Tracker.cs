@@ -13,6 +13,11 @@ namespace Buffs
         private HashSet<Buff> members = new HashSet<Buff>();
         private int maxMembers;
 
+        /// <summary>
+        /// Get a Buff.
+        /// </summary>
+        /// <param name="data">The Data that describes the Buff.</param>
+        /// <returns>An instance of Buff if found, or null.</returns>
         public Buff? Get(Data data)
         {
             return this.Active.Where(m => m.data.Equals(data)).FirstOrDefault();
@@ -30,17 +35,17 @@ namespace Buffs
         }
 
         /// <summary>
-        /// Apply a buff.
+        /// Apply a Buff derived from an existing instance. Does not use the passed in instance itself.
         /// </summary>
         /// <param name="buff">An existing instance of a Buff to apply.</param>
-        /// <returns></returns>
+        /// <returns>The action that the application was able to perform</returns>
         public Action Apply(Buff buff)
         {
             return this.Apply(buff.data, buff.coolDown);
         }
 
         /// <summary>
-        /// Apply a buff.
+        /// Apply a buff with an optional coolDown.
         /// </summary>
         /// <param name="data">The data to create the Buff from.</param>
         /// <param name="coolDown">An optional coolDown to apply the Buff with.</param>
@@ -49,45 +54,48 @@ namespace Buffs
         {
             var active = new HashSet<Buff>(this.Active);
 
-            // refresh buff if it's already applied and active
-            var current = this.Get(data);
-            if (current != null)
+            // Refresh Buff if it's already applied and active
+            var buff = this.Get(data);
+            if (buff != null)
             {
-                if (current.coolDown.Start())
+                if (coolDown != null && coolDown.id != buff.coolDown.id)
+                    return Action.Failed;
+
+                if (buff.coolDown.Start())
                 {
-                    if (current.stacks.Increment())
+                    if (buff.stacks.Increment())
                         return Action.Incremented;
                     return Action.Refreshed;
                 }
                 return Action.Failed;
             }
 
-            // cannot create Buff if coolDown is missing
-            if (coolDown == null)
-                return Action.CoolDownMissing;
+            // Create a new cooldown instance if one wasn't provided.
+            coolDown ??= new CoolDown.Tracker(data.duration, new CoolDown.Events(), false);
+            buff = new Buff(data, coolDown);
 
-            var buff = new Buff(data, coolDown);
-            buff.stacks.Increment();
-
-            // buff can't be applied because it is mutually exclusive or weaker than existing buff
+            // Buff can't be applied because it is mutually exclusive or weaker than existing Buff.
             if (active.Where(m => m.data == data || m.data > data).FirstOrDefault() != null)
                 return Action.Blocked;
 
-            // remove weaker buffs
+            // Remove weaker Buffs.
             foreach (Buff toRemove in active.Where(m => m.data < data))
                 this.Delete(toRemove);
 
-            // no room for buffs
-            if (members.Count >= this.maxMembers)
+            // Cannot be added as there is no room for active Buffs.
+            if (this.Active.Count() >= this.maxMembers)
                 return Action.Full;
 
-            // add buff and register handler
+            // Add Buff and register handler.
+            // This should *never* return false.
+            // We have already checked for the presence of the Buff using a Data object.
             if (!this.members.Add(buff))
                 return Action.Failed;
 
             if (buff.coolDown.Start())
             {
-                buff.coolDown.subscriber.Subscribe(this.HandleExpiry);
+                buff.stacks.Increment();
+                buff.coolDown.subscriber.Subscribe(this.HandleCoolDown);
                 return Action.Applied;
             }
             return Action.Failed;
@@ -135,36 +143,49 @@ namespace Buffs
             return true;
         }
 
+        /// <summary>
+        /// Empty the entire set of Buffs.
+        /// </summary>
+        /// <returns>Whether or not the set was emptied.</returns>
         public bool Empty()
         {
-            var members = new HashSet<Buff>(this.members);
-            foreach (Buff toRemove in members)
+            foreach (Buff toRemove in new HashSet<Buff>(this.members))
                 this.Delete(toRemove);
 
-            this.members.Clear();
             return this.members.Count == 0;
         }
 
+        /// <summary>
+        /// Delete a Buff from the set and cleanup.
+        /// </summary>
+        /// <param name="buff">The instance of the Buff to process.</param>
         private void Delete(Buff buff)
         {
             buff.stacks.Empty();
-            buff.coolDown.subscriber.Unsubscribe(this.HandleExpiry);
             this.members.Remove(buff);
+            if (!buff.coolDown.shared)
+            {
+                buff.coolDown.subscriber.Unsubscribe(this.HandleCoolDown);
+                buff.coolDown.Clear();
+            }
         }
 
         /// <summary>
-        /// Handler for coolDown expiration messages.
+        /// Handler for coolDown messages.
         /// </summary>
         /// <param name="sender">Sender of the message. Unused.</param>
         /// <param name="e">The message to handle.</param>
-        private void HandleExpiry(object? sender, CoolDown.Message e)
+        private void HandleCoolDown(object? sender, CoolDown.Message e)
         {
-            if (e.Action != CoolDown.Action.Expire)
-                return;
-
-            foreach (Buff buff in this.members.Where(m => m.coolDown.id == e.Id))
+            switch (e.Action)
             {
-                this.Delete(buff);
+                case CoolDown.Action.Expire:
+                    foreach (Buff buff in this.members.Where(m => m.coolDown.id == e.Id))
+                    {
+                        this.Delete(buff);
+                        buff.coolDown.subscriber.Unsubscribe(this.HandleCoolDown);
+                    }
+                    break;
             }
         }
     }

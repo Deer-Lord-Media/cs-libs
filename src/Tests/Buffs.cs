@@ -14,7 +14,7 @@ public class BuffsTest
         var duration = new TimeSpan(0, 0, 0, 10, 0);
         var events = new CoolDown.Events();
         var tracker = new Buffs.Tracker(1);
-        var coolDown = new CoolDown.Tracker(duration, events);
+        var coolDown = new CoolDown.Tracker(duration, events, false);
 
         var dataOne = new Buffs.Data(0, "TestBuff", duration, null, null, null);
         var buffOne = new Buffs.Buff(dataOne, coolDown);
@@ -39,7 +39,7 @@ public class BuffsTest
         var duration = new TimeSpan(0, 0, 0, 10, 0);
         var events = new CoolDown.Events();
         var tracker = new Buffs.Tracker(1);
-        var coolDown = new CoolDown.Tracker(duration, events);
+        var coolDown = new CoolDown.Tracker(duration, events, false);
 
         var data = new Buffs.Data(0, "TestBuff", duration, 2, null, null);
         var buffOne = new Buffs.Buff(data, coolDown);
@@ -62,7 +62,7 @@ public class BuffsTest
         var duration = new TimeSpan(0, 0, 0, 10, 0);
         var events = new CoolDown.Events();
         var tracker = new Buffs.Tracker(1);
-        var coolDown = new CoolDown.Tracker(duration, events);
+        var coolDown = new CoolDown.Tracker(duration, events, false);
 
         var dataOne = new Buffs.Data(0, "TestBuff", duration, null, null, null);
         var buffOne = new Buffs.Buff(dataOne, coolDown);
@@ -86,7 +86,7 @@ public class BuffsTest
         var duration = new TimeSpan(0, 0, 0, 10, 0);
         var events = new CoolDown.Events();
         var tracker = new Buffs.Tracker(1);
-        var coolDown = new CoolDown.Tracker(duration, events);
+        var coolDown = new CoolDown.Tracker(duration, events, false);
 
         var dataOne = new Buffs.Data(0, "TestBuff", duration, null, null, null);
         var buffOne = new Buffs.Buff(dataOne, coolDown);

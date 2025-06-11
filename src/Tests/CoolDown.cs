@@ -16,7 +16,7 @@ public class CoolDownTest
         var handledStart = false;
         var handledRefresh = false;
         var handledClear = false;
-        Tracker coolDown = new Tracker(duration, events);
+        Tracker coolDown = new Tracker(duration, events, false);
 
         void HandleStart(object? sender, Message e)
         {
@@ -77,7 +77,7 @@ public class CoolDownTest
 
         var duration = new TimeSpan(0, 0, 0, 1, 0);
         var events = new Events();
-        var coolDown = new Tracker(duration, events);
+        var coolDown = new Tracker(duration, events, false);
         events.Subscribe(Handle);
         var started = coolDown.Start();
         Assert.True(started);
@@ -103,7 +103,7 @@ public class CoolDownTest
 
         var duration = new TimeSpan(0, 0, 0, 5, 0);
         var events = new Events();
-        var coolDown = new Tracker(duration, events);
+        var coolDown = new Tracker(duration, events, false);
         events.Subscribe(HandleExpire);
 
         var started = coolDown.Start();
@@ -134,7 +134,7 @@ public class CoolDownTest
 
         var duration = new TimeSpan(0, 0, 0, 10, 0);
         var events = new Events();
-        var coolDown = new Tracker(duration, events);
+        var coolDown = new Tracker(duration, events, false);
         events.Subscribe(HandleExpire);
 
         var started = coolDown.Start();
