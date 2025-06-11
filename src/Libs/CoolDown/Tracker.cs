@@ -6,21 +6,23 @@ namespace CoolDown
 {
     public class Tracker
     {
-        public Tracker(TimeSpan duration, int id, Events events)
+        public Tracker(TimeSpan duration, Events events, bool shared)
         {
+            this.id = Guid.NewGuid();
             this.duration = duration;
+            this.shared = shared;
             this.startedAt = DateTime.Now - duration;
-            this.id = id;
-            this.cancel = new CancellationTokenSource();
+            this.cts = new CancellationTokenSource();
             this.subscriber = events;
             this.publisher = events;
         }
 
-        public readonly int id;
+        public readonly Guid id;
+        public readonly TimeSpan duration;
+        public readonly bool shared;
         private DateTime startedAt;
         public DateTime StartedAt { get { return this.startedAt; } }
-        public readonly TimeSpan duration;
-        private CancellationTokenSource cancel;
+        private CancellationTokenSource cts;
         public readonly ISubscriber subscriber;
         private readonly IPublisher publisher;
 
@@ -59,7 +61,7 @@ namespace CoolDown
                 this.CancelExpiry();
 
             this.startedAt = DateTime.Now;
-            if (!this.PendExpiry(this.TimeRemaining))
+            if (!this.PendExpiry())
             {
                 this.Expire();
                 return false;
@@ -96,8 +98,9 @@ namespace CoolDown
         /// </summary>
         /// <param name="duration">How long to wait until the event is fired.</param>
         /// <returns>Success of creating the event.</returns>
-        private bool PendExpiry(TimeSpan duration)
+        private bool PendExpiry()
         {
+            var duration = this.TimeRemaining;
             if (duration <= TimeSpan.Zero)
                 return false;
 
@@ -106,7 +109,7 @@ namespace CoolDown
             {
                 try
                 {
-                    await Task.Delay(duration, this.cancel.Token);
+                    await Task.Delay(duration, this.cts.Token);
                     this.Expire();
                 }
                 catch (OperationCanceledException)
@@ -123,8 +126,8 @@ namespace CoolDown
         /// </summary>
         private void CancelExpiry()
         {
-            this.cancel.Cancel();
-            this.cancel = new CancellationTokenSource();
+            this.cts.Cancel();
+            this.cts = new CancellationTokenSource();
         }
     }
 }

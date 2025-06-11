@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Libs\CoolDown\CoolDown.csproj" />
     <ProjectReference Include="..\Libs\Buffs\Buffs.csproj" />
+    <ProjectReference Include="..\Libs\Resource\Resource.csproj" />
   </ItemGroup>
 
   <ItemGroup>

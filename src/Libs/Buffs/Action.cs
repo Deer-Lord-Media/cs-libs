@@ -3,6 +3,7 @@ namespace Buffs
 
     public enum Action
     {
+        CoolDownMissing,
         Failed,
         Applied,
         Refreshed,

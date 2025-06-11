@@ -1,4 +1,6 @@
-﻿using CoolDown;
+﻿using System.Reflection;
+using CoolDown;
+using Resource;
 
 namespace Buffs
 {
@@ -8,30 +10,16 @@ namespace Buffs
         {
             this.data = data;
             this.coolDown = coolDown;
-            this.stacks = 1;
-        }
-        public readonly Data data;
-        public readonly CoolDown.Tracker coolDown;
-        private int stacks;
-        public int Stacks { get { return this.stacks; } }
-        public bool Increment()
-        {
-            if (this.stacks < this.data.stacks)
-            {
-                this.stacks++;
-                return true;
-            }
-            return false;
+            this.stacks = new Resource.Tracker(data.stacks);
         }
 
-        public bool Decrement()
+        public readonly Data data;
+        public readonly CoolDown.Tracker coolDown;
+        public readonly Resource.Tracker stacks;
+
+        public override int GetHashCode()
         {
-            if (this.stacks > 0)
-            {
-                this.stacks--;
-                return true;
-            }
-            return false;
+            return this.data.GetHashCode();
         }
     }
 }
