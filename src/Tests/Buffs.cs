@@ -21,7 +21,6 @@ public class BuffsTest
         var action = tracker.Apply(buffOne);
         Assert.Equal<Buffs.Action>(Buffs.Action.Applied, action);
 
-
         data = new Buffs.Data(1, "TestBuff", null, null, null);
         var buffTwo = new Buffs.Buff(data, coolDown);
         action = tracker.Apply(buffTwo);
