@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Buffs
@@ -31,7 +30,11 @@ namespace Buffs
             if (current != null)
             {
                 if (current.coolDown.Start())
+                {
+                    if (current.Increment())
+                        return Action.Incremented;
                     return Action.Refreshed;
+                }
                 return Action.Failed;
             }
 
@@ -51,8 +54,31 @@ namespace Buffs
             // add buff and register handler
             if (!this.members.Add(buff))
                 return Action.Failed;
-            buff.coolDown.subscriber.Subscribe(this.HandleExpiry);
-            return Action.Applied;
+
+            if (buff.coolDown.Start())
+            {
+                buff.coolDown.subscriber.Subscribe(this.HandleExpiry);
+                return Action.Applied;
+            }
+            return Action.Failed;
+        }
+
+        public Action Remove(Data data)
+        {
+            var active = new HashSet<Buff>(this.Active);
+            var current = active.Where(m => m.Equals(data)).FirstOrDefault();
+            if (current != null)
+            {
+                if (current.Decrement())
+                    return Action.Decremented;
+                var toRemove = active.Where(m => m.data == data).FirstOrDefault();
+                if (toRemove != null)
+                {
+                    if (this.members.Remove(toRemove))
+                        return Action.Removed;
+                }
+            }
+            return Action.Failed;
         }
 
         private void HandleExpiry(object? sender, CoolDown.Message e)

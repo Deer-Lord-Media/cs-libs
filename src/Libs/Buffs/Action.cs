@@ -8,5 +8,8 @@ namespace Buffs
         Refreshed,
         Blocked,
         Full,
+        Incremented,
+        Decremented,
+        Removed,
     }
 }
