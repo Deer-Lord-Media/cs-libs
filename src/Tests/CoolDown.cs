@@ -11,7 +11,7 @@ public class CoolDownTest
     [Fact]
     public void TestOperations()
     {
-        var duration = new TimeSpan(0, 0, 0, 10, 0);
+        var duration = new TimeSpan(0, 0, 0, 2, 0);
         var events = new Events();
         var handledStart = false;
         var handledRefresh = false;
@@ -132,7 +132,7 @@ public class CoolDownTest
             }
         }
 
-        var duration = new TimeSpan(0, 0, 0, 10, 0);
+        var duration = new TimeSpan(0, 0, 0, 2, 0);
         var events = new Events();
         var coolDown = new Tracker(duration, events, false);
         events.Subscribe(HandleExpire);

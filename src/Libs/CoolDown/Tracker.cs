@@ -44,7 +44,7 @@ namespace CoolDown
         {
             get
             {
-                var timeRemaining = this.startedAt.Add(this.duration) - DateTime.Now;
+                var timeRemaining = this.StartedAt.Add(this.duration) - DateTime.Now;
                 if (timeRemaining < TimeSpan.Zero)
                     timeRemaining = TimeSpan.Zero;
                 return timeRemaining;
@@ -66,7 +66,7 @@ namespace CoolDown
                 this.Expire();
                 return false;
             }
-            this.publisher.Publish(this.id, Action.Start, this.startedAt, this.duration);
+            this.publisher.Publish(this.id, Action.Start, this.StartedAt, this.duration);
             return true;
         }
 

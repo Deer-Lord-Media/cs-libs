@@ -74,9 +74,12 @@ namespace Buffs
         /// <returns>If buffs are mutually exclusive.</returns>
         public static bool operator ==(Data? d1, Data? d2)
         {
-            if (Equals(d1, d2)) return true;
+            if (d1 is null && d2 is null) return true;
             if (d1 is null || d2 is null) return false;
-            return d1.mutuallyExclusive.Contains(d2) || d2.mutuallyExclusive.Contains(d1);
+            return d1.id == d2.id || (
+                d1.mutuallyExclusive.Contains(d2)
+                || d2.mutuallyExclusive.Contains(d1)
+            );
         }
 
         /// <summary>

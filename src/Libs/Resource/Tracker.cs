@@ -67,7 +67,7 @@ namespace Resource
         public int Sub(int value)
         {
             var remainder = this.value - this.min;
-            value = Math.Max(value, remainder);
+            value = Math.Min(value, remainder);
             this.value = Math.Max(this.value - value, this.min);
             return value;
         }
@@ -95,11 +95,8 @@ namespace Resource
         {
             get
             {
-                var factor = 100;
-                var denominator = this.max - this.min;
-                var numerator = this.value * factor;
-                var value = numerator / (denominator * factor);
-                return (int)value;
+                float value = (float)this.value / (float)(this.max - this.min);
+                return (int)(value * 100f); // ((float)this.Value / denominator) * factor;
             }
         }
 

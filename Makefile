@@ -8,6 +8,9 @@ build:
 
 test: build
 	dotnet test ./src/Tests --no-build --verbosity normal --filter "FullyQualifiedName~$(MODULE)Test"
+
+test-all: build
+	dotnet test ./src/Tests --collect:"XPlat Code Coverage"
 	reportgenerator -reports:**/coverage.cobertura.xml -targetdir:coverage-report -reporttypes:Html
 
 package: test
