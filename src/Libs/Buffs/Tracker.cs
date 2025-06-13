@@ -87,11 +87,12 @@ namespace Buffs
                 return Action.Full;
 
             // Add Buff and register handler.
-            // This should *never* return false.
+            // This should *never* fail at this point.
             // We have already checked for the presence of the Buff using a Data object.
             if (!this.members.Add(buff))
                 return Action.Failed;
 
+            // Apply the Buff.
             if (buff.coolDown.Start())
             {
                 buff.stacks.Increment();

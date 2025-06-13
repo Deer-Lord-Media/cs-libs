@@ -124,7 +124,7 @@ public class BuffsTest
     [Fact]
     public void TestBuffApply()
     {
-        var duration = new TimeSpan(0, 0, 0, 10, 0);
+        var duration = new TimeSpan(0, 0, 0, 2, 0);
         var events = new CoolDown.Events();
         var tracker = new Buffs.Tracker(1);
         var coolDown = new CoolDown.Tracker(duration, events, false);
@@ -150,6 +150,8 @@ public class BuffsTest
 
         var emptied = tracker.Empty();
         Assert.True(emptied);
+
+        // TODO: wait for cooldown to expire and check handler
     }
 
     [Fact]

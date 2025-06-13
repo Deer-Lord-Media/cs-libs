@@ -74,9 +74,9 @@ namespace Buffs
         /// <returns>If buffs are mutually exclusive.</returns>
         public static bool operator ==(Data? d1, Data? d2)
         {
-            if (d1 is null && d2 is null) return true;
             if (d1 is null || d2 is null) return false;
-            return d1.id == d2.id || (
+            return (
+                d1.id == d2.id ||
                 d1.mutuallyExclusive.Contains(d2)
                 || d2.mutuallyExclusive.Contains(d1)
             );
@@ -90,12 +90,9 @@ namespace Buffs
         /// <returns>If the buffs are not related.</returns>
         public static bool operator !=(Data? d1, Data? d2)
         {
-            if (d1 is null && d2 is null) return false;
             if (d1 is null || d2 is null) return true;
             return (
-                d1.id != d2.id  // buffs are not the same
-                && !d1.mutuallyExclusive.Contains(d2) // buffs not in same category
-                && !d2.mutuallyExclusive.Contains(d1)
+                !(d1 == d2)
                 && !d1.precedenceOver.Contains(d2) // buffs don't have some kind of precedence link
                 && !d2.precedenceOver.Contains(d1)
             );

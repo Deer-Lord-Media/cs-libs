@@ -228,4 +228,4 @@ AppPackages/
 .env
 ./bin
 
-./coverage-report
+./coverage-report/
