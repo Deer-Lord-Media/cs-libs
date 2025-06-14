@@ -107,7 +107,9 @@ namespace Resource
         /// <returns>A new instance with the updated maximum.</returns>
         public Tracker Change(int maxChange)
         {
-            return new Tracker(this.max + maxChange);
+            var tracker = new Tracker(this.max + maxChange);
+            tracker.Add(this.value);
+            return tracker;
         }
     }
 }
