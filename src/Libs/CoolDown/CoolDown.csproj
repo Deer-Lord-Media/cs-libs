@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+
+    <PackageId>CoolDown</PackageId>
+    <Version>0.0.2</Version>
+    <Authors>William DaFriend</Authors>
+    <Company>Deer Lord Media</Company>
+    <PackageDescription>A cooldown class for other libraries</PackageDescription>
+    <RepositoryUrl>https://github.com/Deer-Lord-Media/cs-libs</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+      <None Update="docs\README.md">
+          <Pack>true</Pack>
+          <PackagePath>docs/README.md</PackagePath>
+      </None>
+  </ItemGroup>
+</Project>

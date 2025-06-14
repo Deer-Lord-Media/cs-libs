@@ -1,0 +1,41 @@
+name: Package Library
+on:
+  workflow_dispatch:
+    inputs:
+      MODULE:
+        description: 'name of the package'
+        required: true
+      VERSION:
+        description: 'version of the package'
+        required: true
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+    paths:
+      - '*/*.csproj'
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  Package-Library:  
+    runs-on: [self-hosted, linux]
+    strategy:
+      fail-fast: false
+    env:
+      GITHUB_USERNAME: ${{ secrets.NUGET_USERNAME }}
+      GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
+      MODULE: ${{ github.event.inputs.MODULE }}
+      VERSION: ${{ github.event.inputs.VERSION }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repo }}
+          ref: ${{ github.ref }}
+      - name: Package Library
+        run: make package 
+      - name: Publish Library
+        run: make push

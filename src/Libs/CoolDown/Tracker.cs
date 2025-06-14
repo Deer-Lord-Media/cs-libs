@@ -1,0 +1,133 @@
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace CoolDown
+{
+    public class Tracker
+    {
+        public Tracker(TimeSpan duration, Events events, bool shared)
+        {
+            this.id = Guid.NewGuid();
+            this.duration = duration;
+            this.shared = shared;
+            this.startedAt = DateTime.Now - duration;
+            this.cts = new CancellationTokenSource();
+            this.subscriber = events;
+            this.publisher = events;
+        }
+
+        public readonly Guid id;
+        public readonly TimeSpan duration;
+        public readonly bool shared;
+        private DateTime startedAt;
+        public DateTime StartedAt { get { return this.startedAt; } }
+        private CancellationTokenSource cts;
+        public readonly ISubscriber subscriber;
+        private readonly IPublisher publisher;
+
+        /// <summary>
+        /// Returns true if the cooldown is active.
+        /// </summary>
+        public bool IsActive
+        {
+            get
+            {
+                return this.TimeRemaining > TimeSpan.Zero;
+            }
+        }
+
+        /// <summary>
+        /// Returns how much time is left on the active cooldown.
+        /// </summary>
+        public TimeSpan TimeRemaining
+        {
+            get
+            {
+                var timeRemaining = this.StartedAt.Add(this.duration) - DateTime.Now;
+                if (timeRemaining < TimeSpan.Zero)
+                    timeRemaining = TimeSpan.Zero;
+                return timeRemaining;
+            }
+        }
+
+        /// <summary>
+        /// Starts the cooldown.
+        /// </summary>
+        /// <returns>Success of starting the cooldown and pending the expiry event.</returns>
+        public bool Start()
+        {
+            if (this.IsActive)
+                this.CancelExpiry();
+
+            this.startedAt = DateTime.Now;
+            if (!this.PendExpiry())
+            {
+                this.Expire();
+                return false;
+            }
+            this.publisher.Publish(this.id, Action.Start, this.StartedAt, this.duration);
+            return true;
+        }
+
+        /// <summary>
+        /// Clears the cooldown and it's pending expiration message.
+        /// </summary>
+        /// <returns>Success of the operation.</returns>
+        public bool Clear()
+        {
+            if (!this.IsActive)
+                return false;
+
+            this.CancelExpiry();
+            this.Expire();
+            return true;
+        }
+
+        /// <summary>
+        /// Forcefully expires the cooldown.
+        /// </summary>
+        private void Expire()
+        {
+            this.startedAt = DateTime.Now - this.duration;
+            this.publisher.Publish(this.id, Action.Expire, this.startedAt, this.duration);
+        }
+
+        /// <summary>
+        /// Creates a pending message that fires when the cooldown expires.
+        /// </summary>
+        /// <param name="duration">How long to wait until the event is fired.</param>
+        /// <returns>Success of creating the event.</returns>
+        private bool PendExpiry()
+        {
+            var duration = this.TimeRemaining;
+            if (duration <= TimeSpan.Zero)
+                return false;
+
+            this.CancelExpiry();
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await Task.Delay(duration, this.cts.Token);
+                    this.Expire();
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+            });
+
+            return true;
+        }
+
+        /// <summary>
+        /// Cancels any existing expiry message.
+        /// </summary>
+        private void CancelExpiry()
+        {
+            this.cts.Cancel();
+            this.cts = new CancellationTokenSource();
+        }
+    }
+}

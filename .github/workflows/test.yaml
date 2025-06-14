@@ -1,0 +1,30 @@
+name: Test Library
+on:
+  workflow_dispatch:
+    inputs:
+      MODULE:
+        description: 'name of the module'
+        required: true
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  Test-Library:  
+    runs-on: [self-hosted, linux]
+    strategy:
+      fail-fast: false
+    env:
+      GITHUB_USERNAME: ${{ secrets.NUGET_USERNAME }}
+      GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
+      MODULE: ${{ github.event.inputs.MODULE }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repo }}
+          ref: ${{ github.ref }}  
+      - name: Build Container
+        run: make build
+      - name: Test Library
+        run:  make test
