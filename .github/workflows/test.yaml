@@ -1,10 +1,10 @@
 name: Test Library
 on:
   workflow_dispatch:
-    inputs:
-      MODULE:
-        description: 'name of the module'
-        required: true
+    # inputs:
+    #   MODULE:
+    #     description: 'name of the module'
+    #     required: true
   pull_request:
     branches:
       - main
@@ -24,7 +24,7 @@ jobs:
         with:
           repository: ${{ github.repo }}
           ref: ${{ github.ref }}  
-      - name: Build Container
+      - name: Build Projects
         run: make build
-      - name: Test Library
+      - name: Test Libraries
         run:  make test-all
