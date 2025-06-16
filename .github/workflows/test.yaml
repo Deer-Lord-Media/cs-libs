@@ -27,4 +27,4 @@ jobs:
       - name: Build Container
         run: make build
       - name: Test Library
-        run:  make test
+        run:  make test-all
