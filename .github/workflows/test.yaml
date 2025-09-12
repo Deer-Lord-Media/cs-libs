@@ -14,14 +14,12 @@ jobs:
     runs-on: [self-hosted, linux]
     strategy:
       fail-fast: false
-    env:
-      GITHUB_USERNAME: ${{ secrets.NUGET_USERNAME }}
     steps:
       - name: Authenticate to GitHub Packages
         run: |
           dotnet nuget add source \
             --name "github" \
-            --username "github-actions" \
+            --username "${{ secrets.NUGET_USERNAME }}" \
             --password "${{ secrets.NUGET_READ_TOKEN }}" \
             --store-password-in-clear-text \
             https://nuget.pkg.github.com/Deer-Lord-Media/index.json
