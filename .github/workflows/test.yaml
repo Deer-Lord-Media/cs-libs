@@ -60,14 +60,10 @@ jobs:
               --password "$PASSWORD" \
               --store-password-in-clear-text
           fi
-      - name: Restore
-        run: dotnet restore ./src
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           repository: ${{ github.repo }}
           ref: ${{ github.ref }}  
-      - name: Build Projects
-        run: make build-all
       - name: Test Libraries
         run:  make test-all
