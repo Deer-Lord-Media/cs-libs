@@ -23,7 +23,7 @@ jobs:
           SOURCE_NAME="deer-lord-media"
           SOURCE_URL="https://nuget.pkg.github.com/Deer-Lord-Media/index.json"
           USERNAME="${{ secrets.NUGET_USERNAME }}"
-          PASSWORD="${{ secrets.NUGET_PASSWORD }}"
+          PASSWORD="${{ secrets.NUGET_READ_TOKEN }}"
 
           # Get the list of configured sources
           SOURCES=$(dotnet nuget list source)
