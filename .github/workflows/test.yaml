@@ -16,14 +16,29 @@ jobs:
       fail-fast: false
     steps:
       # needs to be addable even if it exists
-      - name: Authenticate to GitHub Packages
+      - name: Add or Update NuGet Source
         run: |
-          dotnet nuget update source \
-            "deer-lord-media" \
-            --username "${{ secrets.NUGET_USERNAME }}" \
-            --password "${{ secrets.NUGET_READ_TOKEN }}" \
-            --store-password-in-clear-text \
-            --source https://nuget.pkg.github.com/Deer-Lord-Media/index.json
+          SOURCE_NAME="deer-lord-media"
+          SOURCE_URL="https://nuget.pkg.github.com/Deer-Lord-Media/index.json"
+          USERNAME="${{ secrets.NUGET_USERNAME }}"
+          PASSWORD="${{ secrets.NUGET_PASSWORD }}"
+
+          EXISTING=$(dotnet nuget list source | grep "$SOURCE_NAME" || true)
+          if [ -n "$EXISTING" ]; then
+            echo "Source '$SOURCE_NAME' already exists. Updating it..."
+            dotnet nuget update source "$SOURCE_NAME" \
+              --source "$SOURCE_URL" \
+              --username "$USERNAME" \
+              --password "$PASSWORD" \
+              --store-password-in-clear-text
+          else
+            echo "Adding new source '$SOURCE_NAME'..."
+            dotnet nuget add source "$SOURCE_URL" \
+              --name "$SOURCE_NAME" \
+              --username "$USERNAME" \
+              --password "$PASSWORD" \
+              --store-password-in-clear-text
+          fi
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
