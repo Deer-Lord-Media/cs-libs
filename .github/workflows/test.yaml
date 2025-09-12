@@ -60,6 +60,8 @@ jobs:
               --password "$PASSWORD" \
               --store-password-in-clear-text
           fi
+      - name: Restore
+        run: dotnet restore
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
