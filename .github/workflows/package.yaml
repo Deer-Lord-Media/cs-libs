@@ -26,10 +26,12 @@ jobs:
       fail-fast: false
     env:
       GITHUB_USERNAME: ${{ secrets.NUGET_USERNAME }}
-      GITHUB_TOKEN: ${{ secrets.NUGET_READ_TOKEN }}
+      # GITHUB_TOKEN: ${{ secrets.NUGET_READ_TOKEN }}
       MODULE: ${{ github.event.inputs.MODULE }}
       VERSION: ${{ github.event.inputs.VERSION }}
     steps:
+      - name: Restore dependencies
+        run: dotnet restore
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:

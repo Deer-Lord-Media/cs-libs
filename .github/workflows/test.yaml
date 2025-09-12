@@ -16,9 +16,15 @@ jobs:
       fail-fast: false
     env:
       GITHUB_USERNAME: ${{ secrets.NUGET_USERNAME }}
-      GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
-      MODULE: ${{ github.event.inputs.MODULE }}
     steps:
+      - name: Authenticate to GitHub Packages
+        run: |
+          dotnet nuget add source \
+            --name "github" \
+            --username "github-actions" \
+            --password "${{ secrets.NUGET_READ_TOKEN }}" \
+            --store-password-in-clear-text \
+            https://nuget.pkg.github.com/Deer-Lord-Media/index.json
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
