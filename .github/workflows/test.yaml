@@ -18,19 +18,40 @@ jobs:
       # needs to be addable even if it exists
       - name: Add or Update NuGet Source
         run: |
+          set -e
+
           SOURCE_NAME="deer-lord-media"
           SOURCE_URL="https://nuget.pkg.github.com/Deer-Lord-Media/index.json"
           USERNAME="${{ secrets.NUGET_USERNAME }}"
-          PASSWORD="${{ secrets.NUGET_READ_TOKEN }}"
+          PASSWORD="${{ secrets.NUGET_PASSWORD }}"
 
-          EXISTING=$(dotnet nuget list source | grep "$SOURCE_NAME" || true)
-          if [ -n "$EXISTING" ]; then
-            echo "Source '$SOURCE_NAME' already exists. Updating it..."
+          # Get the list of configured sources
+          SOURCES=$(dotnet nuget list source)
+
+          # Check if the source name already exists
+          if echo "$SOURCES" | grep -q "Name: $SOURCE_NAME"; then
+            echo "Source name '$SOURCE_NAME' already exists. Updating it..."
             dotnet nuget update source "$SOURCE_NAME" \
               --source "$SOURCE_URL" \
               --username "$USERNAME" \
               --password "$PASSWORD" \
               --store-password-in-clear-text
+
+          # Or check if the URL is already added under a different name
+          elif echo "$SOURCES" | grep -q "Source: $SOURCE_URL"; then
+            echo "A source with URL '$SOURCE_URL' already exists under a different name."
+            echo "You may want to update or remove it manually."
+            # Optional: Remove it here if desired
+            # EXISTING_NAME=$(dotnet nuget list source | awk -v url="$SOURCE_URL" '
+            #   BEGIN { name = "" }
+            #   $1 == "Name:" { name = $2 }
+            #   $1 == "Source:" && $2 == url { print name }
+            # ')
+            # if [ -n "$EXISTING_NAME" ]; then
+            #   echo "Removing existing source with name $EXISTING_NAME"
+            #   dotnet nuget remove source "$EXISTING_NAME"
+            # fi
+
           else
             echo "Adding new source '$SOURCE_NAME'..."
             dotnet nuget add source "$SOURCE_URL" \
