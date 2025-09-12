@@ -26,7 +26,7 @@ jobs:
       fail-fast: false
     env:
       GITHUB_USERNAME: ${{ secrets.NUGET_USERNAME }}
-      GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.NUGET_READ_TOKEN }}
       MODULE: ${{ github.event.inputs.MODULE }}
       VERSION: ${{ github.event.inputs.VERSION }}
     steps:
