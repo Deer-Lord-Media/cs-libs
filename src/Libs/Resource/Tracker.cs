@@ -4,18 +4,23 @@ namespace Resource
 {
     public class Tracker
     {
-        public Tracker(int max)
+        public Tracker(int max, int min)
         {
-            this.min = 0;
+            this.min = min;
             this.max = max;
         }
 
-        private readonly int min;
-        private readonly int max;
+        private int min;
+        private int max;
         private int value;
         public int Value
         {
             get { return this.value; }
+        }
+
+        public (int, int) Range()
+        {
+            return (this.min, this.max);
         }
 
         /// <summary>
@@ -89,6 +94,14 @@ namespace Resource
         }
 
         /// <summary>
+        /// Zero the resource out, or as close as possible.
+        /// </summary>
+        public void Zero()
+        {
+            this.value = Math.Min(Math.Max(0, this.min), this.max);
+        }
+
+        /// <summary>
         /// Get the ratio of the current value to the total range.
         /// </summary>
         public int Ratio
@@ -104,12 +117,11 @@ namespace Resource
         /// Change the maximum value of the tracker.
         /// </summary>
         /// <param name="maxChange">Amount to change the maximum by.</param>
-        /// <returns>A new instance with the updated maximum.</returns>
-        public Tracker Change(int maxChange)
+        /// <param name="minChange">Amount to change the minimum by.</param>
+        public void Change(int? maxChange, int? minChange)
         {
-            var tracker = new Tracker(this.max + maxChange);
-            tracker.Add(this.value);
-            return tracker;
+            if (minChange != null) this.min += (int)minChange;
+            if (maxChange != null) this.max += (int)maxChange;
         }
     }
 }
