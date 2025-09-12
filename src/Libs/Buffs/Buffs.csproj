@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CoolDown\CoolDown.csproj" />
-    <ProjectReference Include="..\Resource\Resource.csproj" />
+    <PackageReference Include="CoolDown" Version="0.0.1" />
+    <PackageReference Include="Resource" Version="0.0.1" />
   </ItemGroup>
 
 </Project>

@@ -50,8 +50,9 @@ namespace CoolDown
         }
 
         /// <summary>
-        /// Returns how much time is left on the active cooldown.
+        /// Time remaining on the cooldown.
         /// </summary>
+        /// <returns>How much time is remaining, or zero.</returns>
         public TimeSpan TimeRemaining
         {
             get
@@ -122,12 +123,16 @@ namespace CoolDown
                 try
                 {
                     await Task.Delay(duration, this.cts.Token);
-                    this.Expire();
                 }
-                catch (OperationCanceledException)
+                catch (TaskCanceledException)
                 {
                     return;
                 }
+                catch (ObjectDisposedException)
+                {
+                    return;
+                }
+                this.Expire();
             });
 
             return true;

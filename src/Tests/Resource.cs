@@ -45,7 +45,7 @@ public class ResourceTest
         Assert.Equal<int>(50, resource.Value);
         Assert.Equal<float>(50, resource.Ratio);
 
-        resource.Change(10, 0);
+        resource.Change(10, null);
         added = resource.Add(200);
         Assert.Equal<int>(60, added);
         Assert.Equal<int>(110, resource.Value);
