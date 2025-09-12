@@ -6,6 +6,12 @@ namespace CoolDown
 {
     public class Tracker
     {
+        /// <summary>
+        /// Creates a new cooldown tracker. This is the main class you will use.
+        /// </summary>
+        /// <param name="duration">How long the cooldown lasts for when active</param>
+        /// <param name="events">The CoolDown.Events bus that this tracker will publish events to.</param>
+        /// <param name="shared">If this cooldown can be shared between multiple things. May be removed in the future.</param>
         public Tracker(TimeSpan duration, Events events, bool shared)
         {
             this.id = Guid.NewGuid();
@@ -21,7 +27,13 @@ namespace CoolDown
         public readonly TimeSpan duration;
         public readonly bool shared;
         private DateTime startedAt;
-        public DateTime StartedAt { get { return this.startedAt; } }
+        public DateTime StartedAt
+        {
+            get
+            {
+                return this.startedAt;
+            }
+        }
         private CancellationTokenSource cts;
         public readonly ISubscriber subscriber;
         private readonly IPublisher publisher;

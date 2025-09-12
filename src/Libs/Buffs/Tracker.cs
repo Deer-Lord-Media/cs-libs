@@ -24,8 +24,9 @@ namespace Buffs
         }
 
         /// <summary>
-        /// Enumerable of the currently active buffs.
+        /// Get the active Buffs
         /// </summary>
+        /// <returns>An enumerable of Buffs</returns>
         public IEnumerable<Buff> Active
         {
             get
@@ -38,14 +39,14 @@ namespace Buffs
         /// Apply a Buff derived from an existing instance. Does not use the passed in instance itself.
         /// </summary>
         /// <param name="buff">An existing instance of a Buff to apply.</param>
-        /// <returns>The action that the application was able to perform</returns>
+        /// <returns>The Action that the application was able to perform</returns>
         public Action Apply(Buff buff)
         {
             return this.Apply(buff.data, buff.coolDown);
         }
 
         /// <summary>
-        /// Apply a buff with an optional coolDown.
+        /// Apply a Buff with an optional coolDown.
         /// </summary>
         /// <param name="data">The data to create the Buff from.</param>
         /// <param name="coolDown">An optional coolDown to apply the Buff with.</param>
@@ -102,10 +103,10 @@ namespace Buffs
         }
 
         /// <summary>
-        /// Remove a stack from an existing buff, and delete the Buff if necessary.
+        /// Remove a stack from an existing Buff, and delete the Buff if necessary.
         /// </summary>
         /// <param name="data">Data to find the Buff.</param>
-        /// <returns>The action taken.</returns>
+        /// <returns>The Action taken.</returns>
         public Action Remove(Data data)
         {
             // Get the existing buff from the set.
@@ -180,11 +181,8 @@ namespace Buffs
             switch (e.Action)
             {
                 case CoolDown.Action.Expire:
-                    foreach (Buff buff in this.members.Where(m => m.coolDown.id == e.Id))
-                    {
+                    foreach (Buff buff in new HashSet<Buff>(this.members.Where(m => m.coolDown.id == e.Id)))
                         this.Delete(buff);
-                        buff.coolDown.subscriber.Unsubscribe(this.HandleCoolDown);
-                    }
                     break;
             }
         }

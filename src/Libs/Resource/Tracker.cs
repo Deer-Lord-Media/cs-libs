@@ -18,6 +18,11 @@ namespace Resource
             get { return this.value; }
         }
 
+        public (int, int) Range()
+        {
+            return (this.min, this.max);
+        }
+
         /// <summary>
         /// Increase the value by 1, if possible.
         /// </summary>
@@ -94,7 +99,6 @@ namespace Resource
         public void Zero()
         {
             this.value = Math.Min(Math.Max(0, this.min), this.max);
-
         }
 
         /// <summary>

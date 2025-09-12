@@ -10,7 +10,7 @@ namespace Buffs
         {
             this.data = data;
             this.coolDown = coolDown;
-            this.stacks = new Resource.Tracker(data.stacks);
+            this.stacks = new Resource.Tracker(data.stacks, 0);
         }
 
         public readonly Data data;

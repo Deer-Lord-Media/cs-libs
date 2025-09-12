@@ -5,6 +5,15 @@ namespace Buffs
 {
     public class Data
     {
+        /// <summary>
+        /// Create a new Data blob about a Buff.
+        /// </summary>
+        /// <param name="id">Unique identifier.</param>
+        /// <param name="name">Name used for display.</param>
+        /// <param name="duration">How long the Buff lasts for.</param>
+        /// <param name="stacks">How many stacks of the Buff can be applied.</param>
+        /// <param name="precedenceOver">The ids of other Buffs that this Buff has precedence over.</param>
+        /// <param name="mutuallyExclusive">The ids of other Buffs that this Buff cannot coexist alongside.</param>
         public Data(int id, string name, TimeSpan duration, int? stacks, HashSet<Data>? precedenceOver, HashSet<Data>? mutuallyExclusive)
         {
             this.id = id;
