@@ -29,7 +29,7 @@ jobs:
           SOURCES=$(dotnet nuget list source)
 
           # Check if the source name already exists
-          if echo "$SOURCES" | grep -q "Name: $SOURCE_NAME"; then
+          if echo "$SOURCES" | grep -q "$SOURCE_NAME"; then
             echo "Source name '$SOURCE_NAME' already exists. Updating it..."
             dotnet nuget update source "$SOURCE_NAME" \
               --source "$SOURCE_URL" \
