@@ -23,7 +23,7 @@ jobs:
             --username "${{ secrets.NUGET_USERNAME }}" \
             --password "${{ secrets.NUGET_READ_TOKEN }}" \
             --store-password-in-clear-text \
-            -- source https://nuget.pkg.github.com/Deer-Lord-Media/index.json
+            --source https://nuget.pkg.github.com/Deer-Lord-Media/index.json
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
