@@ -18,7 +18,7 @@ jobs:
       - name: Authenticate to GitHub Packages
         run: |
           dotnet nuget add source \
-            --name "github" \
+            --name "deer-lord-media" \
             --username "${{ secrets.NUGET_USERNAME }}" \
             --password "${{ secrets.NUGET_READ_TOKEN }}" \
             --store-password-in-clear-text \
