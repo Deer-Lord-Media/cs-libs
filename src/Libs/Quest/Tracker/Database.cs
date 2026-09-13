@@ -66,8 +66,14 @@ namespace Quest.Tracker
         private void SetAndSave(Guid id, T value)
         {
             _dict[id] = value;
-            var success = save(value);
+            var success = Save(id);
             // ensure update, this is important!
+        }
+
+        private bool Save(Guid id)
+        {
+            // TODO: handle this in the background
+            return save(_dict[id]);
         }
 
         public Database(Func<Guid, T> load, Func<T, bool> save)

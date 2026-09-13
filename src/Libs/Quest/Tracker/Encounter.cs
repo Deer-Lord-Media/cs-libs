@@ -36,24 +36,36 @@ namespace Quest.Tracker
         private readonly Data.Encounter data;
         private readonly IReadOnlyDictionary<Guid, Event> events;
         private readonly IReadOnlyDictionary<Guid, Knowledge> knowledge;
-        public State? State()
-        {
-            foreach (State state in data.states)
-            {
-                int total = state.comparators.Values.Count;
-                if (total == 0) continue;
 
-                int found = 0;
-                foreach (Comparator comparator in state.comparators.Values)
+        private State? state;
+        public State? State
+        {
+            get
+            {
+                if (state != null) return state;
+
+                foreach (State state in data.states)
                 {
-                    if (Compare(comparator)) found++;
+                    int total = state.comparators.Values.Count;
+                    if (total == 0) continue;
+
+                    int found = 0;
+                    foreach (Comparator comparator in state.comparators.Values)
+                    {
+                        if (Compare(comparator)) found++;
+                    }
+                    if (found == total)
+                    {
+                        if (state.outcome)
+                        {
+                            this.state = state;
+                        }
+                        return state;
+                    }
                 }
-                if (found == total)
-                {
-                    return state;
-                }
+
+                return null;
             }
-            return null;
         }
 
         private bool Compare(Comparator comparator)

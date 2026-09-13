@@ -4,13 +4,13 @@ namespace Quest.Data
 {
     public readonly struct Stage
     {
-        public readonly Guid id;
+        public readonly Guid eventId;
         public readonly int number;
         public readonly string description;
 
-        public Stage(int number, string description, Guid id)
+        public Stage(Guid eventId, int number, string description)
         {
-            this.id = id;
+            this.eventId = eventId;
             this.number = number;
             this.description = description;
         }
