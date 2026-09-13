@@ -8,6 +8,7 @@
     <ProjectReference Include="..\Libs\CoolDown\CoolDown.csproj" />
     <ProjectReference Include="..\Libs\Buffs\Buffs.csproj" />
     <ProjectReference Include="..\Libs\Resource\Resource.csproj" />
+    <ProjectReference Include="..\Libs\Quest\Quest.csproj" />
   </ItemGroup>
 
   <ItemGroup>
