@@ -6,10 +6,15 @@ namespace Quest.Tracker
 {
     public class Encounter
     {
-        // An encounter is when you run into something that is going on
-        // this would be entering a peasant's house, finding a wolf in the woods, etc
-        // an encounter can be in a given state based on events and their values
-        // as defined by the comparators
+        /*
+        An encounter is when you run into something that is going on
+        this would be entering a peasant's house, finding a wolf in the woods, etc
+        
+        an encounter can be in a given state based on events and their values
+        as defined by the comparators
+
+        multiple encounters can rely on the same information, which can lead to a more immersive story
+        */
         public Encounter(Data.Encounter data, IReadOnlyDictionary<Guid, Event> database)
         {
             this.data = data;
