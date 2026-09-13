@@ -12,7 +12,7 @@ namespace Quest.Tracker
         public T this[Guid key]
         {
             get => GetOrLoad(key);
-            set => _dict[key] = value;
+            set => SetAndSave(key, value);
         }
 
         // --- Keys / Values ---
@@ -53,6 +53,7 @@ namespace Quest.Tracker
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private readonly Func<Guid, T> load;
+        private readonly Func<T, bool> save;
 
         private T GetOrLoad(Guid id)
         {
@@ -62,9 +63,17 @@ namespace Quest.Tracker
             return _dict[id];
         }
 
-        public Database(Func<Guid, T> load)
+        private void SetAndSave(Guid id, T value)
+        {
+            _dict[id] = value;
+            var success = save(value);
+            // ensure update, this is important!
+        }
+
+        public Database(Func<Guid, T> load, Func<T, bool> save)
         {
             this.load = load;
+            this.save = save;
         }
     }
 }
