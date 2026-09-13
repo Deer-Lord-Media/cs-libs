@@ -38,6 +38,12 @@ namespace Quest.Data
                 case Symbol.EQUAL:
                     op = Equal;
                     break;
+                case Symbol.ARE_SET:
+                    op = AreSet;
+                    break;
+                case Symbol.NOT_SET:
+                    op = NotSet;
+                    break;
             }
             return op;
         }
@@ -45,56 +51,77 @@ namespace Quest.Data
         /// <summary>
         /// Determines whether <paramref name="o"/> is strictly greater than <paramref name="gt"/>.
         /// </summary>
+        /// <param name="t">The value being tested.</param>
         /// <param name="gt">The threshold value.</param>
-        /// <param name="o">The value being tested.</param>
         /// <returns><c>true</c> if <paramref name="o"/> &gt; <paramref name="gt"/>; otherwise <c>false</c>.</returns>
-        private static bool GreaterThan(int gt, int o)
+        private static bool GreaterThan(int t, int gt)
         {
-            return o > gt;
+            return t > gt;
         }
 
         /// <summary>
         /// Determines whether <paramref name="o"/> is strictly less than <paramref name="lt"/>.
         /// </summary>
+        /// <param name="t">The value being tested.</param>
         /// <param name="lt">The threshold value.</param>
-        /// <param name="o">The value being tested.</param>
         /// <returns><c>true</c> if <paramref name="o"/> &lt; <paramref name="lt"/>; otherwise <c>false</c>.</returns>
-        private static bool LessThan(int lt, int o)
+        private static bool LessThan(int t, int lt)
         {
-            return o < lt;
+            return t < lt;
         }
 
         /// <summary>
         /// Determines whether <paramref name="o"/> is greater than or equal to <paramref name="al"/>.
         /// </summary>
+        /// <param name="t">The value being tested.</param>
         /// <param name="al">The minimum threshold value.</param>
-        /// <param name="o">The value being tested.</param>
         /// <returns><c>true</c> if <paramref name="o"/> &gt;= <paramref name="al"/>; otherwise <c>false</c>.</returns>
-        private static bool AtLeast(int al, int o)
+        private static bool AtLeast(int t, int al)
         {
-            return o >= al;
+            return t >= al;
         }
 
         /// <summary>
         /// Determines whether <paramref name="o"/> is less than or equal to <paramref name="ol"/>.
         /// </summary>
+        /// <param name="t">The value being tested.</param>
         /// <param name="ol">The maximum threshold value.</param>
-        /// <param name="o">The value being tested.</param>
         /// <returns><c>true</c> if <paramref name="o"/> &lt;= <paramref name="ol"/>; otherwise <c>false</c>.</returns>
-        private static bool OrLess(int ol, int o)
+        private static bool OrLess(int t, int ol)
         {
-            return o <= ol;
+            return t <= ol;
         }
 
         /// <summary>
-        /// Determines whether <paramref name="eq"/> and <paramref name="o"/> are equal.
+        /// Determines whether <paramref name="eq"/> and <paramref name="t"/> are equal.
         /// </summary>
+        /// <param name="t">The value being tested.</param>
         /// <param name="eq">The reference value.</param>
-        /// <param name="o">The value being tested.</param>
         /// <returns><c>true</c> if the two values are equal; otherwise <c>false</c>.</returns>
-        private static bool Equal(int eq, int o)
+        private static bool Equal(int t, int eq)
         {
-            return eq == o;
+            return t == eq;
+        }
+
+        /// <summary>
+        /// Determines whether every bit set in <paramref name="and"/> is also set in <paramref name="t"/>.
+        /// </summary>
+        /// <param name="t">The value being tested.</param>
+        /// <param name="and">The mask of bits that must all be present in <paramref name="t"/>.</param>
+        /// <returns>
+        /// <c>true</c> if <c>t &amp; and</c> equals <paramref name="and"/> (i.e. <paramref name="t"/>
+        /// has every bit set that <paramref name="and"/> has set); otherwise <c>false</c>.
+        /// </returns>
+        private static bool AreSet(int t, int and)
+        {
+            return (t & and) == and;
+        }
+
+        private static bool NotSet(int t, int and)
+        {
+            return (t & and) == 0;
         }
     }
 }
+
+// use OR for adding flags:

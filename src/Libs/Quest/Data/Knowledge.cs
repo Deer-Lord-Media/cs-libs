@@ -31,7 +31,8 @@ namespace Quest.Data
         /// The meaning of this value is context-dependent (e.g. a stage index,
         /// a detail type, or an enum cast to <see cref="int"/>).
         /// </summary>
-        public readonly int value;
+        public readonly int flags;
+        // these could potentially be a specific set of flags
 
         /// <summary>
         /// The identifier of the event this knowledge pertains to.
@@ -43,13 +44,13 @@ namespace Quest.Data
         /// </summary>
         /// <param name="knowerId">The person who holds this piece of knowledge.</param>
         /// <param name="knowsId">The person who is known to know something about the event.</param>
-        /// <param name="value">The specific detail known about the event.</param>
+        /// <param name="flags">The specific detail known about the event.</param>
         /// <param name="eventId">The event this knowledge pertains to.</param>
-        public Knowledge(Guid knowerId, Guid knowsId, int value, Guid eventId)
+        public Knowledge(Guid knowerId, Guid knowsId, int flags, Guid eventId)
         {
             this.knowerId = knowerId;
             this.knowsId = knowsId;
-            this.value = value;
+            this.flags = flags;
             this.eventId = eventId;
         }
     }

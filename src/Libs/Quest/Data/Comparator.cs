@@ -39,19 +39,19 @@ namespace Quest.Data
         public readonly int value;
 
         /// <summary>
-        /// Evaluates whether <paramref name="other"/> satisfies this comparator's
+        /// Evaluates whether <paramref name="against"/> satisfies this comparator's
         /// condition, by applying the operator function associated with
-        /// <see cref="symbol"/> to <see cref="value"/> and <paramref name="other"/>.
+        /// <see cref="symbol"/> to <see cref="value"/> and <paramref name="against"/>.
         /// </summary>
-        /// <param name="other">The value to compare against <see cref="value"/>.</param>
+        /// <param name="against">The value to compare against <see cref="value"/>.</param>
         /// <returns>
         /// <c>true</c> if a valid operator function exists for <see cref="symbol"/>
         /// and the comparison succeeds; otherwise <c>false</c>.
         /// </returns>
-        public bool Compare(int other)
+        public bool Compare(int against)
         {
             var func = Operator.Function(symbol);
-            return func != null && func(value, other);
+            return func != null && func(value, against);
         }
     }
 }

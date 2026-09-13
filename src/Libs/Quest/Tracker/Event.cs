@@ -31,17 +31,17 @@ namespace Quest.Tracker
         /// <summary>
         /// The 0-based index of the furthest stage reached so far.
         /// </summary>
-        private int value;
+        private int index;
 
         /// <summary>
         /// Gets the 1-based number of the furthest stage reached so far.
         /// </summary>
-        public int Value { get { return value + 1; } }
+        public int Value { get { return index + 1; } }
 
         /// <summary>
         /// Gets the <see cref="Data.Stage"/> at the current progress index.
         /// </summary>
-        public Data.Stage Stage { get { return data.stages[value]; } }
+        public Data.Stage Stage { get { return data.stages[index]; } }
 
         /// <summary>
         /// Advances progress to the given 1-based stage number, if it is further along
@@ -65,8 +65,8 @@ namespace Quest.Tracker
         public Data.Stage Set(int value)
         {
             value--;
-            var c = Math.Max(value, this.value);
-            this.value = Math.Clamp(c, 0, data.count - 1);
+            var c = Math.Max(value, index);
+            index = Math.Clamp(c, 0, data.count - 1);
             return Stage;
         }
     }
