@@ -9,6 +9,6 @@ namespace Quest.Data
         EQUAL = 4,
         ARE_SET = 5,
         NOT_SET = 6,
-        XOR = 7
+        ANY_OF = 7
     };
 }

@@ -20,31 +20,18 @@ namespace Quest.Data
         /// </returns>
         public static Func<int, int, bool>? Function(Symbol symbol)
         {
-            Func<int, int, bool>? op = null;
-            switch (symbol)
+            Func<int, int, bool>? op = symbol switch
             {
-                case Symbol.GREATER_THAN:
-                    op = GreaterThan;
-                    break;
-                case Symbol.LESS_THAN:
-                    op = LessThan;
-                    break;
-                case Symbol.AT_LEAST:
-                    op = AtLeast;
-                    break;
-                case Symbol.OR_LESS:
-                    op = OrLess;
-                    break;
-                case Symbol.EQUAL:
-                    op = Equal;
-                    break;
-                case Symbol.ARE_SET:
-                    op = AreSet;
-                    break;
-                case Symbol.NOT_SET:
-                    op = NotSet;
-                    break;
-            }
+                Symbol.GREATER_THAN => GreaterThan,
+                Symbol.LESS_THAN => LessThan,
+                Symbol.AT_LEAST => AtLeast,
+                Symbol.OR_LESS => OrLess,
+                Symbol.EQUAL => Equal,
+                Symbol.ARE_SET => AreSet,
+                Symbol.NOT_SET => NotSet,
+                Symbol.ANY_OF => AnyOf,
+                _ => null,
+            };
             return op;
         }
 
@@ -104,24 +91,36 @@ namespace Quest.Data
         }
 
         /// <summary>
-        /// Determines whether every bit set in <paramref name="and"/> is also set in <paramref name="t"/>.
+        /// Determines whether all of the bits set in <paramref name="and"/> are also set in <paramref name="t"/>.
         /// </summary>
         /// <param name="t">The value being tested.</param>
-        /// <param name="and">The mask of bits that must all be present in <paramref name="t"/>.</param>
-        /// <returns>
-        /// <c>true</c> if <c>t &amp; and</c> equals <paramref name="and"/> (i.e. <paramref name="t"/>
-        /// has every bit set that <paramref name="and"/> has set); otherwise <c>false</c>.
-        /// </returns>
+        /// <param name="and">A mask identifying the bits that must all be set.</param>
+        /// <returns><c>true</c> if every bit set in <paramref name="and"/> is also set in <paramref name="t"/>; otherwise <c>false</c>.</returns>
         private static bool AreSet(int t, int and)
         {
             return (t & and) == and;
         }
 
+        /// <summary>
+        /// Determines whether none of the bits set in <paramref name="and"/> are set in <paramref name="t"/>.
+        /// </summary>
+        /// <param name="t">The value being tested.</param>
+        /// <param name="and">A mask identifying the bits that must all be clear.</param>
+        /// <returns><c>true</c> if every bit set in <paramref name="and"/> is clear in <paramref name="t"/>; otherwise <c>false</c>.</returns>
         private static bool NotSet(int t, int and)
         {
             return (t & and) == 0;
         }
+
+        /// <summary>
+        /// Determines whether any of the bits set in <paramref name="and"/> are also set in <paramref name="t"/>.
+        /// </summary>
+        /// <param name="t">The value being tested.</param>
+        /// <param name="and">A mask identifying the bits of interest.</param>
+        /// <returns><c>true</c> if at least one bit set in <paramref name="and"/> is also set in <paramref name="t"/>; otherwise <c>false</c>.</returns>
+        private static bool AnyOf(int t, int and)
+        {
+            return (t & and) != 0;
+        }
     }
 }
-
-// use OR for adding flags:
