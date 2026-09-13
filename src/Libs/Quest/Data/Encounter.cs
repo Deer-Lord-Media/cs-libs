@@ -7,14 +7,14 @@ namespace Quest.Data
         public readonly Guid id;
         public readonly string name;
         public readonly string description;
-        public readonly Outcome[] outcomes;
+        public readonly State[] states;
 
-        public Encounter(Guid id, string name, string description, Outcome[] outcomes)
+        public Encounter(Guid id, string name, string description, State[] states)
         {
             this.id = id;
             this.name = name;
             this.description = description;
-            this.outcomes = outcomes;
+            this.states = states;
         }
     }
 }

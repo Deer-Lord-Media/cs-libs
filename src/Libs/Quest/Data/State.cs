@@ -1,19 +1,13 @@
 using System;
+using System.Collections.Generic;
 
 namespace Quest.Data
 {
+    // TODO: Rename this
     public readonly struct State
     {
         public readonly Guid id;
-        public readonly Stage[] stages;
+        public readonly Dictionary<Guid, Comparator> comparators;
 
-        public readonly int count;
-
-        public State(Stage[] stages, Guid id)
-        {
-            this.id = id;
-            this.stages = stages;
-            count = stages.Length;
-        }
     }
 }

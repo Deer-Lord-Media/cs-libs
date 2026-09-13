@@ -2,15 +2,15 @@ using System;
 
 namespace Quest.Tracker
 {
-    public class State
+    public class Event
     {
-        public State(Data.State data, int value = 0)
+        public Event(Data.Event data, int value = 0)
         {
             this.data = data;
             Set(value);
         }
 
-        private readonly Data.State data;
+        private readonly Data.Event data;
         private int value;
         public int Value { get { return value; } }
         public Data.Stage Stage { get { return data.stages[value]; } }
