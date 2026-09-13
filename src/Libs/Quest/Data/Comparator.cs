@@ -51,7 +51,7 @@ namespace Quest.Data
         public bool Compare(int against)
         {
             var func = Operator.Function(symbol);
-            return func != null && func(value, against);
+            return func != null && func(against, value);
         }
     }
 }

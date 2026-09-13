@@ -1,7 +1,7 @@
 using Quest.Data;
 
 using Events = System.Collections.Generic.IReadOnlyDictionary<System.Guid, Quest.Tracker.Event>;
-using Knowledge = System.Collections.Generic.IReadOnlyDictionary<System.Guid, Quest.Data.Knowledge>;
+using Information = System.Collections.Generic.IReadOnlyDictionary<System.Guid, Quest.Tracker.Knowledge>;
 
 
 namespace Quest.Tracker
@@ -28,7 +28,7 @@ namespace Quest.Tracker
         it's possible to create many intermediary stages and disjointed encounters
         to create an illusion of a "living" world
         */
-        public Encounter(Data.Encounter data, Events events, Knowledge knowledge)
+        public Encounter(Data.Encounter data, Events events, Information knowledge)
         {
             this.data = data;
             this.events = events;
@@ -37,7 +37,7 @@ namespace Quest.Tracker
 
         private readonly Data.Encounter data;
         private readonly Events events;
-        private readonly Knowledge knowledge;
+        private readonly Information knowledge;
 
         private State? state;
         public State? State
@@ -72,18 +72,12 @@ namespace Quest.Tracker
 
         private bool Compare(Comparator comparator)
         {
-            int? value = null;
-            switch (comparator.againstType)
+            int? value = comparator.againstType switch
             {
-                case Against.EVENT:
-                    value = events[comparator.againstId].Value;
-                    break;
-                case Against.KNOWLEDGE:
-                    value = knowledge[comparator.againstId].value;
-                    break;
-                default:
-                    break;
-            }
+                Against.EVENT => events[comparator.againstId].Value,
+                Against.KNOWLEDGE => knowledge[comparator.againstId].Flags,
+                _ => null,
+            };
             return (value != null) && comparator.Compare((int)value);
         }
     }
