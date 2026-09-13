@@ -1,6 +1,8 @@
-using System;
-using System.Collections.Generic;
 using Quest.Data;
+
+using Events = System.Collections.Generic.IReadOnlyDictionary<System.Guid, Quest.Tracker.Event>;
+using Knowledge = System.Collections.Generic.IReadOnlyDictionary<System.Guid, Quest.Data.Knowledge>;
+
 
 namespace Quest.Tracker
 {
@@ -26,7 +28,7 @@ namespace Quest.Tracker
         it's possible to create many intermediary stages and disjointed encounters
         to create an illusion of a "living" world
         */
-        public Encounter(Data.Encounter data, IReadOnlyDictionary<Guid, Event> events, IReadOnlyDictionary<Guid, Knowledge> knowledge)
+        public Encounter(Data.Encounter data, Events events, Knowledge knowledge)
         {
             this.data = data;
             this.events = events;
@@ -34,8 +36,8 @@ namespace Quest.Tracker
         }
 
         private readonly Data.Encounter data;
-        private readonly IReadOnlyDictionary<Guid, Event> events;
-        private readonly IReadOnlyDictionary<Guid, Knowledge> knowledge;
+        private readonly Events events;
+        private readonly Knowledge knowledge;
 
         private State? state;
         public State? State
@@ -74,12 +76,10 @@ namespace Quest.Tracker
             switch (comparator.againstType)
             {
                 case Against.EVENT:
-                    Event ev = events[comparator.againstId];
-                    value = ev.Value;
+                    value = events[comparator.againstId].Value;
                     break;
                 case Against.KNOWLEDGE:
-                    Knowledge knwl = knowledge[comparator.againstId];
-                    value = knwl.value;
+                    value = knowledge[comparator.againstId].value;
                     break;
                 default:
                     break;

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Quest.Data
 {
@@ -36,8 +37,34 @@ namespace Quest.Data
         public Event(Guid id, Stage[] stages)
         {
             this.id = id;
-            this.stages = stages;
+            this.stages = stages.OrderBy(s => s.number).ToArray();
             count = stages.Length;
+        }
+
+        /// <summary>
+        /// Retrieves the <see cref="Stage"/> with the given 1-based stage number.
+        /// </summary>
+        /// <param name="number">
+        /// The 1-based number of the stage to retrieve (i.e. the first stage is <c>1</c>, not <c>0</c>).
+        /// </param>
+        /// <returns>
+        /// The matching <see cref="Stage"/> if <paramref name="number"/> corresponds to the stage
+        /// at that position in <see cref="stages"/>; otherwise <c>null</c> if the stage stored at
+        /// that position does not have a matching <see cref="Stage.number"/>.
+        /// </returns>
+        /// <exception cref="IndexOutOfRangeException">
+        /// Thrown if <paramref name="number"/> is less than 1 or greater than the number of stages.
+        /// </exception>
+        public Stage? Stage(int number)
+        {
+            number = Math.Clamp(number, 1, stages.Count());
+            var stage = stages[number - 1];
+            if (stage.number != number)
+            {
+                return null;
+            }
+
+            return stage;
         }
     }
 }
