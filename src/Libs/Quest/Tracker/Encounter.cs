@@ -1,3 +1,4 @@
+using System.Linq;
 using Quest.Data;
 
 using Events = System.Collections.Generic.IReadOnlyDictionary<System.Guid, Quest.Tracker.Event>;
@@ -48,7 +49,7 @@ namespace Quest.Tracker
 
                 foreach (State state in data.states)
                 {
-                    int total = state.comparators.Values.Count;
+                    int total = state.comparators.Values.Count();
                     if (total == 0) continue;
 
                     int found = 0;

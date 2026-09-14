@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Buffs;
-using CoolDown;
 using Xunit;
 
 namespace Tests;

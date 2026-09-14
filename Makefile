@@ -10,7 +10,7 @@ build-all:
 	dotnet build ./src
 
 test: build
-	dotnet test ./src/Tests --verbosity normal --filter "FullyQualifiedName~$(MODULE)Test"
+	dotnet test ./src/Tests --verbosity normal --filter "FullyQualifiedName~$(MODULE)"
 
 test-all: build-all
 	dotnet test ./src/Tests --collect:"XPlat Code Coverage"

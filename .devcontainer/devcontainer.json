@@ -3,13 +3,12 @@
     "build": {
         "dockerfile": "Dockerfile"
     },
-
     "customizations": {
         "vscode": {
             "extensions": [
                 "ms-dotnettools.csharp",
                 "ms-dotnettools.csdevkit",
-                "ms-vscode.makefile-tools",
+                "ms-vscode.makefile-tools"
             ],
             "settings": {
                 "editor.formatOnSave": true,
@@ -28,10 +27,10 @@
     },
     "features": {
         "ghcr.io/devcontainers/features/git:1.3.8": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {},
         "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
     },
-
-    // "postCreateCommand": "dotnet restore csharp/drive-time-radio.sln",
+    "postCreateCommand": "dotnet restore src/cs-libs.sln; gh auth status || gh auth login && gh auth refresh -h github.com -s read:packages && dotnet nuget add source https://nuget.pkg.github.com/Deer-Lord-Media/index.json --name github --username william-dafriend --password $(gh auth token) --store-password-in-clear-text",
     "mounts": [
         "source=${localEnv:SSH_AUTH_SOCK},target=/ssh-agent,type=bind",
         "source=claude-code-config-${devcontainerId},target=/home/vscode/.claude,type=volume"
