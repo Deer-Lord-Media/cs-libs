@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
-using Buffs;
+using BFS = Buffs;
 using Xunit;
+using CD = CoolDown;
 
-namespace Tests;
+namespace Tests.Buffs;
 
 public class BuffsTest
 {
     [Fact]
     public void TestDataNull()
     {
-        var d1 = new Data(1, "data_one", new TimeSpan(), null, null, null);
+        var d1 = new BFS.Data(1, "data_one", new TimeSpan(), null, null, null);
         var equal = d1.Equals(null);
         Assert.False(equal);
 
@@ -21,8 +22,8 @@ public class BuffsTest
     [Fact]
     public void TestDataNotRelated()
     {
-        var d1 = new Data(1, "data_one", new TimeSpan(), null, null, null);
-        var d2 = new Data(2, "data_two", new TimeSpan(), null, null, null);
+        var d1 = new BFS.Data(1, "data_one", new TimeSpan(), null, null, null);
+        var d2 = new BFS.Data(2, "data_two", new TimeSpan(), null, null, null);
 
         var related = d1 == d2;
         var notRelated = d1 != d2;
@@ -40,8 +41,8 @@ public class BuffsTest
     [Fact]
     public void TestDataPrecedenceEmpty()
     {
-        var d1 = new Data(1, "data_one", new TimeSpan(), null, null, null);
-        var d2 = new Data(2, "data_two", new TimeSpan(), null, null, null);
+        var d1 = new BFS.Data(1, "data_one", new TimeSpan(), null, null, null);
+        var d2 = new BFS.Data(2, "data_two", new TimeSpan(), null, null, null);
 
         var precedence = d1 > d2;
         Assert.False(precedence);
@@ -59,7 +60,7 @@ public class BuffsTest
     [Fact]
     public void TestDataPrecedenceNull()
     {
-        var d1 = new Data(1, "data_one", new TimeSpan(), null, null, null);
+        var d1 = new BFS.Data(1, "data_one", new TimeSpan(), null, null, null);
 
         var precedence = d1 < null;
         Assert.False(precedence);
@@ -77,8 +78,8 @@ public class BuffsTest
     [Fact]
     public void TestDataPrecedence()
     {
-        var d1 = new Data(1, "data_one", new TimeSpan(), null, null, null);
-        var d2 = new Data(2, "data_two", new TimeSpan(), null, new HashSet<Data> { d1 }, null);
+        var d1 = new BFS.Data(1, "data_one", new TimeSpan(), null, null, null);
+        var d2 = new BFS.Data(2, "data_two", new TimeSpan(), null, new HashSet<BFS.Data> { d1 }, null);
 
         var precedence = d1 < d2;
         Assert.True(precedence);
@@ -90,10 +91,10 @@ public class BuffsTest
     [Fact]
     public void TestDataRelations()
     {
-        var d1 = new Data(1, "data_one", new TimeSpan(), null, null, null);
-        var d2 = new Data(2, "data_two", new TimeSpan(), null, null, new HashSet<Data> { d1 });
-        var d3 = new Data(3, "data_three", new TimeSpan(), null, new HashSet<Data> { d1 }, null);
-        var d4 = new Data(1, "data_four", new TimeSpan(), null, null, null);
+        var d1 = new BFS.Data(1, "data_one", new TimeSpan(), null, null, null);
+        var d2 = new BFS.Data(2, "data_two", new TimeSpan(), null, null, new HashSet<BFS.Data> { d1 });
+        var d3 = new BFS.Data(3, "data_three", new TimeSpan(), null, new HashSet<BFS.Data> { d1 }, null);
+        var d4 = new BFS.Data(1, "data_four", new TimeSpan(), null, null, null);
 
         var notEqual = d1 == d2;
         Assert.True(notEqual);
@@ -124,28 +125,28 @@ public class BuffsTest
     public void TestBuffApply()
     {
         var duration = new TimeSpan(0, 0, 0, 10, 0);
-        var events = new CoolDown.Events();
-        var tracker = new Buffs.Tracker(1);
-        var coolDown = new CoolDown.Tracker(duration, events, false);
+        var events = new CD.Events();
+        var tracker = new BFS.Tracker(1);
+        var coolDown = new CD.Tracker(duration, events, false);
 
-        var dataOne = new Buffs.Data(0, "TestBuff", duration, null, null, null);
-        var buffOne = new Buffs.Buff(dataOne, coolDown);
+        var dataOne = new BFS.Data(0, "TestBuff", duration, null, null, null);
+        var buffOne = new BFS.Buff(dataOne, coolDown);
         var actionOne = tracker.Apply(buffOne);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Applied, actionOne);
+        Assert.Equal(BFS.Action.Applied, actionOne);
 
-        var dataTwo = new Buffs.Data(1, "TestBuff", duration, null, null, null);
-        var buffTwo = new Buffs.Buff(dataTwo, coolDown);
+        var dataTwo = new BFS.Data(1, "TestBuff", duration, null, null, null);
+        var buffTwo = new BFS.Buff(dataTwo, coolDown);
         var actionTwo = tracker.Apply(buffTwo);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Full, actionTwo);
+        Assert.Equal(BFS.Action.Full, actionTwo);
 
         actionOne = tracker.Apply(buffOne);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Refreshed, actionOne);
+        Assert.Equal(BFS.Action.Refreshed, actionOne);
 
         buffOne = tracker.Get(dataOne);
-        Assert.Equal<int>(1, buffOne.stacks.Value);
+        Assert.Equal(1, buffOne.stacks.Value);
 
         var removeAction = tracker.Remove(dataOne);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Removed, removeAction);
+        Assert.Equal(BFS.Action.Removed, removeAction);
 
         var emptied = tracker.Empty();
         Assert.True(emptied);
@@ -155,26 +156,26 @@ public class BuffsTest
     public void TestBuffStack()
     {
         var duration = new TimeSpan(0, 0, 0, 10, 0);
-        var events = new CoolDown.Events();
-        var tracker = new Buffs.Tracker(1);
-        var coolDown = new CoolDown.Tracker(duration, events, false);
+        var events = new CD.Events();
+        var tracker = new BFS.Tracker(1);
+        var coolDown = new CD.Tracker(duration, events, false);
 
-        var data = new Buffs.Data(0, "TestBuff", duration, 2, null, null);
-        var buffOne = new Buffs.Buff(data, coolDown);
+        var data = new BFS.Data(0, "TestBuff", duration, 2, null, null);
+        var buffOne = new BFS.Buff(data, coolDown);
         var action = tracker.Apply(buffOne);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Applied, action);
+        Assert.Equal(BFS.Action.Applied, action);
 
         var buff = tracker.Get(data);
-        Assert.Equal<int>(1, buff.stacks.Value);
+        Assert.Equal(1, buff.stacks.Value);
 
         action = tracker.Apply(buffOne);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Incremented, action);
+        Assert.Equal(BFS.Action.Incremented, action);
 
         buff = tracker.Get(data);
-        Assert.Equal<int>(2, buff.stacks.Value);
+        Assert.Equal(2, buff.stacks.Value);
 
         var decrementAction = tracker.Remove(data);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Decremented, decrementAction);
+        Assert.Equal(BFS.Action.Decremented, decrementAction);
 
         var cleared = tracker.Clear(data);
         Assert.True(cleared);
@@ -187,44 +188,44 @@ public class BuffsTest
     public void TestBuffPrecedence()
     {
         var duration = new TimeSpan(0, 0, 0, 10, 0);
-        var events = new CoolDown.Events();
-        var tracker = new Buffs.Tracker(1);
-        var coolDown = new CoolDown.Tracker(duration, events, false);
+        var events = new CD.Events();
+        var tracker = new BFS.Tracker(1);
+        var coolDown = new CD.Tracker(duration, events, false);
 
-        var dataOne = new Buffs.Data(0, "TestBuff", duration, null, null, null);
-        var buffOne = new Buffs.Buff(dataOne, coolDown);
+        var dataOne = new BFS.Data(0, "TestBuff", duration, null, null, null);
+        var buffOne = new BFS.Buff(dataOne, coolDown);
 
-        var dataTwo = new Buffs.Data(1, "TestBuff", duration, null, [dataOne], null);
-        var buffTwo = new Buffs.Buff(dataTwo, coolDown);
+        var dataTwo = new BFS.Data(1, "TestBuff", duration, null, [dataOne], null);
+        var buffTwo = new BFS.Buff(dataTwo, coolDown);
 
         var actionOne = tracker.Apply(buffOne);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Applied, actionOne);
+        Assert.Equal(BFS.Action.Applied, actionOne);
 
         var actionTwo = tracker.Apply(buffTwo);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Applied, actionTwo);
+        Assert.Equal(BFS.Action.Applied, actionTwo);
 
         actionOne = tracker.Apply(buffOne);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Blocked, actionOne);
+        Assert.Equal(BFS.Action.Blocked, actionOne);
     }
 
     [Fact]
     public void TestBuffExclusion()
     {
         var duration = new TimeSpan(0, 0, 0, 10, 0);
-        var events = new CoolDown.Events();
-        var tracker = new Buffs.Tracker(1);
-        var coolDown = new CoolDown.Tracker(duration, events, false);
+        var events = new CD.Events();
+        var tracker = new BFS.Tracker(1);
+        var coolDown = new CD.Tracker(duration, events, false);
 
-        var dataOne = new Buffs.Data(0, "TestBuff", duration, null, null, null);
-        var buffOne = new Buffs.Buff(dataOne, coolDown);
+        var dataOne = new BFS.Data(0, "TestBuff", duration, null, null, null);
+        var buffOne = new BFS.Buff(dataOne, coolDown);
 
-        var dataTwo = new Buffs.Data(1, "TestBuff", duration, null, null, [dataOne]);
-        var buffTwo = new Buffs.Buff(dataTwo, coolDown);
+        var dataTwo = new BFS.Data(1, "TestBuff", duration, null, null, [dataOne]);
+        var buffTwo = new BFS.Buff(dataTwo, coolDown);
 
         var actionOne = tracker.Apply(buffOne);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Applied, actionOne);
+        Assert.Equal(BFS.Action.Applied, actionOne);
 
         var actionTwo = tracker.Apply(buffTwo);
-        Assert.Equal<Buffs.Action>(Buffs.Action.Blocked, actionTwo);
+        Assert.Equal(BFS.Action.Blocked, actionTwo);
     }
 }

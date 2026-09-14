@@ -1,9 +1,9 @@
 using System;
 using System.Threading;
-using CoolDown;
+using CD = CoolDown;
 using Xunit;
 
-namespace Tests;
+namespace Tests.CoolDown;
 #nullable enable
 
 public class CoolDownTest
@@ -12,15 +12,15 @@ public class CoolDownTest
     public void TestOperations()
     {
         var duration = new TimeSpan(0, 0, 0, 2, 0);
-        var events = new Events();
+        var events = new CD.Events();
         var handledStart = false;
         var handledRefresh = false;
         var handledClear = false;
-        Tracker coolDown = new Tracker(duration, events, false);
+        var coolDown = new CD.Tracker(duration, events, false);
 
-        void HandleStart(object? sender, Message e)
+        void HandleStart(object? sender, CD.Message e)
         {
-            Assert.Equal<CoolDown.Action>(CoolDown.Action.Start, e.Action);
+            Assert.Equal(CD.Action.Start, e.Action);
             handledStart = true;
         }
         events.Subscribe(HandleStart);
@@ -29,13 +29,13 @@ public class CoolDownTest
         Assert.True(coolDown.IsActive);
         events.Unsubscribe(HandleStart);
         Assert.True(handledStart);
-        Assert.InRange<TimeSpan>(coolDown.TimeRemaining, new TimeSpan(1), duration);
+        Assert.InRange(coolDown.TimeRemaining, new TimeSpan(1), duration);
 
-        void HandleRefresh(object? sender, Message e)
+        void HandleRefresh(object? sender, CD.Message e)
         {
             switch (e.Action)
             {
-                case CoolDown.Action.Start:
+                case CD.Action.Start:
                     handledRefresh = true;
                     break;
             }
@@ -47,9 +47,9 @@ public class CoolDownTest
         events.Unsubscribe(HandleRefresh);
         Assert.True(handledRefresh);
 
-        void HandleClear(object? sender, Message e)
+        void HandleClear(object? sender, CD.Message e)
         {
-            Assert.Equal<CoolDown.Action>(CoolDown.Action.Expire, e.Action);
+            Assert.Equal(CD.Action.Expire, e.Action);
             handledClear = true;
         }
         events.Subscribe(HandleClear);
@@ -63,21 +63,21 @@ public class CoolDownTest
     public void TestExpiry()
     {
         var expired = false;
-        void Handle(object? sender, Message e)
+        void Handle(object? sender, CD.Message e)
         {
             switch (e.Action)
             {
-                case CoolDown.Action.Expire:
+                case CD.Action.Expire:
                     expired = true;
                     break;
-                case CoolDown.Action.Start:
+                case CD.Action.Start:
                     break;
             }
         }
 
         var duration = new TimeSpan(0, 0, 0, 1, 0);
-        var events = new Events();
-        var coolDown = new Tracker(duration, events, false);
+        var events = new CD.Events();
+        var coolDown = new CD.Tracker(duration, events, false);
         events.Subscribe(Handle);
         var started = coolDown.Start();
         Assert.True(started);
@@ -91,19 +91,19 @@ public class CoolDownTest
     public void TestCancellation()
     {
         DateTime? expiredAt = null;
-        void HandleExpire(object? sender, Message e)
+        void HandleExpire(object? sender, CD.Message e)
         {
             switch (e.Action)
             {
-                case CoolDown.Action.Expire:
+                case CD.Action.Expire:
                     expiredAt = DateTime.Now;
                     break;
             }
         }
 
         var duration = new TimeSpan(0, 0, 0, 5, 0);
-        var events = new Events();
-        var coolDown = new Tracker(duration, events, false);
+        var events = new CD.Events();
+        var coolDown = new CD.Tracker(duration, events, false);
         events.Subscribe(HandleExpire);
 
         var started = coolDown.Start();
@@ -122,19 +122,19 @@ public class CoolDownTest
     public void TestRefresh()
     {
         DateTime? expiredAt = null;
-        void HandleExpire(object? sender, Message e)
+        void HandleExpire(object? sender, CD.Message e)
         {
             switch (e.Action)
             {
-                case CoolDown.Action.Expire:
+                case CD.Action.Expire:
                     expiredAt = DateTime.Now;
                     break;
             }
         }
 
         var duration = new TimeSpan(0, 0, 0, 2, 0);
-        var events = new Events();
-        var coolDown = new Tracker(duration, events, false);
+        var events = new CD.Events();
+        var coolDown = new CD.Tracker(duration, events, false);
         events.Subscribe(HandleExpire);
 
         var started = coolDown.Start();

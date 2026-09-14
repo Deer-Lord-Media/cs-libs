@@ -1,7 +1,7 @@
 using Quest.Data;
 using Xunit;
 
-namespace Tests;
+namespace Tests.Quest;
 #nullable enable
 
 public class OperatorTest
