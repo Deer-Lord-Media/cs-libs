@@ -79,7 +79,7 @@ public class BuffsTest
     public void TestDataPrecedence()
     {
         var d1 = new BFS.Data(1, "data_one", new TimeSpan(), null, null, null);
-        var d2 = new BFS.Data(2, "data_two", new TimeSpan(), null, new HashSet<BFS.Data> { d1 }, null);
+        var d2 = new BFS.Data(2, "data_two", new TimeSpan(), null, [d1], null);
 
         var precedence = d1 < d2;
         Assert.True(precedence);

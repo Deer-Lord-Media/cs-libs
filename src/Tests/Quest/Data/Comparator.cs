@@ -3,7 +3,7 @@ using System.Reflection;
 using Quest.Data;
 using Xunit;
 
-namespace Tests.Quest;
+namespace Tests.Quest.Data;
 #nullable enable
 
 public class ComparatorTest
