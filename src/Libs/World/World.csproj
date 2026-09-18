@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
 
-    <PackageId>Quest</PackageId>
+    <PackageId>World</PackageId>
     <Version>0.0.1</Version>
     <Authors>William DaFriend</Authors>
     <Company>Deer Lord Media</Company>

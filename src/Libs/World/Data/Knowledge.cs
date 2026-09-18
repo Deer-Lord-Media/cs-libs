@@ -1,6 +1,6 @@
 using System;
 
-namespace Quest.Data
+namespace World.Data
 {
     /// <summary>
     /// Represents a fact that one person knows about another person's knowledge

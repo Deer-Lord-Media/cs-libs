@@ -1,6 +1,6 @@
 using System;
 
-namespace Quest.Data
+namespace World.Data
 {
     /// <summary>
     /// Represents a single stage within an <see cref="Event"/>'s sequence of stages.

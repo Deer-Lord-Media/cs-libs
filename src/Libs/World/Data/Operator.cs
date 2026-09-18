@@ -1,6 +1,6 @@
 using System;
 
-namespace Quest.Data
+namespace World.Data
 {
     /// <summary>
     /// Provides comparison operator functions that can be resolved dynamically

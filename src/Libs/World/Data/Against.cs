@@ -1,4 +1,4 @@
-namespace Quest.Data
+namespace World.Data
 {
     public enum Against
     {

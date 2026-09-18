@@ -1,4 +1,4 @@
-namespace Quest.Tracker
+namespace World.Tracker
 {
     public class Knowledge
     {

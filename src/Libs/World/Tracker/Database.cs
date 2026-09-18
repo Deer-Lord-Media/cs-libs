@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Quest.Tracker
+namespace World.Tracker
 {
     public class Database<T> : IDictionary<Guid, T>
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Quest.Data
+namespace World.Data
 {
     /// <summary>
     /// Represents a comparison rule that evaluates an integer value against

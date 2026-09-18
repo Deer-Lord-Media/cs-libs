@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Quest.Data
+namespace World.Data
 {
     /// <summary>
     /// Represents an event composed of an ordered sequence of stages.

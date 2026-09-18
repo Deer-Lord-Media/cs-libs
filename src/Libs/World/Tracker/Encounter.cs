@@ -1,11 +1,11 @@
 using System.Linq;
-using Quest.Data;
+using World.Data;
 
-using Events = System.Collections.Generic.IReadOnlyDictionary<System.Guid, Quest.Tracker.Event>;
-using Information = System.Collections.Generic.IReadOnlyDictionary<System.Guid, Quest.Tracker.Knowledge>;
+using Events = System.Collections.Generic.IReadOnlyDictionary<System.Guid, World.Tracker.Event>;
+using Information = System.Collections.Generic.IReadOnlyDictionary<System.Guid, World.Tracker.Knowledge>;
 
 
-namespace Quest.Tracker
+namespace World.Tracker
 {
     public class Encounter
     {

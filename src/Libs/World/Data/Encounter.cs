@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Quest.Data
+namespace World.Data
 {
     /// <summary>
     /// Represents an encounter: a named, described interaction composed of an

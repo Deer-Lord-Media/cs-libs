@@ -1,6 +1,6 @@
 using System;
 
-namespace Quest.Tracker
+namespace World.Tracker
 {
     /// <summary>
     /// Tracks a runtime instance of progress through an <see cref="Data.Event"/>,
