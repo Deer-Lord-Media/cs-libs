@@ -31,7 +31,7 @@ namespace World.Data
         /// The meaning of this value is context-dependent (e.g. a stage index,
         /// a detail type, or an enum cast to <see cref="int"/>).
         /// </summary>
-        public readonly int flags;
+        public readonly Assurance assurance;
         // these could potentially be a specific set of flags
 
         /// <summary>
@@ -44,13 +44,13 @@ namespace World.Data
         /// </summary>
         /// <param name="knowerId">The person who holds this piece of knowledge.</param>
         /// <param name="knowsId">The person who is known to know something about the event.</param>
-        /// <param name="flags">The specific detail known about the event.</param>
+        /// <param name="assurance">The specific detail known about the event.</param>
         /// <param name="eventId">The event this knowledge pertains to.</param>
-        public Knowledge(Guid knowerId, Guid knowsId, int flags, Guid eventId)
+        public Knowledge(Guid knowerId, Guid knowsId, Assurance assurance, Guid eventId)
         {
             this.knowerId = knowerId;
             this.knowsId = knowsId;
-            this.flags = flags;
+            this.assurance = assurance;
             this.eventId = eventId;
         }
     }

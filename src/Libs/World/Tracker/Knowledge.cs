@@ -21,7 +21,7 @@ namespace World.Tracker
         public Knowledge(Data.Knowledge data)
         {
             this.data = data;
-            flags = this.data.flags;
+            flags = this.data.assurance;
         }
     }
 }

@@ -9,6 +9,7 @@
     <ProjectReference Include="..\Libs\Buffs\Buffs.csproj" />
     <ProjectReference Include="..\Libs\Resource\Resource.csproj" />
     <ProjectReference Include="..\Libs\World\World.csproj" />
+    <ProjectReference Include="..\Libs\StateMachine\StateMachine.csproj" />
   </ItemGroup>
 
   <ItemGroup>
